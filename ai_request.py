@@ -1,14 +1,54 @@
 import json
 import boto3
 
-bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
+# LoL API Get Data
+def getData():
+    raise NotImplemented
 
+# Parse LoL API Data
+def dataParse():
+    raise NotImplemented
+
+game_data = ""
+
+# Bedrock Model Configs
+bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
 model_id = "arn:aws:bedrock:us-east-1:085366697379:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0"
 
-# Prompt Creation
-prompt = "Explain the difference between supervised and unsupervised learning."
+# AI Prompt Creation
+base = (
+    "You are a Challenger-ranked League of Legends coach with over 10 years of competitive and analytical experience. " 
+    "Your tone is confident, encouraging, and professional — like a high-ELO coach reviewing a player's match history. " 
+    "You focus on actionable, measurable advice with in-game reasoning (timing, wave control, map awareness, etc.). " 
+    "Use game-specific vocabulary correctly (e.g., roam timings, CS@10, lane priority, objective control, tempo, macro). " 
+    "Avoid fluff or generic comments. Always explain why each issue matters in terms of win conditions and map state." 
+    "When data is unclear, infer gently — never guess random numbers. " 
+    "Keep answers concise and structured. "
+)
 
-# Request Structure
+context = (
+    "You are reviewing a player's recent ranked game. The following data is provided:\n"
+    # "{player_info}"
+    # "{champion_data}"
+    # "{game_data}"
+    "The player is playing Miss Fortune against Xayah in the ADC Role. "
+    "At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. "
+    "Miss Fortune has 75 cs and Xayah has 57 cs. "
+    "Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. "
+    "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n"
+)
+
+task = (
+    "Identify the lane result, whether the player ended up behind, even, or ahead of the opposing laner at the 10 minute mark based on the player's gold, level, and KDA. "
+    "Next identify the top 2-3 mistakes in the laning phase and explain how they affected the player's result at the 10 minute mark. "
+    "Then provide 2 actionable coaching tips with clear timings or cues (e.g., 'At 3:15 when wave 3 crashes…'). "
+    "Provide a summary of the player's tendencies for lane aggression and play style. "
+)
+
+prompt = f"{base} {context} {task}"
+print(prompt)
+
+# AWS Request Structure
 body = {
     "messages": [
         {"role": "user", "content": prompt}
@@ -17,7 +57,7 @@ body = {
     "anthropic_version": "bedrock-2023-05-31",
 }
 
-# Send the request to Bedrock
+# Send the request to AWS Bedrock
 response = bedrock.invoke_model(
     modelId=model_id,
     body=json.dumps(body),
