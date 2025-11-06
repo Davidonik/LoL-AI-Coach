@@ -1,6 +1,9 @@
 import json
 import boto3
 
+lol_api = "RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
+api_url = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/KiraKuin/Lover?api_key=RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
+
 playerData_path = "./playerData"
 
 # LoL API Get Data
