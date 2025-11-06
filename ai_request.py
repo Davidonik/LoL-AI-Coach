@@ -4,7 +4,9 @@ import boto3
 lol_api = "RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
 api_url = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/KiraKuin/Lover?api_key=RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
 
-playerData_path = "./playerData"
+playerData_json = None # Check for None in case file load fails
+with open("./playerData/playerData.json", "r") as file:
+    playerData_json = json.load(file)
 
 # LoL API Get Data
 def getData():
