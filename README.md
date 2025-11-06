@@ -2,10 +2,10 @@
 
 # Setup
 Have python 3.13.7
-python venv venv
-Activate the venv
+Run python -m venv venv
+Run .\venv\Scripts\activate
 Run pip install -r requirements.txt
 
-pip install awscli
-aws configure
+Run pip install awscli
+Run aws configure
 Add your credentials
