@@ -20,9 +20,8 @@ def getData():
     api_url_matches = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{playerPUUID}/ids?start=0&count=20&api_key={lol_api}"
     resp = requests.get(api_url_matches)
     matchdata = resp.json()
-    
-
-    
+    for i in range(0, 5):
+        championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
 
 # Parse LoL API Data
 def dataParse():
