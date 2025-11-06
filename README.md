@@ -14,7 +14,7 @@ The AI knows what each champion is supposed to do — for example:
 
 *Ashe is a ranged marksman who deals steady damage from afar.*
 
-                            or
+or
 
 *Leona is a tank who protects her teammates and starts fights.*
 
@@ -32,7 +32,7 @@ Instead of vague tips, it might say things like:
 
 “You played Ahri this game. Your early-game farm was strong, but you roamed later than usual for a mid-laner. Try pushing the wave faster before leaving lane.”
 
-Or:
+or:
 
 “You built too many damage items as Leona — next time, prioritize armor and magic resistance to stay alive longer.”
 
@@ -40,8 +40,8 @@ Or:
 The AI can also store your match history and highlight progress — like “You’ve improved your farming speed by 15% in the last 10 games.”
 
 ## Setup
-1. Download [Python 3.13.7 64-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7-amd64.exe) or [Python 3.13.7 64-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7.exe)
-2. Open a terminal, select powershell and run `python -m venv venv` in VS code 
-3. Activate the venv using `.\venv\Scripts\activate`
-4. Run `pip install -r requirements.txt`, after that run `pip install awscli` and `aws configure`
+1. Download [Python 3.13.7 64-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7-amd64.exe) or [Python 3.13.7 32-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7.exe)
+2. Open a terminal, select powershell and run   `python -m venv venv` in VS code 
+3. Activate the venv using  `.\venv\Scripts\activate`
+4. Run  `pip install -r requirements.txt`, after that run   `pip install awscli` and    `aws configure`
 5. Add your credentials
