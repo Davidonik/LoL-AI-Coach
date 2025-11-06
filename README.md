@@ -14,7 +14,7 @@ The AI knows what each champion is supposed to do — for example:
 
 *Ashe is a ranged marksman who deals steady damage from afar.*
 
-or
+**OR**
 
 *Leona is a tank who protects her teammates and starts fights.*
 
@@ -32,7 +32,7 @@ Instead of vague tips, it might say things like:
 
 “You played Ahri this game. Your early-game farm was strong, but you roamed later than usual for a mid-laner. Try pushing the wave faster before leaving lane.”
 
-or:
+**OR**
 
 “You built too many damage items as Leona — next time, prioritize armor and magic resistance to stay alive longer.”
 
