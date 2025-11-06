@@ -1,6 +1,8 @@
 import json
 import boto3
 
+playerData_path = "./playerData"
+
 # LoL API Get Data
 def getData():
     raise NotImplemented
@@ -31,9 +33,9 @@ context = (
     # "{player_info}"
     # "{champion_data}"
     # "{game_data}"
-    "The player is playing Miss Fortune against Xayah in the ADC Role. "
-    "At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. "
-    "Miss Fortune has 75 cs and Xayah has 57 cs. "
+    # "The player is playing Miss Fortune against Xayah in the ADC Role. "
+    # "At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. "
+    # "Miss Fortune has 75 cs and Xayah has 57 cs. "
     "Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. "
     "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n"
 )
