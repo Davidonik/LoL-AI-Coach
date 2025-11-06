@@ -10,24 +10,21 @@ user = {
 
 lol_api = "RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
 
-playerData_json = None # Check for None in case file load fails
-with open("./playerData/playerData.json", "r") as file:
-    playerData_json = json.load(file)
-
 # LoL API Get Data
 def getData(user):
     # Player Info
     api_url_player = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{user["sname"]}/{user["tag"]}&api_key={lol_api}"
     resp = requests.get(api_url_player)
+    user["puuid"] = resp.json()["puuid"]
 
     # 20 most recent match info
-    user["puuid"] = resp.json()["puuid"]
     api_url_matches = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{user["puuid"]}/ids?start=0&count=20&api_key={lol_api}"
     resp = requests.get(api_url_matches)
     matchdata = resp.json()
     
-
-    
+playerData_json = None # Check for None in case file load fails
+with open("./playerData/playerData.json", "r") as file:
+    playerData = json.load(file)[user["puuid"]]
 
 # Parse LoL API Data
 def dataParse():
