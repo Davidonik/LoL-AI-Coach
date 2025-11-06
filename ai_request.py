@@ -22,8 +22,15 @@ def getData(user):
     resp = requests.get(api_url_matches)
     matchdata = resp.json()
     
-    for i in range(0, 5):
+    # Champions for the specific match
+    for i in range(0, 10):
         championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
+    
+    playerindex = matchdata["metadata"]["participants"].indexOf(user["puuid"])
+
+    playermatchdata = matchdata["info"]["participants"][playerindex]
+    playercounterpartmatchdata = matchdata["info"]["participants"][(playerindex + 5) % 2]
+    
         
 playerData_json = None # Check for None in case file load fails
 with open("./playerData/playerData.json", "r") as file:
