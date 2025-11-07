@@ -45,7 +45,9 @@ def getData(user):
 
     playermatchdata = matchdata["info"]["participants"][playerindex]
     playercounterpartmatchdata = matchdata["info"]["participants"][(playerindex + 5) % 2]
-    
+
+def get_champ_data(championname, folderpath="champions"):
+    filename = f"{championname.capitalize()}.json"
         
 playerData_json = None # Check for None in case file load fails
 with open("./playerData/playerData.json", "r") as file:
