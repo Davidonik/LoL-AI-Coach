@@ -159,8 +159,20 @@ def getchampdata(championnames, folderpath="champion"):
     for championname in championnames:
         filename = f"{championname}.json"
         filepath = os.path.join(folderpath, filename)
+# parser functions
+def parse_traits(playerData: dict) -> list:
+    """_summary_
+
+    Args:
+        playerData (dict): player data object from player sheet
+
+    Returns:
+        list: key value pair of all player traits
+    """
+    return [(key, playerData["traits_"][key]) for key in dict(playerData["traits_"]).keys()]
+
 # other GET functions
-def getchampdata(championname: str, folderpath="champion") -> dict:
+def get_champdata(championnames: str, folderpath="champion") -> dict:
     """_summary_
 
     Args:
@@ -170,50 +182,60 @@ def getchampdata(championname: str, folderpath="champion") -> dict:
     Returns:
         dict: data on champions
     """
-    filename = f"{championname}.json"
-    filepath = os.path.join(folderpath, filename)
+    championdata = {}
+    for championname in championnames:
+        filename = f"{championname}.json"
+        filepath = os.path.join(folderpath, filename)
 
-        try:
-            with open(filepath, "r", encoding="utf-8") as champdata:
-                championdata.append(json.load(champdata))
-        except FileNotFoundError:
-            championdata[championname] = {"error": f"{championname}.json not found"}
+    try:
+        with open(filepath, "r", encoding="utf-8") as champdata:
+            championdata.append(json.load(champdata))
+    except FileNotFoundError:
+        championdata[championname] = {"error": f"{championname}.json not found"}
 
     return championdata
 
-def get_playerData():
-    return
-# playerData_json = None # Check for None in case file load fails
-# with open("./playerData/playerData.json", "r") as file:
-#     playerData = json.load(file)
-#     if user["puuid"] in playerData:
-#         playerData = playerData[user["puuid"]]
-#     else:
-#         playerData[user["puuid"]] = {
-#             "KDA_": {
-#                 "total": None,
-#                 "last20": None,
-#             },
-#             "avg_": {
-#                 "deaths": None,
-#                 "cs@10": None,
-#                 "cs_per_min": None,
-#                 "gold_per_min": None,
-#             },
-#             "total_": {
-#                 "dmg_done": None,
-#                 "towers_taken": None,
-#                 "gold": None,
-#                 "objectives": None,
-#                 "objective_steals": None,
-#                 "first_bloods": None,
-#                 "feats": None,
-#             },
-#             "traits_": {
-#                 "aggression": None,
-#                 "weakness": None,
-#                 "strength": None,
-#             }
-#         }
-#         playerData = playerData[user["puuid"]]
-# user["traits"] = [playerData["traits_"][key] for key in dict(playerData["traits_"]).keys()]
+def get_playerData(puuid: str) -> dict:
+    """_summary_
+
+    Args:
+        puuid (str): player's id for sheet query
+
+    Returns:
+        dict: contains stats about player
+    """
+    # json load (placeholder fo AWS DynamoDB API requests)
+    with open("./playerData/playerData.json", "r") as file:
+        playerData = json.load(file)
+        
+        # player data already exists in sheet
+        if puuid in playerData:
+            return playerData[puuid]
+        
+        # player data needs to be initialized in sheet
+        return {
+            "KDA_": {
+                "total": None,
+                "last20": None,
+            },
+            "avg_": {
+                "deaths": None,
+                "cs@10": None,
+                "cs_per_min": None,
+                "gold_per_min": None,
+            },
+            "total_": {
+                "dmg_done": None,
+                "towers_taken": None,
+                "gold": None,
+                "objectives": None,
+                "objective_steals": None,
+                "first_bloods": None,
+                "feats": None,
+            },
+            "traits_": {
+                "aggression": None,
+                "weakness": None,
+                "strength": None,
+            }
+        }
