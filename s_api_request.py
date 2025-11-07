@@ -28,7 +28,7 @@ def set_user():
     # make requests to LoL API 
     puuid = lolapi_puuid(sname, tag)
     if None == puuid:
-        return make_response(jsonify({"error": "summoner not found"}))
+        return make_response(jsonify({"error": f"summoner not found"}))
 
     response = make_response(jsonify({"message": True}))
     response.set_cookie("sname", sname, max_age=60*60*24)
