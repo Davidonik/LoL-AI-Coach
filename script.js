@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       // Parse the response from Flask
-      const data = await response.get_json();
+      const data = await response.json();
 
       if (response.ok && data.message) {
         status.innerText = `User saved: ${data.user}`;
