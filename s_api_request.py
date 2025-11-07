@@ -127,14 +127,19 @@ def lolapi_matches(puuid: str) -> dict:
         "opponent": opponent,
     }
 
-def getchampdata(championname, folderpath="champion"):
-    filename = f"{championname}.json"
-    filepath = os.path.join(folderpath, filename)
+def getchampdata(championnames, folderpath="champion"):
+    championdata = {}
+    for championname in championnames:
+        filename = f"{championname}.json"
+        filepath = os.path.join(folderpath, filename)
 
-    with open(filepath, "r", encoding="utf-8") as champdata:
-        data = json.load(champdata)
+        try:
+            with open(filepath, "r", encoding="utf-8") as champdata:
+                championdata.append(json.load(champdata))
+        except FileNotFoundError:
+            championdata[championname] = {"error": f"{championname}.json not found"}
 
-    return data
+    return championdata
 
 # playerData_json = None # Check for None in case file load fails
 # with open("./playerData/playerData.json", "r") as file:
