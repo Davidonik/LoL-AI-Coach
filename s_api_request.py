@@ -5,6 +5,15 @@ from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
 
+@app.route("/set_user", methods=["POST"])
+def set_user():
+    data = request.get_json()
+    name = data.get("sname", None)
+
+    response = make_response(jsonify({"message": f"Welcome, {name}!"}))
+    response.set_cookie("sname", name, max_age=60*60*24)  # cookie lasts 1 day
+    return response
+
 # user object for user info
 user = {
     "sname": "KiraKuin",
