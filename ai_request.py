@@ -25,10 +25,6 @@ def getData(user):
     resp = requests.get(api_url_matches)
     matchdata = resp.json()
     
-<<<<<<< HEAD
-# read player data sheet from json (to be AWS DynamoDB)
-playerData = None # Check for None in case file load fails
-=======
     # Champions for the specific match
     for i in range(0, 10):
         championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
@@ -40,7 +36,6 @@ playerData = None # Check for None in case file load fails
     
         
 playerData_json = None # Check for None in case file load fails
->>>>>>> ad46ed183941a0e23ef4d4b354ae9bdd8969bd18
 with open("./playerData/playerData.json", "r") as file:
     playerData = json.load(file)
     if user["puuid"] in playerData:
