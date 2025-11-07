@@ -173,12 +173,12 @@ def parse_traits(playerData: dict) -> list:
     return [(key, playerData["traits_"][key]) for key in dict(playerData["traits_"]).keys()]
 
 # other GET functions
-def get_champdata(championnames: list, folderpath="champion") -> dict:
+def get_champdata(championnames: list, folderpath="champions") -> dict:
     """_summary_
 
     Args:
-        championname (str): name of champion
-        folderpath (str, optional): path to champion data dir. Defaults to "champion".
+        championnames (list): lists of champion
+        folderpath (str, optional): path to champion data dir. Defaults to "champions".
 
     Returns:
         dict: data on champions
