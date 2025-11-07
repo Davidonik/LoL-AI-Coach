@@ -106,6 +106,7 @@ def ai_coach():
     
     return response
 
+
 # LoL API Requests
 def lolapi_puuid(sname: str, tag: str) -> str:
     """_summary_
@@ -172,7 +173,7 @@ def parse_traits(playerData: dict) -> list:
     return [(key, playerData["traits_"][key]) for key in dict(playerData["traits_"]).keys()]
 
 # other GET functions
-def get_champdata(championname: str, folderpath="champion") -> dict:
+def get_champdata(championnames: list, folderpath="champion") -> dict:
     """_summary_
 
     Args:
@@ -182,13 +183,18 @@ def get_champdata(championname: str, folderpath="champion") -> dict:
     Returns:
         dict: data on champions
     """
-    filename = f"{championname}.json"
-    filepath = os.path.join(folderpath, filename)
+    championdata = {}
+    for championname in championnames:
+        filename = f"{championname}.json"
+        filepath = os.path.join(folderpath, filename)
 
-    with open(filepath, "r", encoding="utf-8") as champdata:
-        data = json.load(champdata)
+    try:
+        with open(filepath, "r", encoding="utf-8") as champdata:
+            championdata.append(json.load(champdata))
+    except FileNotFoundError:
+        championdata[championname] = {"error": f"{championname}.json not found"}
 
-    return data
+    return championdata
 
 def get_playerData(puuid: str) -> dict:
     """_summary_

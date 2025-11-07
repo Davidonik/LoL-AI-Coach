@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const sname = document.getElementById("sname").value.trim();
     const tag = document.getElementById("tag").value.trim();
 
-    status.innerText = "Sending data...";
+  resultDiv.innerHTML = `<p>Loading data for <b>${summoner}</b>...</p>`;
 
     try {
       // Send the data to Flask as JSON

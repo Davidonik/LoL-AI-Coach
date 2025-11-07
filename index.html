@@ -11,13 +11,16 @@
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
   <h1 class="text-4xl font-bold mb-6">League of Legends AI Coach</h1>
 
-  <div class="input-container">
-    <input type="text" id="sname" class="px-4 py-2 rounded-lg text-black" placeholder="Summoner Name">
-    <input type="text" id="tag" class="px-4 py-2 rounded-lg text-black" placeholder="Tag (e.g. NA1)">
-    <button id="setUserBtn" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Set User</button>
+  <div class="flex gap-2">
+    <input id="summonerInput" type="text" placeholder="Enter Summoner Name"
+           class="px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    <button onclick="fetchData()"
+            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+      Analyze
+    </button>
   </div>
 
-  <div id="status"></div>
+  <div id="result" class="mt-8 p-6 bg-gray-800 rounded-xl w-full max-w-md shadow-lg text-left"></div>
 
   <script src="script.js"></script>
 </body>
