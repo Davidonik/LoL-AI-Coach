@@ -6,8 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const sname = document.getElementById("sname").value.trim();
     const tag = document.getElementById("tag").value.trim();
 
-  resultDiv.innerHTML = `<p>Loading data for <b>${summoner}</b>...</p>`;
-
     try {
       // Send the data to Flask as JSON
       const response = await fetch("http://127.0.0.1:5000/set_user", {

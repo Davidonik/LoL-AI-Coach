@@ -18,20 +18,20 @@ CORS(
 @app.route("/set_user", methods=["POST"])
 def set_user():
     data = request.get_json()
-    name = data.get("sname", None)
+    sname = data.get("sname", None)
     tag = data.get("tag", None)
     
     # no sname or tag given in fetch
-    if None == name or None == tag:
+    if None == sname or None == tag:
         return make_response(jsonify({"error": "invalid summoner name and/or tag"}))
     
     # make requests to LoL API 
-    puuid = lolapi_puuid(sname=request.cookies.get("sname"), tag=request.cookies.get("tag"))
+    puuid = lolapi_puuid(sname, tag)
     if None == puuid:
         return make_response(jsonify({"error": "summoner not found"}))
 
     response = make_response(jsonify({"message": True}))
-    response.set_cookie("sname", name, max_age=60*60*24)
+    response.set_cookie("sname", sname, max_age=60*60*24)
     response.set_cookie("tag", tag, max_age=60*60*24)
     response.set_cookie("puuid", puuid, max_age=60*60*24)
     return response
@@ -119,7 +119,7 @@ def lolapi_puuid(sname: str, tag: str) -> str:
         str: corresponding summoner's PUUID
     """
     # Player Info
-    api_request = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{sname}/{tag}&api_key={APIKEY_LOL}"
+    api_request = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{sname}/{tag}?api_key={APIKEY_LOL}"
     resp = requests.get(api_request)
     
     if resp.status_code != 200:
