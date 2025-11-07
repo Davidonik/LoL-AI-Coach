@@ -1,0 +1,20 @@
+.center-container {
+  /* 1. Make the container fill the screen */
+  height: 100vh; /* 100% of the viewport height */
+  width: 100vw;  /* 100% of the viewport width (optional, often 100% width is default) */
+  
+  /* 2. Enable Flexbox */
+  display: flex;
+  
+  /* 3. Center horizontally */
+  justify-content: center;
+  
+  /* 4. Center vertically */
+  align-items: center;
+}
+
+/* Optional: Basic button styling for visibility */
+button {
+  padding: 15px 30px;
+  font-size: 18px;
+}

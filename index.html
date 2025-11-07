@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>League AI Coach</title>
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #030813;
+        color: #ffffff;
+        text-align: center;
+        padding: 2em;
+        }
+        input, button {
+        padding: 0.5em;
+        margin-top: 1em;
+        font-size: 1em;
+        }
+        .result {
+        margin-top: 2em;
+        background: #1f2937;
+        border-radius: 10px;
+        padding: 1em;
+        display: inline-block;
+        width: 60%;
+        }
+    </style>
+</head>
+<body>
+    <h1>League of Legends AI Coach</h1>
+    <p>Enter your Summoner Name:</p>
+    <input id="summonerInput" type="text" placeholder="e.g. Faker#GOAT">
+
+    <div class="center-container">
+    <button onclick="fetchData()">Analyze Match</button>
+    </div>
+    
+    <div id="result" class="result"></div>
+
+    <script>
+        async function fetchData() {
+        const summoner = document.getElementById("summonerInput").value;
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "Loading...";
+
+        try {
+            const response = await fetch(`/analyze?summoner=${summoner}`);
+            const data = await response.json();
+
+            if (data.error) {
+            resultDiv.innerHTML = `<p style='color:red;'>Error: ${data.error}</p>`;
+            } else {
+            resultDiv.innerHTML = `
+                <h2>${data.summoner}'s Match Summary</h2>
+                <p><b>Champion:</b> ${data.champion} (${data.champion_title})</p>
+                <p><b>KDA:</b> ${data.kda}</p>
+                <p><b>Gold Earned:</b> ${data.gold}</p>
+                <p><b>Damage to Champions:</b> ${data.damage}</p>
+                <p><i>${data.feedback}</i></p>
+            `;
+            }
+        } catch (err) {
+            resultDiv.innerHTML = `<p style='color:red;'>Error fetching data.</p>`;
+        }
+        }
+    </script>
+</body>
+</html>
