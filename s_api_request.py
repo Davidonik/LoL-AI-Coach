@@ -154,11 +154,6 @@ def lolapi_matches(puuid: str) -> dict:
         "opponent": opponent,
     }
 
-def getchampdata(championnames, folderpath="champion"):
-    championdata = {}
-    for championname in championnames:
-        filename = f"{championname}.json"
-        filepath = os.path.join(folderpath, filename)
 # parser functions
 def parse_traits(playerData: dict) -> list:
     """_summary_
