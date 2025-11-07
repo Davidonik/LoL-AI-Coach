@@ -155,7 +155,16 @@ def lolapi_matches(puuid: str) -> dict:
     }
 
 # other GET functions
-def getchampdata(championname, folderpath="champion"):
+def getchampdata(championname: str, folderpath="champion") -> dict:
+    """_summary_
+
+    Args:
+        championname (str): name of champion
+        folderpath (str, optional): path to champion data dir. Defaults to "champion".
+
+    Returns:
+        dict: data on champions
+    """
     filename = f"{championname}.json"
     filepath = os.path.join(folderpath, filename)
 
