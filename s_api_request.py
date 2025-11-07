@@ -23,6 +23,85 @@ def set_user():
     response.set_cookie("tag", tag, max_age=60*60*24)
     return response
 
+# user object for user info
+user = {
+    "sname": "KiraKuin",
+    "tag": "Lover",
+    "puuid": None,
+    "traits": None,
+}
+
+# API Key for LoL
+lol_api = "RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
+
+# LoL API Get Data
+def getData(user):
+    # Player Info
+    api_url_player = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{user["sname"]}/{user["tag"]}&api_key={lol_api}"
+    resp = requests.get(api_url_player)
+    user["puuid"] = resp.json()["puuid"]
+
+    # 20 most recent match info
+    api_url_matches = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{user["puuid"]}/ids?start=0&count=20&api_key={lol_api}"
+    resp = requests.get(api_url_matches)
+    matchdata = resp.json()
+    
+    # Champions for the specific match
+    for i in range(0, 10):
+        championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
+    
+    playerindex = matchdata["metadata"]["participants"].indexOf(user["puuid"])
+
+    playermatchdata = matchdata["info"]["participants"][playerindex]
+    playercounterpartmatchdata = matchdata["info"]["participants"][(playerindex + 5) % 2]
+
+def get_champ_data(championname, folderpath="champions"):
+    filename = f"{championname.capitalize()}.json"
+        
+playerData_json = None # Check for None in case file load fails
+with open("./playerData/playerData.json", "r") as file:
+    playerData = json.load(file)
+    if user["puuid"] in playerData:
+        playerData = playerData[user["puuid"]]
+    else:
+        playerData[user["puuid"]] = {
+            "KDA_": {
+                "total": None,
+                "last20": None,
+            },
+            "avg_": {
+                "deaths": None,
+                "cs@10": None,
+                "cs_per_min": None,
+                "gold_per_min": None,
+            },
+            "total_": {
+                "dmg_done": None,
+                "towers_taken": None,
+                "gold": None,
+                "objectives": None,
+                "objective_steals": None,
+                "first_bloods": None,
+                "feats": None,
+            },
+            "traits_": {
+                "aggression": None,
+                "weakness": None,
+                "strength": None,
+            }
+        }
+        playerData = playerData[user["puuid"]]
+user["traits"] = [playerData["traits_"][key] for key in dict(playerData["traits_"]).keys()]
+
+# Parse LoL API Data
+def dataParse():
+    raise NotImplemented
+
+game_data = ""
+
+# Bedrock Model Configs
+bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
+model_id = "arn:aws:bedrock:us-east-1:085366697379:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0"
 @app.route("/set_user", methods=["POST"])
 def ai_coach():
     # set up user object

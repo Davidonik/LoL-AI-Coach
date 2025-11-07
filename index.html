@@ -4,66 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>League AI Coach</title>
-    <style>
-        body {
-        font-family: Arial, sans-serif;
-        background-color: #030813;
-        color: #ffffff;
-        text-align: center;
-        padding: 2em;
-        }
-        input, button {
-        padding: 0.5em;
-        margin-top: 1em;
-        font-size: 1em;
-        }
-        .result {
-        margin-top: 2em;
-        background: #1f2937;
-        border-radius: 10px;
-        padding: 1em;
-        display: inline-block;
-        width: 60%;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
-<body>
-    <h1>League of Legends AI Coach</h1>
-    <p>Enter your Summoner Name:</p>
-    <input id="summonerInput" type="text" placeholder="e.g. Faker#GOAT">
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
+  <h1 class="text-4xl font-bold mb-6">League of Legends AI Coach</h1>
 
-    <div class="center-container">
-    <button onclick="fetchData()">Analyze Match</button>
-    </div>
-    
-    <div id="result" class="result"></div>
+  <div class="flex gap-2">
+    <input id="summonerInput" type="text" placeholder="Enter Summoner Name"
+           class="px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    <button onclick="fetchData()"
+            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition">
+      Analyze
+    </button>
+  </div>
 
-    <script>
-        async function fetchData() {
-        const summoner = document.getElementById("summonerInput").value;
-        const resultDiv = document.getElementById("result");
-        resultDiv.innerHTML = "Loading...";
+  <div id="result" class="mt-8 p-6 bg-gray-800 rounded-xl w-full max-w-md shadow-lg text-left"></div>
 
-        try {
-            const response = await fetch(`/analyze?summoner=${summoner}`);
-            const data = await response.json();
-
-            if (data.error) {
-            resultDiv.innerHTML = `<p style='color:red;'>Error: ${data.error}</p>`;
-            } else {
-            resultDiv.innerHTML = `
-                <h2>${data.summoner}'s Match Summary</h2>
-                <p><b>Champion:</b> ${data.champion} (${data.champion_title})</p>
-                <p><b>KDA:</b> ${data.kda}</p>
-                <p><b>Gold Earned:</b> ${data.gold}</p>
-                <p><b>Damage to Champions:</b> ${data.damage}</p>
-                <p><i>${data.feedback}</i></p>
-            `;
-            }
-        } catch (err) {
-            resultDiv.innerHTML = `<p style='color:red;'>Error fetching data.</p>`;
-        }
-        }
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
