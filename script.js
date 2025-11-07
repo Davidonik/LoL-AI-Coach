@@ -1,33 +1,42 @@
-async function fetchData() {
-  const summoner = document.getElementById("summonerInput").value.trim();
-  const resultDiv = document.getElementById("result");
+document.addEventListener("DOMContentLoaded", () => {
+  const button = document.getElementById("setUserBtn");
+  const status = document.getElementById("status");
 
-  if (!summoner) {
-    resultDiv.innerHTML = `<p class="text-red-400 text-center mx-auto">Please enter a Summoner name.</p>`;
-    return;
-  }
+  button.addEventListener("click", async () => {
+    const sname = document.getElementById("sname").value.trim();
+    const tag = document.getElementById("tag").value.trim();
 
-  resultDiv.innerHTML = `<p>Loading data for <b>${summoner}</b>...</p>`;
-
-  try {
-    const response = await fetch(`/analyze?summoner=${encodeURIComponent(summoner)}`);
-    const data = await response.json();
-
-    if (data.error) {
-      resultDiv.innerHTML = `<p class="text-red-400 text-center mx-auto" >${data.error}</p>`;
-    } else {
-      resultDiv.innerHTML = `
-        <div class="fade-in">
-          <h2 class="text-2xl font-bold mb-3">${data.summoner}'s Match Summary</h2>
-          <p><b>Champion:</b> ${data.champion} <span class="text-gray-400">(${data.champion_title})</span></p>
-          <p><b>KDA:</b> ${data.kda}</p>
-          <p><b>Gold Earned:</b> ${data.gold.toLocaleString()}</p>
-          <p><b>Damage to Champions:</b> ${data.damage.toLocaleString()}</p>
-          <p class="italic text-blue-300 mt-3">${data.feedback}</p>
-        </div>
-      `;
+    if (!sname || !tag) {
+      status.innerText = "⚠️ Please enter both summoner name and tag.";
+      return;
     }
-  } catch (err) {
-    resultDiv.innerHTML = `<p class="text-red-400 text-center mx-auto">Could not find summoner. Please check your Riot ID</p>`;
-  }
-}
+
+    status.innerText = "Sending data...";
+
+    try {
+      // Send the data to Flask as JSON
+      const response = await fetch("/set_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ sname, tag })
+      });
+
+      // Parse the response from Flask
+      const data = await response.get_json();
+
+      if (response.ok && data.message) {
+        status.innerText = `User saved: ${data.user}`;
+      } else {
+        status.innerText = "Failed to save user.";
+      }
+
+      console.log("Server Response:", data);
+
+    } catch (error) {
+      console.error("Error during fetch:", error);
+      status.innerText = "Network error, please try again.";
+    }
+  });
+});

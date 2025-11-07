@@ -41,7 +41,7 @@ The AI can also store your match history and highlight progress — like “You�
 
 ## Setup
 1. Download [Python 3.13.7 64-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7-amd64.exe) or [Python 3.13.7 32-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7.exe)
-2. Open a terminal, select powershell and run   `python -m venv venv` in VS code 
-3. Activate the venv using  `.\venv\Scripts\activate`
-4. Run  `pip install -r requirements.txt`, after that run   `pip install awscli` and    `aws configure`
+2. Open a terminal, select powershell and run `python -m venv venv` in VS code 
+3. Activate the venv using `.\venv\Scripts\activate`
+4. Run `pip install -r requirements.txt`, after that run `pip install awscli` and `aws configure`
 5. Add your credentials
