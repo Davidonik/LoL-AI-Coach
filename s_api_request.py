@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
+APIKEY_LOL = "RGAPI-4677eda2-db80-49d1-b629-8e9234350286"
 
 app = Flask(__name__)
 CORS(
