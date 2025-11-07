@@ -1,32 +1,33 @@
 async function fetchData() {
-  const summoner = document.getElementById("summonerInput").value;
+  const summoner = document.getElementById("summonerInput").value.trim();
   const resultDiv = document.getElementById("result");
-  const button = document.querySelector("button");
+
+  if (!summoner) {
+    resultDiv.innerHTML = `<p class="text-red-400 text-center mx-auto">Please enter a Summoner name.</p>`;
+    return;
+  }
 
   resultDiv.innerHTML = `<p>Loading data for <b>${summoner}</b>...</p>`;
-  button.disabled = true;
 
   try {
-    const response = await fetch(`/analyze?summoner=${summoner}`);
+    const response = await fetch(`/analyze?summoner=${encodeURIComponent(summoner)}`);
     const data = await response.json();
 
     if (data.error) {
-      resultDiv.innerHTML = `<p class="error">⚠️ ${data.error}</p>`;
+      resultDiv.innerHTML = `<p class="text-red-400 text-center mx-auto" >${data.error}</p>`;
     } else {
       resultDiv.innerHTML = `
-        <div class="card">
-          <h2>${data.summoner}'s Match Summary</h2>
-          <p><strong>Champion:</strong> ${data.champion} (${data.champion_title})</p>
-          <p><strong>KDA:</strong> ${data.kda}</p>
-          <p><strong>Gold Earned:</strong> ${data.gold.toLocaleString()}</p>
-          <p><strong>Damage to Champions:</strong> ${data.damage.toLocaleString()}</p>
-          <p class="feedback">${data.feedback}</p>
+        <div class="fade-in">
+          <h2 class="text-2xl font-bold mb-3">${data.summoner}'s Match Summary</h2>
+          <p><b>Champion:</b> ${data.champion} <span class="text-gray-400">(${data.champion_title})</span></p>
+          <p><b>KDA:</b> ${data.kda}</p>
+          <p><b>Gold Earned:</b> ${data.gold.toLocaleString()}</p>
+          <p><b>Damage to Champions:</b> ${data.damage.toLocaleString()}</p>
+          <p class="italic text-blue-300 mt-3">${data.feedback}</p>
         </div>
       `;
     }
   } catch (err) {
-    resultDiv.innerHTML = `<p class="error">❌ Error fetching data. Please try again later.</p>`;
-  } finally {
-    button.disabled = false;
+    resultDiv.innerHTML = `<p class="text-red-400 text-center mx-auto">Could not find summoner. Please check your Riot ID</p>`;
   }
 }
