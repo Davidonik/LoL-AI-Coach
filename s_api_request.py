@@ -100,7 +100,6 @@ def ai_coach():
     
     return response
 
-
 # LoL API Requests
 def lolapi_puuid(sname: str, tag: str) -> str:
     """_summary_
@@ -154,8 +153,20 @@ def lolapi_matches(puuid: str) -> dict:
         "opponent": opponent,
     }
 
+# parser functions
+def parse_traits(playerData: dict) -> list:
+    """_summary_
+
+    Args:
+        playerData (dict): player data object from player sheet
+
+    Returns:
+        list: key value pair of all player traits
+    """
+    return [(key, playerData["traits_"][key]) for key in dict(playerData["traits_"]).keys()]
+
 # other GET functions
-def getchampdata(championname: str, folderpath="champion") -> dict:
+def get_champdata(championname: str, folderpath="champion") -> dict:
     """_summary_
 
     Args:
@@ -173,39 +184,47 @@ def getchampdata(championname: str, folderpath="champion") -> dict:
 
     return data
 
-def get_playerData():
-    return
-# playerData_json = None # Check for None in case file load fails
-# with open("./playerData/playerData.json", "r") as file:
-#     playerData = json.load(file)
-#     if user["puuid"] in playerData:
-#         playerData = playerData[user["puuid"]]
-#     else:
-#         playerData[user["puuid"]] = {
-#             "KDA_": {
-#                 "total": None,
-#                 "last20": None,
-#             },
-#             "avg_": {
-#                 "deaths": None,
-#                 "cs@10": None,
-#                 "cs_per_min": None,
-#                 "gold_per_min": None,
-#             },
-#             "total_": {
-#                 "dmg_done": None,
-#                 "towers_taken": None,
-#                 "gold": None,
-#                 "objectives": None,
-#                 "objective_steals": None,
-#                 "first_bloods": None,
-#                 "feats": None,
-#             },
-#             "traits_": {
-#                 "aggression": None,
-#                 "weakness": None,
-#                 "strength": None,
-#             }
-#         }
-#         playerData = playerData[user["puuid"]]
-# user["traits"] = [playerData["traits_"][key] for key in dict(playerData["traits_"]).keys()]
+def get_playerData(puuid: str) -> dict:
+    """_summary_
+
+    Args:
+        puuid (str): player's id for sheet query
+
+    Returns:
+        dict: contains stats about player
+    """
+    # json load (placeholder fo AWS DynamoDB API requests)
+    with open("./playerData/playerData.json", "r") as file:
+        playerData = json.load(file)
+        
+        # player data already exists in sheet
+        if puuid in playerData:
+            return playerData[puuid]
+        
+        # player data needs to be initialized in sheet
+        return {
+            "KDA_": {
+                "total": None,
+                "last20": None,
+            },
+            "avg_": {
+                "deaths": None,
+                "cs@10": None,
+                "cs_per_min": None,
+                "gold_per_min": None,
+            },
+            "total_": {
+                "dmg_done": None,
+                "towers_taken": None,
+                "gold": None,
+                "objectives": None,
+                "objective_steals": None,
+                "first_bloods": None,
+                "feats": None,
+            },
+            "traits_": {
+                "aggression": None,
+                "weakness": None,
+                "strength": None,
+            }
+        }
