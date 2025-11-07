@@ -6,30 +6,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const sname = document.getElementById("sname").value.trim();
     const tag = document.getElementById("tag").value.trim();
 
-    if (!sname || !tag) {
-      status.innerText = "⚠️ Please enter both summoner name and tag.";
-      return;
-    }
-
     status.innerText = "Sending data...";
 
     try {
       // Send the data to Flask as JSON
-      const response = await fetch("/set_user", {
+      const response = await fetch("http://127.0.0.1:5000/set_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ sname, tag })
+        credentials: "include",
+        body: JSON.stringify({
+          "sname": sname,
+          "tag": tag
+        })
       });
 
       // Parse the response from Flask
       const data = await response.json();
 
+      console.log(data)
+
       if (response.ok && data.message) {
         status.innerText = `User saved: ${data.user}`;
       } else {
-        status.innerText = "Failed to save user.";
+        status.innerText = data.error;
       }
 
       console.log("Server Response:", data);

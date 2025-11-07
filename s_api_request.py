@@ -3,11 +3,17 @@ import boto3
 import requests
 import os
 from flask import Flask, request, jsonify, make_response
+from flask_cors import CORS
 
 # API Key for LoL
 APIKEY_LOL = "RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
 
 app = Flask(__name__)
+CORS(
+    app,
+    supports_credentials=True,
+    origins=["http://127.0.0.1:5500", "http://localhost:5500"]
+)
 
 @app.route("/set_user", methods=["POST"])
 def set_user():
