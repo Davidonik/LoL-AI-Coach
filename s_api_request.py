@@ -23,7 +23,7 @@ user = {
 }
 
 # API Key for LoL
-lol_api = "RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
+lol_api = "RGAPI-4677eda2-db80-49d1-b629-8e9234350286"
 
 # LoL API Get Data
 def getData(user):
