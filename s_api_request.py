@@ -1,6 +1,7 @@
 import json
 import boto3
 import requests
+import os
 from flask import Flask, request, jsonify, make_response
 
 # API Key for LoL
@@ -130,6 +131,15 @@ def lolapi_matches(user: dict) -> dict:
         "player": player,
         "opponent": opponent,
     }
+
+def getchampdata(championname, folderpath="champion"):
+    filename = f"{championname}.json"
+    filepath = os.path.join(folderpath, filename)
+
+    with open(filepath, "r", encoding="utf-8") as champdata:
+        data = json.load(champdata)
+
+    return data
 
 # playerData_json = None # Check for None in case file load fails
 # with open("./playerData/playerData.json", "r") as file:
