@@ -106,6 +106,13 @@ def ai_coach():
     
     return response
 
+@app.route("/set_user", methods=["POST"])
+def getLast20Matches():
+    puuid = request.cookies.get("puuid", None)
+    if None == puuid:
+        return make_response(jsonify({"error": f"summoner not found"}))
+    return lolapi_matches(puuid)
+
 
 # LoL API Requests
 def lolapi_puuid(sname: str, tag: str) -> str:
@@ -135,7 +142,7 @@ def lolapi_matches(puuid: str) -> dict:
         puuid (str): player's PUUID
 
     Returns:
-        dict: player -> player's match data, opponent -> lane opponent's match data
+        dict: matchdata 
         None: errors return None
     """
     api_url_matches = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=20&api_key={APIKEY_LOL}"
@@ -145,20 +152,7 @@ def lolapi_matches(puuid: str) -> dict:
         return None
     
     matchdata = resp.json()
-    
-    # Champions for the specific match
-    for i in range(0, 10):
-        championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
-
-    playerindex = matchdata["metadata"]["participants"].indexOf(puuid)
-
-    player = matchdata["info"]["participants"][playerindex]
-    opponent = matchdata["info"]["participants"][(playerindex + 5) % 2]
-    
-    return {
-        "player": player,
-        "opponent": opponent,
-    }
+    return matchdata
 
 # parser functions
 def parse_traits(playerData: dict) -> list:
@@ -240,3 +234,30 @@ def get_playerData(puuid: str) -> dict:
                 "strength": None,
             }
         }
+def player_opponent(matchdata: dict, puuid: str):
+    """_summary_
+
+    Args:
+        matchdata (dict): data of matches 
+        puuid (str): player's PUUID
+
+    Returns:
+        dict: player -> player's match data, opponent -> lane opponent's match data
+        None: errors return None
+    """
+    if None == matchdata or None == puuid:
+        return None
+
+    # Champions for the specific match
+    for i in range(0, 10):
+        championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
+
+    playerindex = matchdata["metadata"]["participants"].indexOf(puuid)
+
+    player = matchdata["info"]["participants"][playerindex]
+    opponent = matchdata["info"]["participants"][(playerindex + 5) % 2]
+    
+    return {
+        "player": player,
+        "opponent": opponent,
+    }

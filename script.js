@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(data)
 
       if (response.ok && data.message) {
-        status.innerText = `User saved: ${data.user}`;
+        setTimeout(() => {
+                window.location.href = "matches.html";
+            }, 800);
       } else {
         status.innerText = data.error;
       }
