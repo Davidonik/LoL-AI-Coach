@@ -21,6 +21,8 @@ def set_user():
     
     # make requests to LoL API 
     puuid = lolapi_puuid(sname=request.cookies.get("sname"), tag=request.cookies.get("tag"))
+    if None == puuid:
+        return make_response(jsonify({"error": "summoner not found"}))
 
     response = make_response(jsonify({"message": True}))
     response.set_cookie("sname", name, max_age=60*60*24)
@@ -101,16 +103,41 @@ def ai_coach():
 
 # LoL API Requests
 def lolapi_puuid(sname: str, tag: str) -> str:
+    """_summary_
+
+    Args:
+        sname (str): summoner name
+        tag (str): tagline of summoner
+
+    Returns:
+        str: corresponding summoner's PUUID
+    """
     # Player Info
     api_request = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{sname}/{tag}&api_key={APIKEY_LOL}"
     resp = requests.get(api_request)
+    
+    if resp.status_code != 200:
+        return None
     
     return resp.json()["puuid"]
 
 
 def lolapi_matches(puuid: str) -> dict:
+    """_summary_
+
+    Args:
+        puuid (str): player's PUUID
+
+    Returns:
+        dict: player -> player's match data, opponent -> lane opponent's match data
+        None: errors return None
+    """
     api_url_matches = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=20&api_key={APIKEY_LOL}"
     resp = requests.get(api_url_matches)
+    
+    if resp.status_code != 200:
+        return None
+    
     matchdata = resp.json()
     
     # Champions for the specific match
@@ -132,6 +159,19 @@ def getchampdata(championnames, folderpath="champion"):
     for championname in championnames:
         filename = f"{championname}.json"
         filepath = os.path.join(folderpath, filename)
+# other GET functions
+def getchampdata(championname: str, folderpath="champion") -> dict:
+    """_summary_
+
+    Args:
+        championname (str): name of champion
+        folderpath (str, optional): path to champion data dir. Defaults to "champion".
+
+    Returns:
+        dict: data on champions
+    """
+    filename = f"{championname}.json"
+    filepath = os.path.join(folderpath, filename)
 
         try:
             with open(filepath, "r", encoding="utf-8") as champdata:
@@ -141,6 +181,8 @@ def getchampdata(championnames, folderpath="champion"):
 
     return championdata
 
+def get_playerData():
+    return
 # playerData_json = None # Check for None in case file load fails
 # with open("./playerData/playerData.json", "r") as file:
 #     playerData = json.load(file)
