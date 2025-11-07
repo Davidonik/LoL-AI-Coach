@@ -2,12 +2,15 @@ import json
 import boto3
 import requests
 
+# user object for user info
 user = {
     "sname": "KiraKuin",
     "tag": "Lover",
     "puuid": None,
+    "traits": None,
 }
 
+# API Key for LoL
 lol_api = "RGAPI-dcf2e12a-26c7-41c3-abbb-ecd4add5b06b"
 
 # LoL API Get Data
@@ -22,9 +25,41 @@ def getData(user):
     resp = requests.get(api_url_matches)
     matchdata = resp.json()
     
-playerData_json = None # Check for None in case file load fails
+# read player data sheet from json (to be AWS DynamoDB)
+playerData = None # Check for None in case file load fails
 with open("./playerData/playerData.json", "r") as file:
-    playerData = json.load(file)[user["puuid"]]
+    playerData = json.load(file)
+    if user["puuid"] in playerData:
+        playerData = playerData[user["puuid"]]
+    else:
+        playerData[user["puuid"]] = {
+            "KDA_": {                
+                "total": None,
+                "last20": None,
+            },
+            "avg_": {                
+                "deaths": None,
+                "cs@10": None,
+                "cs_per_min": None,
+                "gold_per_min": None,
+            },
+            "total_": {                
+                "dmg_done": None,
+                "towers_taken": None,
+                "gold": None,
+                "objectives": None,
+                "objective_steals": None,
+                "first_bloods": None,
+                "feats": None,
+            },
+            "traits_": {
+                "aggression": None,
+                "weakness": None,
+                "strength": None,
+            }
+        }
+        playerData = playerData[user["puuid"]]
+user["traits"] = [playerData["traits_"][key] for key in dict(playerData["traits_"]).keys()]
 
 # Parse LoL API Data
 def dataParse():
@@ -55,7 +90,7 @@ context = (
     # "The player is playing Miss Fortune against Xayah in the ADC Role. "
     # "At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. "
     # "Miss Fortune has 75 cs and Xayah has 57 cs. "
-    "Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. "
+    # "Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. "
     "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n"
 )
 
@@ -63,7 +98,8 @@ task = (
     "Identify the lane result, whether the player ended up behind, even, or ahead of the opposing laner at the 10 minute mark based on the player's gold, level, and KDA. "
     "Next identify the top 2-3 mistakes in the laning phase and explain how they affected the player's result at the 10 minute mark. "
     "Then provide 2 actionable coaching tips with clear timings or cues (e.g., 'At 3:15 when wave 3 crashes…'). "
-    "Provide a summary of the player's tendencies for lane aggression and play style. "
+    "Given this player's tendencies:\n"
+    f"{str(dict(playerData["traits_"]).keys())} give a one word label for each trait in the format of a json file. "
 )
 
 prompt = f"{base} {context} {task}"
