@@ -16,24 +16,19 @@ def set_user():
     
     # no sname or tag given in fetch
     if None == name or None == tag:
-        return make_response(jsonify({"message": False}))
+        return make_response(jsonify({"error": "invalid summoner name and/or tag"}))
+    
+    # make requests to LoL API 
+    puuid = lolapi_puuid(sname=request.cookies.get("sname"), tag=request.cookies.get("tag"))
 
     response = make_response(jsonify({"message": True}))
     response.set_cookie("sname", name, max_age=60*60*24)
     response.set_cookie("tag", tag, max_age=60*60*24)
+    response.set_cookie("puuid", puuid, max_age=60*60*24)
     return response
 
 @app.route("/set_user", methods=["POST"])
 def ai_coach():
-    # set up user object
-    user = {
-        "sname": request.cookies.get("sname"),
-        "tag": request.cookies.get("tag"),
-    }
-    
-    # make requests to LoL API 
-    user["puuid"] = lolapi_puuid(user)
-    
     # Bedrock Model Configs
     bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
     model_id = "arn:aws:bedrock:us-east-1:085366697379:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0"
@@ -104,16 +99,16 @@ def ai_coach():
 
 
 # LoL API Requests
-def lolapi_puuid(user: dict) -> str:
+def lolapi_puuid(sname: str, tag: str) -> str:
     # Player Info
-    api_request = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{user["sname"]}/{user["tag"]}&api_key={APIKEY_LOL}"
+    api_request = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{sname}/{tag}&api_key={APIKEY_LOL}"
     resp = requests.get(api_request)
     
     return resp.json()["puuid"]
 
 
-def lolapi_matches(user: dict) -> dict:
-    api_url_matches = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{user["puuid"]}/ids?start=0&count=20&api_key={APIKEY_LOL}"
+def lolapi_matches(puuid: str) -> dict:
+    api_url_matches = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=20&api_key={APIKEY_LOL}"
     resp = requests.get(api_url_matches)
     matchdata = resp.json()
     
@@ -121,7 +116,7 @@ def lolapi_matches(user: dict) -> dict:
     for i in range(0, 10):
         championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
 
-    playerindex = matchdata["metadata"]["participants"].indexOf(user["puuid"])
+    playerindex = matchdata["metadata"]["participants"].indexOf(puuid)
 
     player = matchdata["info"]["participants"][playerindex]
     opponent = matchdata["info"]["participants"][(playerindex + 5) % 2]
