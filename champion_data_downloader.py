@@ -28,14 +28,14 @@ class ChampionDataDownloader:
 
     def download_all_champions(self) -> None:
         """Download and save each champion’s data as a separate JSON file."""
-        print(f"🔍 Fetching champion list for version {self.version}...")
+        print(f"Fetching champion list for version {self.version}...")
 
         champion_list_url = f"{self.base_url}/champion.json"
         response = requests.get(champion_list_url)
         response.raise_for_status()
         champion_list = response.json()["data"]
 
-        print(f"📦 Found {len(champion_list)} champions. Starting download...")
+        print(f"Found {len(champion_list)} champions. Starting download...")
 
         for champ_name in champion_list:
             try:
@@ -52,12 +52,12 @@ class ChampionDataDownloader:
                 with open(file_path, "w", encoding="utf-8") as f:
                     json.dump(champ_data, f, ensure_ascii=False, indent=2)
 
-                print(f"✅ Saved: {file_path}")
+                print(f"Saved: {file_path}")
 
             except Exception as e:
-                print(f"⚠️ Failed to load {champ_name}: {e}")
+                print(f"Failed to load {champ_name}: {e}")
 
-        print(f"\n🎉 All champions saved to '{self.output_dir}/' for patch {self.version}")
+        print(f"\n All champions saved to '{self.output_dir}/' for patch {self.version}")
 
 
 if __name__ == "__main__":
