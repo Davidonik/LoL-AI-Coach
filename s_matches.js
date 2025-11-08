@@ -2,8 +2,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const matchList = document.getElementById("matchList");
   const loading = document.getElementById("loading");
 
+  const home = document.getElementById('home');
+
+  if (homeButton) {
+    home.addEventListener("click", function (){
+      window.location.href = 'index.html';
+      });
+  }
+
   try {
-    const response = await fetch("/api/get_matches");
+    const response = await fetch("http://127.0.0.1:5000/api/get_matches");
     const data = await response.json();
 
     if (response.ok && data.matches) {
@@ -14,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         card.innerHTML = `
           <h4>${m.champion}</h4>
           <p>K/D/A: ${m.kills}/${m.deaths}/${m.assists}</p>
+          <p>K/D/A: ${m.kda} KDA</p>
           <p>Duration: ${(m.gameDuration / 60).toFixed(1)} min</p>
           <p class="${m.win ? 'win' : 'loss'}">${m.win ? 'WIN' : 'LOSS'}</p>
         `;
