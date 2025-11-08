@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, make_response, redirect, url_for, ren
 from flask_cors import CORS
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-a24b298f-5f2e-4c8c-890c-5bc8cc010a2b"
+APIKEY_LOL = "RGAPI-2b6282c3-6b36-4869-b7b9-6e26fa4413f4"
 
 # Bedrock Model Configs
 BEDROCK = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
@@ -339,14 +339,16 @@ def get_stats(matchdata: dict) -> dict:
         csAt10 = participantdata["challenges"]["jungleCsBefore10Minutes"]
     else:
         csAt10 = participantdata["challenges"]["laneMinionsFirst10Minutes"]
-    csPerMinute = participantdata
+    totalcs = participantdata["totalAllyJungleMinionsKilled"] + participantdata["totalEnemyJungleMinionsKilled"] + participantdata["totalMinionsKilled"]
+    csPerMinute = totalcs / (matchdata["info"]["gameDuration"]//60)
 
     return {
         "kda": kda,
         "kills": kills,
         "assists": assists,
         "deaths": deaths,
-        "csAt10": csAt10
+        "csAt10": csAt10,
+        "csPerMinute": csPerMinute 
     }
 
 def get_last20(puuid: str) -> dict:
@@ -359,13 +361,15 @@ def get_last20(puuid: str) -> dict:
         assists += get_stats(get_matchdata(matchid))["assists"]
         deaths += get_stats(get_matchdata(matchid))["deaths"]
         csAt10 += get_stats(get_matchdata(matchid))["csAt10"]
+        csPerMinute += get_stats(get_matchdata(matchid))["csPerMinute"]
     
     return {
         "last20kda": kda,
         "last20kills": kills,
         "last20assists": assists,
         "last20deaths": deaths,
-        "last20csAt10": csAt10
+        "last20csAt10": csAt10,
+        "last20csPerMinute": csPerMinute
     }
 
 def get_playerData(puuid: str) -> dict:
@@ -397,7 +401,7 @@ def get_playerData(puuid: str) -> dict:
                 "assists": get_last20(puuid)["last20assists"],
                 "deaths": get_last20(puuid)["last20deaths"],
                 "cs@10": get_last20(puuid)["last20csAt10"],
-                "cs_per_min": None,
+                "cs_per_min": get_last20(puuid)["last20csPerMinute"],
                 "gold_per_min": None,
             },
             # total of reviewed matches
