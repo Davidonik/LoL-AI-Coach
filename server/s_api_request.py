@@ -385,8 +385,6 @@ def get_last20gamesstuff() -> list:
     for matchid in (lolapi_matches(request.cookies.get("puuid"))):
         last20matchstats.append(get_stats(get_matchdata(matchid)))
 
-    last20matchstats.append(get_stats(get_matchdata(matchid))["champused"])
-
     return last20matchstats
 
 def get_avg20() -> dict:
