@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, make_response, redirect, url_for, ren
 from flask_cors import CORS
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-4677eda2-db80-49d1-b629-8e9234350286"
+APIKEY_LOL = "RGAPI-a24b298f-5f2e-4c8c-890c-5bc8cc010a2b"
 
 #######################################################
 ###################### FLASH APP ######################
@@ -52,6 +52,8 @@ def ai_coach():
     bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
     model_id = "arn:aws:bedrock:us-east-1:085366697379:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0"
 
+    player_info = get_playerData(request.cookies.get("puuid"))
+    champion_data = get_champdata()
     game_data = lolapi_matches(request.cookies.get("puuid"))
 
     # AI Prompt Creation
@@ -67,8 +69,8 @@ def ai_coach():
 
     context = (
         f"""You are reviewing a player's recent ranked game. The following data is provided:\n
-        # player_info
-        # champion_data
+        # {player_info}
+        # {champion_data}
         # {game_data}
         # The player is playing Miss Fortune against Xayah in the ADC Role. 
         # At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold.
@@ -199,10 +201,6 @@ def parse_player_opponent(matchdata: dict, puuid: str):
     if None == matchdata or None == puuid:
         return None
 
-    # Champions for the specific match
-    for i in range(0, 10):
-        championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
-
     playerindex = matchdata["metadata"]["participants"].indexOf(puuid)
 
     player = matchdata["info"]["participants"][playerindex]
@@ -217,28 +215,34 @@ def parse_player_opponent(matchdata: dict, puuid: str):
 ####################### GET FUNCTIONS #######################
 #############################################################
 
-def get_champdata(championnames: list, folderpath="champions") -> dict:
+def get_champdata(folderpath="champions") -> dict:
     """_summary_
 
     Args:
-        championnames (list): lists of champion
         folderpath (str, optional): path to champion data dir. Defaults to "champions".
 
     Returns:
         dict: data on champions
     """
     championdata = {}
-    for championname in championnames:
+    matchdata = lolapi_matches(request.cookies.get("puuid"))
+
+    # Champions for the specific match
+    for i in range(0, 10):
+        championname = matchdata["info"]["participants"][i]["championName"]
         filename = f"{championname}.json"
         filepath = os.path.join(folderpath, filename)
 
-    try:
-        with open(filepath, "r", encoding="utf-8") as champdata:
-            championdata.append(json.load(champdata))
-    except FileNotFoundError:
-        championdata[championname] = {"error": f"{championname}.json not found"}
+        try:
+            with open(filepath, "r", encoding="utf-8") as champdata:
+                championdata[championname] = json.load(champdata)
+        except FileNotFoundError:
+            championdata[championname] = {"error": f"{championname}.json not found"}
 
     return championdata
+
+def get_kda():
+    raise NotImplemented
 
 def get_playerData(puuid: str) -> dict:
     """_summary_
