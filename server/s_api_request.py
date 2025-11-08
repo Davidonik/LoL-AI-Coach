@@ -104,7 +104,13 @@ def ai_traits():
     )
 
     aws_response_body = json.loads(aws_response["body"].read())
-    return aws_response_body
+    
+    response = make_response(jsonify({
+        "message": True,
+        "ai_response": aws_response_body["content"][0]["text"]
+    }))
+    
+    return response
 
 @app.route("/aws/ai_coach", methods=["POST"])
 def ai_coach():

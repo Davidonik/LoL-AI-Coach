@@ -18,7 +18,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/get_matches");
+    const response = await fetch("http://127.0.0.1:5000/api/get_matches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({})
+    });
     const data = await response.json();
 
     if (response.ok && data.matches) {
