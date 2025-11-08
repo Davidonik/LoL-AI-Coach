@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Recent Matches</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="{{ url_for('static', filename='s_matches.js') }}"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="../s_matches.js"></script>
+  <link rel="stylesheet" href="../styles.css">
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
 
@@ -14,9 +14,10 @@
     <button id="home" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Home</button>
     <button id="leaderboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Leaderboard</button>
   </div>
-
+  
   <div class="container">
     <div class="card">
+        <text>{{ ign | default('Guest', true) }}</text>
         <h2 class="font-mono text-4xl font-bold mb-6 ">Loading...</h2>
       <div id="matchList" class="match-list"></div>
     </div>

@@ -36,7 +36,8 @@ CORS(
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    ign = f"{request.cookies.get("sname", "")}#{request.cookies.get("tag", "")}"
+    return render_template("dashboard.html", ign=ign)
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
@@ -93,9 +94,8 @@ def ai_traits():
         accept="application/json"
     )
 
-    # The response body comes as a byte stream, so decode it:
     aws_response_body = json.loads(aws_response["body"].read())
-    return
+    return aws_response_body
 
 @app.route("/aws/ai_coach", methods=["POST"])
 def ai_coach():
