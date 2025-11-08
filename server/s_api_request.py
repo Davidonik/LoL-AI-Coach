@@ -45,7 +45,7 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
-    matches = get_20matches()
+    matches = get_last20gamesstuff()
     return render_template("dashboard.html", ign="hi", matches=matches)
 
 @app.route("/leaderboard")
