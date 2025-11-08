@@ -344,6 +344,8 @@ def get_stats(matchdata: dict) -> dict:
         csAt10 = participantdata["challenges"]["laneMinionsFirst10Minutes"]
     totalcs = participantdata["totalAllyJungleMinionsKilled"] + participantdata["totalEnemyJungleMinionsKilled"] + participantdata["totalMinionsKilled"]
     csPerMinute = totalcs / (matchdata["info"]["gameDuration"]//60)
+    goldperminute = participantdata["challenges"]["goldPerMinute"]
+    goldearned = participantdata
 
     return {
         "kda": kda,
@@ -351,7 +353,8 @@ def get_stats(matchdata: dict) -> dict:
         "assists": assists,
         "deaths": deaths,
         "csAt10": csAt10,
-        "csPerMinute": csPerMinute 
+        "csPerMinute": csPerMinute ,
+        "goldperminute": goldperminute
     }
 
 def get_last20(puuid: str) -> dict:
@@ -365,6 +368,7 @@ def get_last20(puuid: str) -> dict:
         deaths += get_stats(get_matchdata(matchid))["deaths"]
         csAt10 += get_stats(get_matchdata(matchid))["csAt10"]
         csPerMinute += get_stats(get_matchdata(matchid))["csPerMinute"]
+        goldperminute += get_stats(get_matchdata(matchid))["goldperminute"]
     
     return {
         "last20kda": kda,
@@ -372,7 +376,8 @@ def get_last20(puuid: str) -> dict:
         "last20assists": assists,
         "last20deaths": deaths,
         "last20csAt10": csAt10,
-        "last20csPerMinute": csPerMinute
+        "last20csPerMinute": csPerMinute,
+        "last20goldperminute": goldperminute
     }
 
 def get_playerData(puuid: str) -> dict:
@@ -405,7 +410,7 @@ def get_playerData(puuid: str) -> dict:
                 "deaths": get_last20(puuid)["last20deaths"],
                 "cs@10": get_last20(puuid)["last20csAt10"],
                 "cs_per_min": get_last20(puuid)["last20csPerMinute"],
-                "gold_per_min": None,
+                "gold_per_min": get_last20(puuid)["last20goldperminute"],
             },
             # total of reviewed matches
             "total_": {
