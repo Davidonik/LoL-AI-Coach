@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (leaderboard){
     leaderboard.addEventListener("click", () => {
-    window.location.href = 'templates/leaderboard.html';
+    window.location.href = '/templates/leaderboard.html';
     });
   }
 

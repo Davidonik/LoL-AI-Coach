@@ -41,7 +41,7 @@ CORS(
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("leaderboard.html")
 
 @app.route("/dashboard")
 def dashboard():
