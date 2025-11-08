@@ -327,7 +327,8 @@ def get_kda(matchdata: dict) -> dict:
     """
     participantindex = get_participant_index(matchdata, request.cookies.get("puuid"))
     participantdata = matchdata["info"]["participants"][participantindex]
-    kda, kills, deaths, assists = participantdata["challenges"]["kda"], participantdata["kills"], participantdata["deaths"], participantdata["assists"]
+    kills, deaths, assists = participantdata["kills"], participantdata["deaths"], participantdata["assists"]
+    kda = round((kills+assists) / deaths, 2)
 
     return {
         "kda": kda,
@@ -348,19 +349,21 @@ def get_playerData(puuid: str) -> dict:
     # json load (placeholder fo AWS DynamoDB API requests)
     with open("./playerData/playerData.json", "r") as file:
         playerData = json.load(file)
+        last20kda = 0.00
         
         # player data already exists in sheet
         if puuid in playerData:
             return playerData[puuid]
         
+        # player kda for the most recent 20 matches
         for matchid in (lolapi_matches(puuid)):
-            get_matchdata(matchid)
+            last20kda += get_kda(get_matchdata(matchid))["kda"]
         
         # player data needs to be initialized in sheet
         return {
             "KDA_": {
                 "kda": None,
-                "last20": None
+                "last20": last20kda
             },
             "avg_": {
                 "deaths": None,
