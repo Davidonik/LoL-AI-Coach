@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, make_response, redirect, url_for, ren
 from flask_cors import CORS
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-4677eda2-db80-49d1-b629-8e9234350286"
+APIKEY_LOL = "RGAPI-a24b298f-5f2e-4c8c-890c-5bc8cc010a2b"
 
 #######################################################
 ###################### FLASH APP ######################
@@ -240,6 +240,9 @@ def get_champdata(folderpath="champions") -> dict:
             championdata[championname] = {"error": f"{championname}.json not found"}
 
     return championdata
+
+def get_kda():
+
 
 def get_playerData(puuid: str) -> dict:
     """_summary_
