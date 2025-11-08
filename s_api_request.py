@@ -52,6 +52,8 @@ def ai_coach():
     bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
     model_id = "arn:aws:bedrock:us-east-1:085366697379:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0"
 
+    game_data = lolapi_matches(request.cookies.get("puuid"))
+
     # AI Prompt Creation
     base = (
         "You are a Challenger-ranked League of Legends coach with over 10 years of competitive and analytical experience. " 
@@ -64,15 +66,16 @@ def ai_coach():
     )
 
     context = (
-        "You are reviewing a player's recent ranked game. The following data is provided:\n"
-        # "{player_info}"
-        # "{champion_data}"
-        # "{game_data}"
-        # "The player is playing Miss Fortune against Xayah in the ADC Role. "
-        # "At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. "
-        # "Miss Fortune has 75 cs and Xayah has 57 cs. "
-        # "Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. "
-        "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n"
+        f"""You are reviewing a player's recent ranked game. The following data is provided:\n
+        # player_info
+        # champion_data
+        # {game_data}
+        # The player is playing Miss Fortune against Xayah in the ADC Role. 
+        # At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold.
+        # Miss Fortune has 75 cs and Xayah has 57 cs. "
+        # Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA.
+        "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
+        """
     )
 
     task = (
