@@ -49,32 +49,4 @@ button {
   color: #ef4444;
   font-weight: bold;
 }
-/* Typing effect */
-.typing {
-  font-family: 'Courier New', monospace; /* Ensure monospace font */
-  width: 9ch; /* Adjusted for "Loading..." text */
-  animation: typing 3s steps(9), blink 0.5s step-end infinite alternate;
-  white-space: nowrap;
-  overflow: hidden;
-  border-right: 3px solid;
-  font-size: 2em;
-}
 
-/* Typing animation */
-@keyframes typing {
-  from { width: 0; }
-  to { width: 9ch; } /* Ensure the animation finishes with the full text */
-}
-
-/* Cursor blink animation */
-@keyframes blink {
-  50% { border-color: transparent; }
-}
-
-/* Center the text vertically and horizontally */
-.centered {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* Full viewport height */
-}

@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const tag = document.getElementById("tag").value.trim();
 
     try {
-      // Send the data to Flask as JSON
-      const response = await fetch("http://127.0.0.1:5000/set_user", {
+      // Send the fetch request to Flask server to set up user
+      const response = await fetch("http://127.0.0.1:5000/api/set_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -20,20 +20,20 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       });
 
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+
       // Parse the response from Flask
       const data = await response.json();
 
-      console.log(data)
+      // console.log(data)
+      // console.log("Server Response:", data);
 
-      if (response.ok && data.message) {
-        setTimeout(() => {
-          window.location.href = "matches.html";
-        }, 800);
-      } else {
+      if (data.error) {
         status.innerText = data.error;
       }
-
-      console.log("Server Response:", data);
 
     } catch (error) {
       console.error("Error during fetch:", error);
