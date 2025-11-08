@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("setUserBtn");
   const status = document.getElementById("status");
-  const home = document.getElementById('home');
-
 
   button.addEventListener("click", async () => {
     const sname = document.getElementById("sname").value.trim();
