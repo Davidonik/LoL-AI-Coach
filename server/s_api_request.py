@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, make_response, redirect, url_for, ren
 from flask_cors import CORS
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-a24b298f-5f2e-4c8c-890c-5bc8cc010a2b"
+APIKEY_LOL = "RGAPI-2b6282c3-6b36-4869-b7b9-6e26fa4413f4"
 
 # Bedrock Model Configs
 BEDROCK = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
@@ -197,7 +197,10 @@ def lolapi_puuid(sname: str, tag: str) -> str:
     api_request = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{sname}/{tag}?api_key={APIKEY_LOL}"
     resp = requests.get(api_request)
     
+    print("hi")
+    
     if resp.status_code != 200:
+        print("hi")
         return None
     
     return resp.json()["puuid"]
@@ -322,25 +325,54 @@ def get_participant_index(matchdata: dict, puuid: str) -> int | None:
     return None
 
 
-def get_kda(matchdata: dict) -> dict:
+def get_stats(matchdata: dict) -> dict:
     """_summary_
 
     Args:
         matchdata (dict): match data of the chosen match.
 
     Returns:
-        dict: returns the kda, kills, deaths, assists
+        dict: returns the stats of the player
     """
     participantindex = get_participant_index(matchdata, request.cookies.get("puuid"))
     participantdata = matchdata["info"]["participants"][participantindex]
     kills, deaths, assists = participantdata["kills"], participantdata["deaths"], participantdata["assists"]
     kda = round((kills+assists) / deaths, 2)
+    if participantdata["teamPosition"] == "JUNGLE":
+        csAt10 = participantdata["challenges"]["jungleCsBefore10Minutes"]
+    else:
+        csAt10 = participantdata["challenges"]["laneMinionsFirst10Minutes"]
+    totalcs = participantdata["totalAllyJungleMinionsKilled"] + participantdata["totalEnemyJungleMinionsKilled"] + participantdata["totalMinionsKilled"]
+    csPerMinute = totalcs / (matchdata["info"]["gameDuration"]//60)
 
     return {
         "kda": kda,
         "kills": kills,
+        "assists": assists,
         "deaths": deaths,
-        "assists": assists
+        "csAt10": csAt10,
+        "csPerMinute": csPerMinute 
+    }
+
+def get_last20(puuid: str) -> dict:
+    kda, kills, deaths, assists, csAt10 = 0.00, 0, 0, 0, 0
+
+    # player kda for the most recent 20 matches
+    for matchid in (lolapi_matches(puuid)):
+        kda += get_stats(get_matchdata(matchid))["kda"]
+        kills += get_stats(get_matchdata(matchid))["kills"]
+        assists += get_stats(get_matchdata(matchid))["assists"]
+        deaths += get_stats(get_matchdata(matchid))["deaths"]
+        csAt10 += get_stats(get_matchdata(matchid))["csAt10"]
+        csPerMinute += get_stats(get_matchdata(matchid))["csPerMinute"]
+    
+    return {
+        "last20kda": kda,
+        "last20kills": kills,
+        "last20assists": assists,
+        "last20deaths": deaths,
+        "last20csAt10": csAt10,
+        "last20csPerMinute": csPerMinute
     }
 
 def get_playerData(puuid: str) -> dict:
@@ -355,28 +387,27 @@ def get_playerData(puuid: str) -> dict:
     # json load (placeholder fo AWS DynamoDB API requests)
     with open("./playerData/playerData.json", "r") as file:
         playerData = json.load(file)
-        last20kda = 0.00
         
         # player data already exists in sheet
         if puuid in playerData:
             return playerData[puuid]
         
-        # player kda for the most recent 20 matches
-        for matchid in (lolapi_matches(puuid)):
-            last20kda += get_kda(get_matchdata(matchid))["kda"]
-        
         # player data needs to be initialized in sheet
         return {
             "KDA_": {
-                "kda": None,
-                "last20": last20kda
+                "total_kda_reviewed": None,
+                "last20": get_last20(puuid)["last20kda"]
             },
+            # last 20 matches
             "avg_": {
-                "deaths": None,
-                "cs@10": None,
-                "cs_per_min": None,
+                "kills": get_last20(puuid)["last20kills"],
+                "assists": get_last20(puuid)["last20assists"],
+                "deaths": get_last20(puuid)["last20deaths"],
+                "cs@10": get_last20(puuid)["last20csAt10"],
+                "cs_per_min": get_last20(puuid)["last20csPerMinute"],
                 "gold_per_min": None,
             },
+            # total of reviewed matches
             "total_": {
                 "dmg_done": None,
                 "towers_taken": None,
