@@ -2,6 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("setUserBtn");
   const status = document.getElementById("status");
 
+  const leaderboard = document.getElementById('leaderboard');
+
+  if (leaderboard){
+    leaderboard.addEventListener("click", () => {
+    window.location.href = '../leaderboard.html';
+    });
+  }
+
   button.addEventListener("click", async () => {
     const sname = document.getElementById("sname").value.trim();
     const tag = document.getElementById("tag").value.trim();

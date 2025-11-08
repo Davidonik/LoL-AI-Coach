@@ -3,10 +3,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loading = document.getElementById("loading");
 
   const home = document.getElementById('home');
+  const leaderboard = document.getElementById('leaderboard');
 
   if (home){
     home.addEventListener("click", () => {
-    window.location.href = 'index.html';
+    window.location.href = '../index.html';
+    });
+  }
+
+  if (leaderboard){
+    leaderboard.addEventListener("click", () => {
+    window.location.href = '../leaderboard.html';
     });
   }
 
