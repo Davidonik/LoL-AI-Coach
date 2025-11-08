@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const matchList = document.getElementById("matchList");
   const loading = document.getElementById("loading");
+  const test2_button = document.getElementById("test2");
 
   const home = document.getElementById('home');
   const leaderboard = document.getElementById('leaderboard');
@@ -16,6 +17,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = "http://127.0.0.1:5000/leaderboard";
     });
   }
+
+  test2_button.addEventListener("click", async () => {
+    const response = await fetch("http://127.0.0.1:5000/aws/ai_coach", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({})
+    })
+    const data = await response.json();
+
+    if (response.ok && response.ai_response) {
+      console.log(response.ai_response);
+    }
+  })
 
   try {
     const response = await fetch("http://127.0.0.1:5000/api/get_matches", {
