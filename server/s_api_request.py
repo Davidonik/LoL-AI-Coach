@@ -291,16 +291,32 @@ def get_matchdata(matchid: str) -> dict:
 
     return matchdata
 
-def get_kda(matchdata: dict, participantindex: int) -> dict:
+def get_participant_index(matchdata: dict, puuid: str) -> int | None:
     """_summary_
 
     Args:
         matchdata (dict): match data of the chosen match.
-        participantindex (int): position of the participant data in matchdata
+        puuid (str): player's id for query
+
+    Returns:
+        dict: Returns the participant index (0 to 9) for a given player's PUUID.
+    """
+    for i, p in enumerate(matchdata["info"]["participants"]):
+        if p["puuid"] == puuid:
+            return i
+    return None
+
+
+def get_kda(matchdata: dict) -> dict:
+    """_summary_
+
+    Args:
+        matchdata (dict): match data of the chosen match.
 
     Returns:
         dict: returns the kda, kills, deaths, assists
     """
+    participantindex = get_participant_index(matchdata, request.cookies.get("puuid"))
     participantdata = matchdata["info"]["participants"][participantindex]
     kda, kills, deaths, assists = participantdata["challenges"]["kda"], participantdata["kills"], participantdata["deaths"], participantdata["assists"]
 
@@ -310,7 +326,6 @@ def get_kda(matchdata: dict, participantindex: int) -> dict:
         "deaths": deaths,
         "assists": assists
     }
-
 
 def get_playerData(puuid: str) -> dict:
     """_summary_
@@ -328,6 +343,9 @@ def get_playerData(puuid: str) -> dict:
         # player data already exists in sheet
         if puuid in playerData:
             return playerData[puuid]
+        
+        for matchid in (lolapi_matches(puuid)):
+            get_matchdata(matchid)
         
         # player data needs to be initialized in sheet
         return {
