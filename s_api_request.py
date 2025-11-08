@@ -8,6 +8,10 @@ from flask_cors import CORS
 # API Key for LoL
 APIKEY_LOL = "RGAPI-4677eda2-db80-49d1-b629-8e9234350286"
 
+#######################################################
+###################### FLASH APP ######################
+#######################################################
+
 app = Flask(__name__)
 CORS(
     app,
@@ -114,7 +118,10 @@ def getLast20Matches():
     return lolapi_matches(puuid)
 
 
-# LoL API Requests
+##############################################################
+###################### LoL API REQUESTS ######################
+##############################################################
+
 def lolapi_puuid(sname: str, tag: str) -> str:
     """_summary_
 
@@ -154,7 +161,10 @@ def lolapi_matches(puuid: str) -> dict:
     matchdata = resp.json()
     return matchdata
 
-# parser functions
+##############################################################
+###################### PARSER FUNCTIONS ######################
+##############################################################
+
 def parse_traits(playerData: dict) -> list:
     """_summary_
 
@@ -166,7 +176,38 @@ def parse_traits(playerData: dict) -> list:
     """
     return [(key, playerData["traits_"][key]) for key in dict(playerData["traits_"]).keys()]
 
-# other GET functions
+def parse_player_opponent(matchdata: dict, puuid: str):
+    """_summary_
+
+    Args:
+        matchdata (dict): data of matches 
+        puuid (str): player's PUUID
+
+    Returns:
+        dict: player -> player's match data, opponent -> lane opponent's match data
+        None: errors return None
+    """
+    if None == matchdata or None == puuid:
+        return None
+
+    # Champions for the specific match
+    for i in range(0, 10):
+        championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
+
+    playerindex = matchdata["metadata"]["participants"].indexOf(puuid)
+
+    player = matchdata["info"]["participants"][playerindex]
+    opponent = matchdata["info"]["participants"][(playerindex + 5) % 2]
+    
+    return {
+        "player": player,
+        "opponent": opponent,
+    }
+
+#############################################################
+####################### GET FUNCTIONS #######################
+#############################################################
+
 def get_champdata(championnames: list, folderpath="champions") -> dict:
     """_summary_
 
@@ -234,30 +275,3 @@ def get_playerData(puuid: str) -> dict:
                 "strength": None,
             }
         }
-def player_opponent(matchdata: dict, puuid: str):
-    """_summary_
-
-    Args:
-        matchdata (dict): data of matches 
-        puuid (str): player's PUUID
-
-    Returns:
-        dict: player -> player's match data, opponent -> lane opponent's match data
-        None: errors return None
-    """
-    if None == matchdata or None == puuid:
-        return None
-
-    # Champions for the specific match
-    for i in range(0, 10):
-        championsinmatch = championsinmatch.append(matchdata["info"]["participants"][i]["championName"])
-
-    playerindex = matchdata["metadata"]["participants"].indexOf(puuid)
-
-    player = matchdata["info"]["participants"][playerindex]
-    opponent = matchdata["info"]["participants"][(playerindex + 5) % 2]
-    
-    return {
-        "player": player,
-        "opponent": opponent,
-    }
