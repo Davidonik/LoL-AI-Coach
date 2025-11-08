@@ -7,18 +7,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (home){
     home.addEventListener("click", () => {
-    window.location.href = '../index.html';
+    window.location.href = 'static/s_matches.js/index.html';
     });
   }
 
   if (leaderboard){
     leaderboard.addEventListener("click", () => {
-    window.location.href = '../leaderboard.html';
+    window.location.href = 'static/s_matches.js/leaderboard.html';
     });
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/get_matches");
+    const response = await fetch("http://127.0.0.1:5000/api/get_matches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({})
+    });
     const data = await response.json();
 
     if (response.ok && data.matches) {

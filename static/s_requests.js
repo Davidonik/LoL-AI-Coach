@@ -9,8 +9,7 @@ window.onload = () => {
         headers: {
           "Content-Type": "application/json"
         },
-        credentials: "include",
-        body: JSON.stringify({})
+        credentials: "include"
       });
 
       // Parse the response from Flask
