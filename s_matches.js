@@ -4,10 +4,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const home = document.getElementById('home');
 
-  if (homeButton) {
-    home.addEventListener("click", function (){
-      window.location.href = 'index.html';
-      });
+  if (home){
+    home.addEventListener("click", () => {
+    window.location.href = 'index.html';
+    });
   }
 
   try {

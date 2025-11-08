@@ -3,11 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const status = document.getElementById("status");
   const home = document.getElementById('home');
 
-  if (homeButton) {
-    home.addEventListener("click", function (){
-      window.location.href = 'index.html';
-      });
-  }
 
   button.addEventListener("click", async () => {
     const sname = document.getElementById("sname").value.trim();
@@ -47,4 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
       status.innerText = "Network error, please try again.";
     }
   });
+
+  if (homeButton) {
+    home.addEventListener("click", async () => {
+      window.location.href = 'index.html';
+      });
+  }
 });
