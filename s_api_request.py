@@ -54,7 +54,7 @@ def ai_coach():
 
     player_info = get_playerData(request.cookies.get("puuid"))
     champion_data = get_champdata()
-    game_data = lolapi_matches(request.cookies.get("puuid"))
+    game_data = get_matchdata()
 
     # AI Prompt Creation
     base = (
@@ -169,8 +169,8 @@ def lolapi_matches(puuid: str) -> dict:
     if resp.status_code != 200:
         return None
     
-    matchdata = resp.json()
-    return matchdata
+    first20matches = resp.json()
+    return first20matches
 
 ##############################################################
 ###################### PARSER FUNCTIONS ######################
@@ -241,7 +241,14 @@ def get_champdata(folderpath="champions") -> dict:
 
     return championdata
 
+def get_matchdata(matchid: dict):
+    api_url_match = f"https://americas.api.riotgames.com/lol/match/v5/matches/{matchid}?api_key={APIKEY_LOL}"
+    resp = requests.get(api_url_match)
+
+    return resp.json()
+
 def get_kda():
+    pass
 
 
 def get_playerData(puuid: str) -> dict:
@@ -263,16 +270,15 @@ def get_playerData(puuid: str) -> dict:
         
         # player data needs to be initialized in sheet
         return {
-            "KDA_": {
-                "total": None,
-                "last20": None,
-            },
+            # last 20 games
+            "KDA_": None,
             "avg_": {
                 "deaths": None,
                 "cs@10": None,
                 "cs_per_min": None,
                 "gold_per_min": None,
             },
+            # last 20 games
             "total_": {
                 "dmg_done": None,
                 "towers_taken": None,
