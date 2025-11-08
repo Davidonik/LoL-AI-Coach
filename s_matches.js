@@ -3,11 +3,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loading = document.getElementById("loading");
 
   const home = document.getElementById('home');
+  const leaderboard = document.getElementById('leaderboard');
 
-  if (homeButton) {
-    home.addEventListener("click", function (){
-      window.location.href = 'index.html';
-      });
+  if (home){
+    home.addEventListener("click", () => {
+    window.location.href = '../index.html';
+    });
+  }
+
+  if (leaderboard){
+    leaderboard.addEventListener("click", () => {
+    window.location.href = '../leaderboard.html';
+    });
   }
 
   try {

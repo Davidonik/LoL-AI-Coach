@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("setUserBtn");
   const status = document.getElementById("status");
-  const home = document.getElementById('home');
 
-  if (homeButton) {
-    home.addEventListener("click", function (){
-      window.location.href = 'index.html';
-      });
+  const leaderboard = document.getElementById('leaderboard');
+
+  if (leaderboard){
+    leaderboard.addEventListener("click", () => {
+    window.location.href = '../leaderboard.html';
+    });
   }
 
   button.addEventListener("click", async () => {
@@ -47,4 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
       status.innerText = "Network error, please try again.";
     }
   });
+
+  if (homeButton) {
+    home.addEventListener("click", async () => {
+      window.location.href = 'index.html';
+      });
+  }
 });
