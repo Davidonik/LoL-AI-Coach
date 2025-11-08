@@ -2,7 +2,7 @@ import json
 import boto3
 import requests
 import os
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, redirect, url_for, render_template
 from flask_cors import CORS
 
 # API Key for LoL
@@ -34,13 +34,19 @@ def set_user():
     if None == puuid:
         return make_response(jsonify({"error": f"summoner not found"}))
 
-    response = make_response(jsonify({"message": True}))
+    # Create a redirect response (to some route, e.g. /dashboard)
+    response = make_response(redirect(url_for("dashboard")))
+    
     response.set_cookie("sname", sname, max_age=60*60*24)
     response.set_cookie("tag", tag, max_age=60*60*24)
     response.set_cookie("puuid", puuid, max_age=60*60*24)
     return response
 
-@app.route("/set_user", methods=["POST"])
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
+@app.route("/ai_coach", methods=["POST"])
 def ai_coach():
     # Bedrock Model Configs
     bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")

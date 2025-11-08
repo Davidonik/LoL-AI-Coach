@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok && data.message) {
         setTimeout(() => {
-                window.location.href = "matches.html";
-            }, 800);
+          window.location.href = "matches.html";
+        }, 800);
       } else {
         status.innerText = data.error;
       }
