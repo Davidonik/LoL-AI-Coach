@@ -197,7 +197,10 @@ def lolapi_puuid(sname: str, tag: str) -> str:
     api_request = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{sname}/{tag}?api_key={APIKEY_LOL}"
     resp = requests.get(api_request)
     
+    print("hi")
+    
     if resp.status_code != 200:
+        print("hi")
         return None
     
     return resp.json()["puuid"]
