@@ -19,7 +19,11 @@ CORS(
     origins=["http://127.0.0.1:5500", "http://localhost:5500"]
 )
 
-@app.route("/set_user", methods=["POST"])
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
+@app.route("/api/set_user", methods=["POST"])
 def set_user():
     data = request.get_json()
     sname = data.get("sname", None)
@@ -42,11 +46,7 @@ def set_user():
     response.set_cookie("puuid", puuid, max_age=60*60*24)
     return response
 
-@app.route("/dashboard")
-def dashboard():
-    return render_template("dashboard.html")
-
-@app.route("/ai_coach", methods=["POST"])
+@app.route("/aws/ai_coach", methods=["POST"])
 def ai_coach():
     # Bedrock Model Configs
     bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
@@ -119,7 +119,7 @@ def ai_coach():
     
     return response
 
-@app.route("/set_user", methods=["POST"])
+@app.route("/api/get_matches", methods=["POST"])
 def getLast20Matches():
     puuid = request.cookies.get("puuid", None)
     if None == puuid:
