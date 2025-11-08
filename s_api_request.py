@@ -8,6 +8,21 @@ from flask_cors import CORS
 # API Key for LoL
 APIKEY_LOL = "RGAPI-a24b298f-5f2e-4c8c-890c-5bc8cc010a2b"
 
+# Bedrock Model Configs
+BEDROCK = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
+MODEL_ID = "arn:aws:bedrock:us-east-1:085366697379:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0"
+
+# AI Prompt Bases
+BASE = (
+    "You are a Challenger-ranked League of Legends coach with over 10 years of competitive and analytical experience. " 
+    "Your tone is confident, encouraging, and professional — like a high-ELO coach reviewing a player's match history. " 
+    "You focus on actionable, measurable advice with in-game reasoning (timing, wave control, map awareness, etc.). " 
+    "Use game-specific vocabulary correctly (e.g., roam timings, CS@10, lane priority, objective control, tempo, macro). " 
+    "Avoid fluff or generic comments. Always explain why each issue matters in terms of win conditions and map state." 
+    "When data is unclear, infer gently — never guess random numbers. " 
+    "Keep answers concise and structured. "
+)
+
 #######################################################
 ###################### FLASH APP ######################
 #######################################################
@@ -46,27 +61,49 @@ def set_user():
     response.set_cookie("puuid", puuid, max_age=60*60*24)
     return response
 
-@app.route("/aws/ai_coach", methods=["POST"])
-def ai_coach():
-    # Bedrock Model Configs
-    bedrock = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
-    model_id = "arn:aws:bedrock:us-east-1:085366697379:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0"
-
-    player_info = get_playerData(request.cookies.get("puuid"))
-    champion_data = get_champdata()
-    game_data = lolapi_matches(request.cookies.get("puuid"))
-
+@app.route("/aws/ai_traits", methods=["POST"])
+def ai_traits():
+    # Get stats for player
+    playerData = get_playerData(request.cookies.get("puuid", None))
+    traits = playerData["traits_"].keys()
+    del playerData["traits_"]
+    
     # AI Prompt Creation
-    base = (
-        "You are a Challenger-ranked League of Legends coach with over 10 years of competitive and analytical experience. " 
-        "Your tone is confident, encouraging, and professional — like a high-ELO coach reviewing a player's match history. " 
-        "You focus on actionable, measurable advice with in-game reasoning (timing, wave control, map awareness, etc.). " 
-        "Use game-specific vocabulary correctly (e.g., roam timings, CS@10, lane priority, objective control, tempo, macro). " 
-        "Avoid fluff or generic comments. Always explain why each issue matters in terms of win conditions and map state." 
-        "When data is unclear, infer gently — never guess random numbers. " 
-        "Keep answers concise and structured. "
+    prompt = (
+        f"{BASE} The following is your student's statistics from past reviews in json format:\n"
+        f"{str(playerData)}\n"
+        "Summarize the player into traits by making in a json object using the follow keys:\n"
+        f"{str(traits)}"
+    )
+    
+    # AWS Request Structure
+    body = {
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "max_tokens": 1000,
+        "anthropic_version": "bedrock-2023-05-31",
+    }
+
+    # Send the request to AWS Bedrock
+    aws_response = BEDROCK.invoke_model(
+        modelId=MODEL_ID,
+        body=json.dumps(body),
+        contentType="application/json",
+        accept="application/json"
     )
 
+    # The response body comes as a byte stream, so decode it:
+    aws_response_body = json.loads(aws_response["body"].read())
+    return
+
+@app.route("/aws/ai_coach", methods=["POST"])
+def ai_coach():
+    player_info = get_playerData(request.cookies.get("puuid"))
+    champion_data = get_champdata()
+    game_data = get_matchdata()
+
+    # AI Prompt Creation
     context = (
         f"""You are reviewing a player's recent ranked game. The following data is provided:\n
         # {player_info}
@@ -84,11 +121,9 @@ def ai_coach():
         "Identify the lane result, whether the player ended up behind, even, or ahead of the opposing laner at the 10 minute mark based on the player's gold, level, and KDA. "
         "Next identify the top 2-3 mistakes in the laning phase and explain how they affected the player's result at the 10 minute mark. "
         "Then provide 2 actionable coaching tips with clear timings or cues (e.g., 'At 3:15 when wave 3 crashes…'). "
-        # "Given this player's tendencies:\n"
-        # f"{str(playerData["traits_"].keys())} give a one word label for each trait in the format of a json file. "
     )
 
-    prompt = f"{base} {context} {task}"
+    prompt = f"{BASE} {context} {task}"
     # print(prompt)
 
     # AWS Request Structure
@@ -101,8 +136,8 @@ def ai_coach():
     }
 
     # Send the request to AWS Bedrock
-    aws_response = bedrock.invoke_model(
-        modelId=model_id,
+    aws_response = BEDROCK.invoke_model(
+        modelId=MODEL_ID,
         body=json.dumps(body),
         contentType="application/json",
         accept="application/json"
@@ -169,8 +204,8 @@ def lolapi_matches(puuid: str) -> dict:
     if resp.status_code != 200:
         return None
     
-    matchdata = resp.json()
-    return matchdata
+    first20matches = resp.json()
+    return first20matches
 
 ##############################################################
 ###################### PARSER FUNCTIONS ######################
@@ -241,7 +276,15 @@ def get_champdata(folderpath="champions") -> dict:
 
     return championdata
 
+def get_matchdata(matchid: dict):
+    api_url_match = f"https://americas.api.riotgames.com/lol/match/v5/matches/{matchid}?api_key={APIKEY_LOL}"
+    resp = requests.get(api_url_match)
+
+    return resp.json()
+
 def get_kda():
+    pass
+
     raise NotImplemented
 
 def get_playerData(puuid: str) -> dict:
@@ -263,16 +306,15 @@ def get_playerData(puuid: str) -> dict:
         
         # player data needs to be initialized in sheet
         return {
-            "KDA_": {
-                "total": None,
-                "last20": None,
-            },
+            # last 20 games
+            "KDA_": None,
             "avg_": {
                 "deaths": None,
                 "cs@10": None,
                 "cs_per_min": None,
                 "gold_per_min": None,
             },
+            # last 20 games
             "total_": {
                 "dmg_done": None,
                 "towers_taken": None,
