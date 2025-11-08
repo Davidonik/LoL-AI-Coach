@@ -82,7 +82,7 @@ def ai_traits():
     prompt = (
         f"{BASE} The following is your student's statistics from past reviews in json format:\n"
         f"{str(playerData)}\n"
-        "Summarize the player into traits by making in a json object using the follow keys:\n"
+        "Summarize the player into traits by making in a json object using the follow keys, keep the values to be one word:\n"
         f"{str(traits)}"
     )
     
