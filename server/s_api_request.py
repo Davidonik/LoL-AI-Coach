@@ -27,12 +27,21 @@ BASE = (
 ###################### FLASH APP ######################
 #######################################################
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder="../templates",
+    static_folder="../static"
+)
+
 CORS(
     app,
     supports_credentials=True,
     origins=["http://127.0.0.1:5500", "http://localhost:5500"]
 )
+
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 @app.route("/dashboard")
 def dashboard():
