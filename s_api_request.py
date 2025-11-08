@@ -101,7 +101,7 @@ def ai_traits():
 def ai_coach():
     player_info = get_playerData(request.cookies.get("puuid"))
     champion_data = get_champdata()
-    game_data = get_matchdata()
+    game_data = get_matchdata() #TODO fetch the matchid after button is made for it
 
     # AI Prompt Creation
     context = (
@@ -276,16 +276,41 @@ def get_champdata(folderpath="champions") -> dict:
 
     return championdata
 
-def get_matchdata(matchid: dict):
+def get_matchdata(matchid: str) -> dict:
+    """_summary_
+
+    Args:
+        matchid (str): match id of the chosen match.
+
+    Returns:
+        dict: data on the match
+    """
     api_url_match = f"https://americas.api.riotgames.com/lol/match/v5/matches/{matchid}?api_key={APIKEY_LOL}"
     resp = requests.get(api_url_match)
+    matchdata = resp.json()
 
-    return resp.json()
+    return matchdata
 
-def get_kda():
-    pass
+def get_kda(matchdata: dict, participantindex: int) -> dict:
+    """_summary_
 
-    raise NotImplemented
+    Args:
+        matchdata (dict): match data of the chosen match.
+        participantindex (int): position of the participant data in matchdata
+
+    Returns:
+        dict: returns the kda, kills, deaths, assists
+    """
+    participantdata = matchdata["info"]["participants"][participantindex]
+    kda, kills, deaths, assists = participantdata["challenges"]["kda"], participantdata["kills"], participantdata["deaths"], participantdata["assists"]
+
+    return {
+        "kda": kda,
+        "kills": kills,
+        "deaths": deaths,
+        "assists": assists
+    }
+
 
 def get_playerData(puuid: str) -> dict:
     """_summary_
@@ -306,15 +331,16 @@ def get_playerData(puuid: str) -> dict:
         
         # player data needs to be initialized in sheet
         return {
-            # last 20 games
-            "KDA_": None,
+            "KDA_": {
+                "kda": None,
+                "last20": None
+            },
             "avg_": {
                 "deaths": None,
                 "cs@10": None,
                 "cs_per_min": None,
                 "gold_per_min": None,
             },
-            # last 20 games
             "total_": {
                 "dmg_done": None,
                 "towers_taken": None,
