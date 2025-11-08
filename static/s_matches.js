@@ -7,13 +7,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (home){
     home.addEventListener("click", () => {
-    window.location.href = 'static/s_matches.js/index.html';
+      window.location.href = "http://127.0.0.1:5000/home";
     });
   }
 
   if (leaderboard){
     leaderboard.addEventListener("click", () => {
-    window.location.href = 'static/s_matches.js/leaderboard.html';
+      window.location.href = "http://127.0.0.1:5000/leaderboard";
     });
   }
 

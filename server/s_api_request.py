@@ -45,8 +45,15 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
-    ign = f"{request.cookies.get("sname", "")}#{request.cookies.get("tag", "")}"
-    return render_template("dashboard.html", ign=ign)
+    return render_template("dashboard.html")
+
+@app.route("/leaderboard")
+def leaderboard():
+    return render_template("leaderboard.html")
+
+@app.route("/review")
+def review():
+    return render_template("review.html")
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
@@ -197,10 +204,7 @@ def lolapi_puuid(sname: str, tag: str) -> str:
     api_request = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{sname}/{tag}?api_key={APIKEY_LOL}"
     resp = requests.get(api_request)
     
-    print("hi")
-    
     if resp.status_code != 200:
-        print("hi")
         return None
     
     return resp.json()["puuid"]
