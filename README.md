@@ -1,7 +1,7 @@
 # **LoL-AI-Coach**
 A League of Legends AI Coach is like a personal digital trainer that watches how you play and gives you feedback — just like a real coach would.
 
-It uses game data from your matches (like what champion you played, how many times you died, what items you bought, and how much you helped your team) and compares it to what skilled players usually do.
+It uses game data from your matches (like what champion you played, how many times you died, etc.) and compares it to what skilled players usually do.
 
 Then it gives you tips, analysis, and goals to help you improve faster.
 
@@ -34,7 +34,7 @@ Instead of vague tips, it might say things like:
 
 **OR**
 
-“You built too many damage items as Leona — next time, prioritize armor and magic resistance to stay alive longer.”
+“You built too many damage items as Leona — next time, prioritize armor and magic resistance to stay alive longer.”  #change this line
 
 ### 5.Tracks your improvement over time
 The AI can also store your match history and highlight progress — like “You’ve improved your farming speed by 15% in the last 10 games.”
