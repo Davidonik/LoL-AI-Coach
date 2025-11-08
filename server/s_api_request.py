@@ -45,7 +45,8 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    matches = get_20matches()
+    return render_template("dashboard.html", ign="hi", matches=matches)
 
 @app.route("/leaderboard")
 def leaderboard():
