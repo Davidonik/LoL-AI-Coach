@@ -305,7 +305,7 @@ def get_matchdata(matchid: str) -> dict:
         matchid (str): match id of the chosen match.
 
     Returns:
-        dict: data on the match
+        dict: full data on the match
     """
     api_url_match = f"https://americas.api.riotgames.com/lol/match/v5/matches/{matchid}?api_key={APIKEY_LOL}"
     resp = requests.get(api_url_match)
@@ -340,15 +340,23 @@ def get_stats(matchdata: dict) -> dict:
     """
     participantindex = get_participant_index(matchdata, request.cookies.get("puuid"))
     participantdata = matchdata["info"]["participants"][participantindex]
+    for participant in matchdata["info"]["participants"]:
+        if participant["puuid"] == request.cookies.get("puuid"):
+            champused = participant["championName"]
+            return champused
+        
     kills, deaths, assists = participantdata["kills"], participantdata["deaths"], participantdata["assists"]
     kda = round((kills+assists) / deaths, 2)
+
     if participantdata["teamPosition"] == "JUNGLE":
         csAt10 = participantdata["challenges"]["jungleCsBefore10Minutes"]
     else:
         csAt10 = participantdata["challenges"]["laneMinionsFirst10Minutes"]
     totalcs = participantdata["totalAllyJungleMinionsKilled"] + participantdata["totalEnemyJungleMinionsKilled"] + participantdata["totalMinionsKilled"]
+
     gameduration = (matchdata["info"]["gameDuration"]//60)
     csPerMinute = totalcs / gameduration
+
     goldperminute = participantdata["challenges"]["goldPerMinute"]
     goldearned = participantdata["goldearned"]
     winloss = participantdata["win"]
@@ -363,10 +371,11 @@ def get_stats(matchdata: dict) -> dict:
         "goldperminute": goldperminute,
         "goldearned": goldearned,
         "gameduration": gameduration,
-        "winloss": winloss
+        "winloss": winloss,
+        "champused": champused
     }
 
-def get_last20games() -> list:
+def get_last20gamesstuff() -> list:
     """_summary_
 
     Returns:
@@ -375,6 +384,8 @@ def get_last20games() -> list:
     last20matchstats = []
     for matchid in (lolapi_matches(request.cookies.get("puuid"))):
         last20matchstats.append(get_stats(get_matchdata(matchid)))
+
+    last20matchstats.append(get_stats(get_matchdata(matchid))["champused"])
 
     return last20matchstats
 
