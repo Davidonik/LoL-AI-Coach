@@ -41,12 +41,12 @@ button {
   font-size: 0.9rem;
 }
 
-.match-card .win {
+.win{
   color: #22c55e;
   font-weight: bold;
 }
 
-.match-card .loss {
+.loss {
   color: #ef4444;
   font-weight: bold;
 }
