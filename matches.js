@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loading = document.getElementById("loading");
 
   try {
-    const response = await fetch("/get_matches");
+    const response = await fetch("/get_matche");
     const data = await response.json();
 
     if (response.ok && data.matches) {
