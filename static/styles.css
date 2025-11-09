@@ -64,3 +64,8 @@ button {
 .review:hover {
   background-color: #2563eb; /* blue-600 */
 }
+
+#ai-response {
+  margin-left: 15%;
+  margin-right: 15%;
+}

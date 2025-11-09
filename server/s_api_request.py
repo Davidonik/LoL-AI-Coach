@@ -58,9 +58,11 @@ def leaderboard():
 
 @app.route("/review")
 def review():
+    stats = session.get("matchstats", None)
     coach_response = session.get("coach_response", None)
     html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
-    return render_template("review.html", coach_response=html_response)
+    
+    return render_template("review.html", coach_response=html_response, stats=stats)
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
@@ -87,7 +89,7 @@ def set_user():
 
 @app.route("/api/player/stats", methods=["POST"])
 def get_player_stats():
-    playerData = get_playerData(request.cookies.get("puuid", None))
+    playerData = get_playerStats(request.cookies.get("puuid", None))
     if None == playerData:
         return make_response(jsonify({"error": f"No player was defined"}))
     return make_response(jsonify(playerData))
@@ -95,7 +97,7 @@ def get_player_stats():
 @app.route("/aws/ai_traits", methods=["POST"])
 def ai_traits():
     # Get stats for player
-    playerData = get_playerData(request.cookies.get("puuid", None))
+    playerData = get_playerStats(request.cookies.get("puuid", None))
     traits = playerData["traits_"].keys()
     del playerData["traits_"]
     
@@ -138,18 +140,19 @@ def ai_coach():
     data = request.get_json()
     matchid = data.get("matchid")
 
-    player_info = get_playerData(request.cookies.get("puuid"))
+    player_stats = get_playerStats(request.cookies.get("puuid"))
     champion_data = get_champdata(matchid)
-    game_data = get_matchdata(matchid) #TODO fetch the matchid after button is made for it
-    player_opponent_info = parse_player_opponent(game_data, request.cookies.get("puuid"))
+    match_data = get_matchdata(matchid) #TODO fetch the matchid after button is made for it
+    opponent_puuid = parse_player_opponent(match_data, request.cookies.get("puuid"))["opponentpuuid"]
 
     # AI Prompt Creation
     context = (
         f"""You are reviewing a player's recent ranked game. The following data is provided:\n
-        {player_info}
+        {player_stats}
         {champion_data}
-        {game_data}
-        The information about the player and their counterpart {player_opponent_info}. 
+        {match_data}
+        The information about the player {}. 
+        The information about the player's lane opponent {}. 
         At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold.
         Miss Fortune has 75 cs and Xayah has 57 cs. "
         Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA.
@@ -187,6 +190,8 @@ def ai_coach():
     coach_response = aws_response_body["content"][0]["text"]
     
     session["coach_response"] = coach_response
+    session["matchstats"] = playerstatsAt10(matchid)
+    
     return redirect(url_for("review"))
 
 @app.route("/api/get_matches", methods=["POST"])
@@ -241,6 +246,17 @@ def lolapi_matches(puuid: str) -> list:
 ##############################################################
 ###################### PARSER FUNCTIONS ######################
 ##############################################################
+
+def parse_player_to_info(player: dict) -> dict:
+    """_summary_
+
+    Args:
+        player (dict): player object (unparsed)
+
+    Returns:
+        dict: cleans input to provide filtered information
+    """
+    return {}
 
 def parse_traits(playerData: dict) -> list:
     """_summary_
@@ -444,7 +460,7 @@ def get_avg20(matchid: str) -> dict:
         "last20goldperminute": goldperminute/20
     }
 
-def get_playerData(puuid: str) -> dict:
+def get_playerStats(puuid: str) -> dict:
     """_summary_
 
     Args:

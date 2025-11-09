@@ -69,7 +69,9 @@
     </div>
   </div>
 </div>
-  {{ coach_response | escapejs }}
+<div id="ai-response">
+    {{ coach_response | safe }}
+</div>
 
 </body>
 </html>
