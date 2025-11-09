@@ -402,16 +402,16 @@ def get_avg20() -> dict:
         dict: returns the stats of the player
     """
     kda, kills, deaths, assists, csAt10, csPerMinute, goldperminute = 0.00, 0, 0, 0, 0, 0, 0
-
+    stats = get_stats(get_matchdata(matchid))
     # player kda for the most recent 20 matches
     for matchid in (lolapi_matches(request.cookies.get("puuid"))):
-        kda += get_stats(get_matchdata(matchid))["kda"]
-        kills += get_stats(get_matchdata(matchid))["kills"]
-        assists += get_stats(get_matchdata(matchid))["assists"]
-        deaths += get_stats(get_matchdata(matchid))["deaths"]
-        csAt10 += get_stats(get_matchdata(matchid))["csAt10"]
-        csPerMinute += get_stats(get_matchdata(matchid))["csPerMinute"]
-        goldperminute += get_stats(get_matchdata(matchid))["goldperminute"]
+        kda += stats["kda"]
+        kills += stats["kills"]
+        assists += stats["assists"]
+        deaths += stats["deaths"]
+        csAt10 += stats["csAt10"]
+        csPerMinute += stats["csPerMinute"]
+        goldperminute += stats["goldperminute"]
     
     return {
         "last20kda": kda/20,
@@ -435,7 +435,7 @@ def get_playerData(puuid: str) -> dict:
     # json load (placeholder fo AWS DynamoDB API requests)
     with open("./playerData/playerData.json", "r") as file:
         playerData = json.load(file)
-        
+        avg20 = get_avg20()
         # player data already exists in sheet
         if puuid in playerData:
             return playerData[puuid]
@@ -444,16 +444,16 @@ def get_playerData(puuid: str) -> dict:
         return {
             "KDA_": {
                 "total_kda_reviewed": None,
-                "last20": get_avg20(puuid)["last20kda"]
+                "last20": avg20["last20kda"]
             },
             # last 20 matches
             "avg_": {
-                "kills": get_avg20(puuid)["last20kills"],
-                "assists": get_avg20(puuid)["last20assists"],
-                "deaths": get_avg20(puuid)["last20deaths"],
-                "cs@10": get_avg20(puuid)["last20csAt10"],
-                "cs_per_min": get_avg20(puuid)["last20csPerMinute"],
-                "gold_per_min": get_avg20(puuid)["last20goldperminute"],
+                "kills": avg20["last20kills"],
+                "assists": avg20["last20assists"],
+                "deaths": avg20["last20deaths"],
+                "cs@10": avg20["last20csAt10"],
+                "cs_per_min": avg20["last20csPerMinute"],
+                "gold_per_min": avg20["last20goldperminute"],
             },
             # total of reviewed matches
             "total_": {
