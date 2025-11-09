@@ -79,7 +79,7 @@ def set_user():
 
     # Create a redirect response (to some route, e.g. /dashboard)
     response = make_response(redirect(url_for("dashboard")))
-
+    
     response.set_cookie("sname", sname, max_age=60*60*24)
     response.set_cookie("tag", tag, max_age=60*60*24)
     response.set_cookie("puuid", puuid, max_age=60*60*24)
