@@ -3,7 +3,9 @@ window.onload = () => {
   for(const btn of review_btn) {
     btn.addEventListener("click", async () => {
       try {
-        btn.disabled = true;
+        for (const b of review_btn) {
+          b.disabled = true;
+        }
         btn.innerText = "Loading...";
         btn.classList.remove("hover:bg-blue-600");
 
@@ -29,10 +31,11 @@ window.onload = () => {
         }
 
       } catch (error) {
-        btn.disabled = false;
-        btn.innerText = "Review";
-        btn.classList.add("hover:bg-blue-600");
-        console.error("Error during fetch:", error);
+        for (const b of review_btn) {
+          b.disabled = false;
+          b.innerText = "Review";
+          b.classList.add("hover:bg-blue-600");
+        }
       }
     });
   }
