@@ -58,10 +58,4 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("hover:bg-blue-600");
     }
   });
-
-  if (homeButton) {
-    home.addEventListener("click", async () => {
-      window.location.href = 'index.html';
-      });
-  }
 });

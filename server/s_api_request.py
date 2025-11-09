@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, make_response, redirect, url_for, ren
 from flask_cors import CORS
 
 # API Key for LoL
-APIKEY_LOL = ""
+APIKEY_LOL = "RGAPI-494a4976-77e7-4866-b34b-1886b60ab245"
 
 # Bedrock Model Configs
 BEDROCK = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
@@ -32,6 +32,8 @@ app = Flask(
     template_folder="../templates",
     static_folder="../static"
 )
+app.secret_key = "randomiest of random strings in the randomiest world"
+
 
 CORS(
     app,
@@ -41,6 +43,11 @@ CORS(
 
 @app.route("/")
 def home():
+    # response = make_response(render_template("index.html"))
+    # response.set_cookie("sname", "KiraKuin", max_age=60*60*24)
+    # response.set_cookie("tag", "Lover", max_age=60*60*24)
+    # response.set_cookie("puuid", "58RyCNnVEoGy_lH7W9V_9fDJTdn93HoETNdzBCDfvVC204pwgjagNR9oVq1L-p08rYnhjNs5ldWDbQ", max_age=60*60*24)
+    # return response
     return render_template("index.html")
 
 @app.route("/dashboard")
@@ -179,7 +186,7 @@ def ai_coach():
 
     session["coach_response"] = ai_response
 
-    return redirect(url_for("reveiw"))
+    return make_response(redirect(url_for("review")))
 
 @app.route("/api/get_matches", methods=["POST"])
 def getLast20Matches():

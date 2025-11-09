@@ -3,12 +3,11 @@ window.onload = () => {
   for(const btn of review_btn) {
     btn.addEventListener("click", async () => {
       try {
-        button.disabled = true;
-        button.innerText = "Loading...";
-        button.classList.remove("hover:bg-blue-600");
-        // Send the fetch request to Flask server to let ai coach review
-        console.log(btn.dataset.matchid)
+        btn.disabled = true;
+        btn.innerText = "Loading...";
+        btn.classList.remove("hover:bg-blue-600");
 
+        // Send the fetch request to Flask server to let ai coach review
         const response = await fetch("http://127.0.0.1:5000/aws/ai_coach", {
           method: "POST",
           headers: {
@@ -20,15 +19,19 @@ window.onload = () => {
           })
         });
 
-        // Parse the response from Flask
-        const data = await response.json();
-
-        console.log("Server Response:", data);
+        if (response.redirected) {
+          window.location.href = response.url;
+          return;
+        } else {
+          // Parse the response from Flask
+          const data = await response.json();
+          console.log("Server Response:", data);
+        }
 
       } catch (error) {
-        button.disabled = false;
-        button.innerText = "Review";
-        button.classList.add("hover:bg-blue-600");
+        btn.disabled = false;
+        btn.innerText = "Review";
+        btn.classList.add("hover:bg-blue-600");
         console.error("Error during fetch:", error);
       }
     });
