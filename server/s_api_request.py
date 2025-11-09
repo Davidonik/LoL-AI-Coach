@@ -97,7 +97,7 @@ def get_player_stats():
 @app.route("/aws/ai_traits", methods=["POST"])
 def ai_traits():
     # Get stats for player
-    playerData = get_playerStats(request.cookies.get("puuid", None))
+    playerData = get_playerData(request.cookies.get("puuid", None))
     traits = playerData["traits_"].keys()
     del playerData["traits_"]
     
@@ -471,7 +471,7 @@ def playerstatsAt10(matchid: str, puuid: str) -> dict:
     frames = matchdatatimeline["info"]["frames"]
     frameAt10 = min(frames, key=lambda f: abs(f["timestamp"] - targettime))
 
-    pf = frameAt10["participantFrames"][str(participantid)]
+    pf = frameAt10["participantFrames"][str(participantid + 1)]
     cs = pf.get("minionsKilled", 0) + pf.get("jungleMinionsKilled", 0)
 
     # 4) Events up to 10:00 for K/D/A
