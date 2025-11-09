@@ -386,6 +386,7 @@ def get_stats(matchdata: dict) -> dict:
 
     return {
         "matchid": matchid,
+        "queuetype": queuetype,
         "kda": kda,
         "kills": kills,
         "assists": assists,
