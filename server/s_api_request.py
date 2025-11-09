@@ -268,13 +268,16 @@ def parse_player_opponent(matchdata: dict, puuid: str):
         return None
 
     playerindex = matchdata["metadata"]["participants"].index(puuid)
+    opponentindex = (playerindex + 5) % 2
+    opponentpuuid = matchdata["metadata"]["participants"][opponentindex]
 
     player = matchdata["info"]["participants"][playerindex]
-    opponent = matchdata["info"]["participants"][(playerindex + 5) % 2]
+    opponent = matchdata["info"]["participants"][opponentindex]
     
     return {
         "player": player,
         "opponent": opponent,
+        "opponentpuuid": opponentpuuid
     }
 
 #############################################################
@@ -443,6 +446,62 @@ def get_avg20(matchid: str) -> dict:
         "last20csPerMinute": csPerMinute/20,
         "last20goldperminute": goldperminute/20
     }
+
+def playerstatsAt10(matchid: str, puuid: str):
+    api_url_timeline = f"https://americas.api.riotgames.com/lol/match/v5/matches/{matchid}/timeline?api_key={APIKEY_LOL}"
+    resp = requests.get(api_url_timeline)
+    matchdatatimeline = resp.json()
+
+    participantid = get_participant_index(get_matchdata(matchid), puuid)
+
+    targettime = 600000  # 10 min in ms
+    frames = matchdatatimeline["info"]["frames"]
+    frameAt10 = min(frames, key=lambda f: abs(f["timestamp"] - targettime))
+
+    pf = frameAt10["participantFrames"][str(participantid)]
+    cs = pf.get("minionsKilled", 0) + pf.get("jungleMinionsKilled", 0)
+
+    # 4) Events up to 10:00 for K/D/A
+    kills = deaths = assists = 0
+    for f in frames:
+        if f["timestamp"] > targettime:
+            break
+        for e in f.get("events", []):
+            if e.get("type") != "CHAMPION_KILL":
+                continue
+            if e["timestamp"] > targettime:
+                continue
+
+            # killer
+            if e.get("killerId") == participantid:
+                kills += 1
+
+            # victim
+            if e.get("victimId") == participantid:
+                deaths += 1
+
+            # assists
+            for aid in e.get("assistingParticipantIds", []) or []:
+                if aid == participantid:
+                    assists += 1
+                    break
+
+    kda = (kills + assists) / max(1, deaths)
+
+    return {
+        "gold": pf.get("totalGold"),
+        "xp": pf.get("xp"),
+        "cs": cs,
+        "level": pf.get("level"),
+        "kills_by10": kills,
+        "deaths_by10": deaths,
+        "assists_by10": assists,
+        "kda_by10": round(kda, 2),
+    }
+
+player_stats_10 = get_ten_minute_stats(MATCH_ID, PUUID)
+print(player_stats_10)
+
 
 def get_playerData(puuid: str) -> dict:
     """_summary_
