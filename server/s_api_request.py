@@ -128,7 +128,7 @@ def ai_coach():
     matchid = data.get("matchid")
 
     player_info = get_playerData(request.cookies.get("puuid"))
-    champion_data = get_champdata()
+    champion_data = get_champdata(matchid)
     game_data = get_matchdata(matchid) #TODO fetch the matchid after button is made for it
     player_opponent_info = parse_player_opponent(matchid, request.cookies.get("puuid"))
 
@@ -277,32 +277,6 @@ def parse_player_opponent(matchdata: dict, puuid: str):
 ####################### GET FUNCTIONS #######################
 #############################################################
 
-def get_champdata(folderpath="champions") -> dict:
-    """_summary_
-
-    Args:
-        folderpath (str, optional): path to champion data dir. Defaults to "champions".
-
-    Returns:
-        dict: data on champions
-    """
-    championdata = {}
-    matchdata = lolapi_matches(request.cookies.get("puuid"))
-
-    # Champions for the specific match
-    for i in range(0, 10):
-        championname = matchdata["info"]["participants"][i]["championName"]
-        filename = f"{championname}.json"
-        filepath = os.path.join(folderpath, filename)
-
-        try:
-            with open(filepath, "r", encoding="utf-8") as champdata:
-                championdata[championname] = json.load(champdata)
-        except FileNotFoundError:
-            championdata[championname] = {"error": f"{championname}.json not found"}
-
-    return championdata
-
 def get_matchdata(matchid: str) -> dict:
     """_summary_
 
@@ -317,6 +291,33 @@ def get_matchdata(matchid: str) -> dict:
     matchdata = resp.json()
 
     return matchdata
+
+def get_champdata(matchid: str ,folderpath="champions") -> dict:
+    """_summary_
+
+    Args:
+        matchid (str): id of specific match
+        folderpath (str, optional): path to champion data dir. Defaults to "champions".
+
+    Returns:
+        dict: data on champions
+    """
+    championdata = {}
+    matchdata = get_matchdata(matchid)
+
+    # Champions for the specific match
+    for i in range(0, 10):
+        championname = matchdata["info"]["participants"][i]["championName"]
+        filename = f"{championname}.json"
+        filepath = os.path.join(folderpath, filename)
+
+        try:
+            with open(filepath, "r", encoding="utf-8") as champdata:
+                championdata[championname] = json.load(champdata)
+        except FileNotFoundError:
+            championdata[championname] = {"error": f"{championname}.json not found"}
+
+    return championdata
 
 def get_participant_index(matchdata: dict, puuid: str) -> int | None:
     """_summary_
