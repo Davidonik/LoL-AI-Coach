@@ -130,7 +130,7 @@ def ai_coach():
     player_info = get_playerData(request.cookies.get("puuid"))
     champion_data = get_champdata(matchid)
     game_data = get_matchdata(matchid) #TODO fetch the matchid after button is made for it
-    player_opponent_info = parse_player_opponent(matchid, request.cookies.get("puuid"))
+    player_opponent_info = parse_player_opponent(game_data, request.cookies.get("puuid"))
 
     # AI Prompt Creation
     context = (
@@ -215,14 +215,14 @@ def lolapi_puuid(sname: str, tag: str) -> str:
     
     return resp.json()["puuid"]
 
-def lolapi_matches(puuid: str) -> dict:
+def lolapi_matches(puuid: str) -> list:
     """_summary_
 
     Args:
         puuid (str): player's PUUID
 
     Returns:
-        dict: matchdata 
+        list: list of match ids 
         None: errors return None
     """
     api_url_matches = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=20&api_key={APIKEY_LOL}"
@@ -263,7 +263,7 @@ def parse_player_opponent(matchdata: dict, puuid: str):
     if None == matchdata or None == puuid:
         return None
 
-    playerindex = matchdata["metadata"]["participants"].indexOf(puuid)
+    playerindex = matchdata["metadata"]["participants"].index(puuid)
 
     player = matchdata["info"]["participants"][playerindex]
     opponent = matchdata["info"]["participants"][(playerindex + 5) % 2]
@@ -392,7 +392,8 @@ def get_last20gamesstuff() -> list:
     """
     last20matchstats = []
     for matchid in (lolapi_matches(request.cookies.get("puuid"))):
-        last20matchstats.append(get_stats(get_matchdata(matchid)))
+        hold = get_matchdata(matchid)
+        last20matchstats.append(get_stats(hold))
 
     return last20matchstats
 
