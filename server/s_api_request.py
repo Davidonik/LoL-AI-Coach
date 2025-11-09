@@ -2,7 +2,9 @@ import json
 import boto3
 import requests
 import os
-from flask import Flask, request, jsonify, make_response, redirect, url_for, render_template
+import markdown
+from flask import Flask, request, jsonify, make_response, redirect, url_for, render_template, session
+from markupsafe import Markup
 from flask_cors import CORS
 
 # API Key for LoL
@@ -32,12 +34,12 @@ app = Flask(
     template_folder="../templates",
     static_folder="../static"
 )
+app.secret_key = "some_secret_key"
 
-CORS(
-    app,
-    supports_credentials=True,
-    origins=["http://127.0.0.1:5500", "http://localhost:5500"]
-)
+CORS(app, supports_credentials=True, origins=[
+    "http://127.0.0.1:5500",
+    "http://localhost:5500"
+])
 
 @app.route("/")
 def home():
@@ -45,10 +47,10 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
-    matches = get_last20gamesstuff()
-    if matches == None:
-        matches = {}
-    return render_template("dashboard.html", ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ", games=matches)
+    games = get_last20gamesstuff()
+    if games == None:
+        games = []
+    return render_template("dashboard.html", ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ", games=games)
 
 @app.route("/leaderboard")
 def leaderboard():
@@ -56,7 +58,10 @@ def leaderboard():
 
 @app.route("/review")
 def review():
-    return render_template("review.html")
+    # coach_response = request.args.get("coach_response")
+    # html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
+    coach_response = session.get("coach_response", None)
+    return render_template("review.html", coach_response=coach_response)
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
@@ -153,7 +158,6 @@ def ai_coach():
     )
 
     prompt = f"{BASE} {context} {task}"
-    # print(prompt)
 
     # AWS Request Structure
     body = {
@@ -174,16 +178,10 @@ def ai_coach():
 
     # The response body comes as a byte stream, so decode it:
     aws_response_body = json.loads(aws_response["body"].read())
-
-    # Create response object
-    # print("\n Model output:")
-    # print(aws_response_body["content"][0]["text"])
-    response = make_response(jsonify({
-        "message": True,
-        "ai_response": aws_response_body["content"][0]["text"]
-    }))
+    coach_response = aws_response_body["content"][0]["text"]
     
-    return response
+    session["coach_response"] = coach_response
+    return redirect(url_for("review"))
 
 @app.route("/api/get_matches", methods=["POST"])
 def getLast20Matches():
