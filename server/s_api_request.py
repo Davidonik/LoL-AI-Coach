@@ -124,21 +124,25 @@ def ai_traits():
 
 @app.route("/aws/ai_coach", methods=["POST"])
 def ai_coach():
+    data = request.get_json()
+    matchid = data.get("matchid")
+
     player_info = get_playerData(request.cookies.get("puuid"))
     champion_data = get_champdata()
-    game_data = get_matchdata() #TODO fetch the matchid after button is made for it
+    game_data = get_matchdata(matchid) #TODO fetch the matchid after button is made for it
+    player_opponent_info = parse_player_opponent(matchid, request.cookies.get("puuid"))
 
     # AI Prompt Creation
     context = (
         f"""You are reviewing a player's recent ranked game. The following data is provided:\n
-        # {player_info}
-        # {champion_data}
-        # {game_data}
-        # The player is playing Miss Fortune against Xayah in the ADC Role. 
-        # At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold.
-        # Miss Fortune has 75 cs and Xayah has 57 cs. "
-        # Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA.
-        "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
+        {player_info}
+        {champion_data}
+        {game_data}
+        The information about the player and their counterpart {player_opponent_info}. 
+        At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold.
+        Miss Fortune has 75 cs and Xayah has 57 cs. "
+        Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA.
+        Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
         """
     )
 
@@ -188,7 +192,6 @@ def getLast20Matches():
         return make_response(jsonify({"error": f"summoner not found"}))
     return lolapi_matches(puuid)
 
-
 ##############################################################
 ###################### LoL API REQUESTS ######################
 ##############################################################
@@ -211,7 +214,6 @@ def lolapi_puuid(sname: str, tag: str) -> str:
         return None
     
     return resp.json()["puuid"]
-
 
 def lolapi_matches(puuid: str) -> dict:
     """_summary_
@@ -331,7 +333,6 @@ def get_participant_index(matchdata: dict, puuid: str) -> int | None:
             return i
     return None
 
-
 def get_stats(matchdata: dict) -> dict:
     """_summary_
 
@@ -341,6 +342,8 @@ def get_stats(matchdata: dict) -> dict:
     Returns:
         dict: returns the stats of the player
     """
+    matchid = matchdata["metadata"]["matchId"]
+
     participantindex = get_participant_index(matchdata, request.cookies.get("puuid"))
     participantdata = matchdata["info"]["participants"][participantindex]
     for participant in matchdata["info"]["participants"]:
@@ -365,6 +368,7 @@ def get_stats(matchdata: dict) -> dict:
     winloss = participantdata["win"]
 
     return {
+        "matchid": matchid,
         "kda": kda,
         "kills": kills,
         "assists": assists,
@@ -398,16 +402,16 @@ def get_avg20() -> dict:
         dict: returns the stats of the player
     """
     kda, kills, deaths, assists, csAt10, csPerMinute, goldperminute = 0.00, 0, 0, 0, 0, 0, 0
-
+    stats = get_stats(get_matchdata(matchid))
     # player kda for the most recent 20 matches
     for matchid in (lolapi_matches(request.cookies.get("puuid"))):
-        kda += get_stats(get_matchdata(matchid))["kda"]
-        kills += get_stats(get_matchdata(matchid))["kills"]
-        assists += get_stats(get_matchdata(matchid))["assists"]
-        deaths += get_stats(get_matchdata(matchid))["deaths"]
-        csAt10 += get_stats(get_matchdata(matchid))["csAt10"]
-        csPerMinute += get_stats(get_matchdata(matchid))["csPerMinute"]
-        goldperminute += get_stats(get_matchdata(matchid))["goldperminute"]
+        kda += stats["kda"]
+        kills += stats["kills"]
+        assists += stats["assists"]
+        deaths += stats["deaths"]
+        csAt10 += stats["csAt10"]
+        csPerMinute += stats["csPerMinute"]
+        goldperminute += stats["goldperminute"]
     
     return {
         "last20kda": kda/20,
@@ -431,7 +435,7 @@ def get_playerData(puuid: str) -> dict:
     # json load (placeholder fo AWS DynamoDB API requests)
     with open("./playerData/playerData.json", "r") as file:
         playerData = json.load(file)
-        
+        avg20 = get_avg20()
         # player data already exists in sheet
         if puuid in playerData:
             return playerData[puuid]
@@ -440,16 +444,16 @@ def get_playerData(puuid: str) -> dict:
         return {
             "KDA_": {
                 "total_kda_reviewed": None,
-                "last20": get_avg20(puuid)["last20kda"]
+                "last20": avg20["last20kda"]
             },
             # last 20 matches
             "avg_": {
-                "kills": get_avg20(puuid)["last20kills"],
-                "assists": get_avg20(puuid)["last20assists"],
-                "deaths": get_avg20(puuid)["last20deaths"],
-                "cs@10": get_avg20(puuid)["last20csAt10"],
-                "cs_per_min": get_avg20(puuid)["last20csPerMinute"],
-                "gold_per_min": get_avg20(puuid)["last20goldperminute"],
+                "kills": avg20["last20kills"],
+                "assists": avg20["last20assists"],
+                "deaths": avg20["last20deaths"],
+                "cs@10": avg20["last20csAt10"],
+                "cs_per_min": avg20["last20csPerMinute"],
+                "gold_per_min": avg20["last20goldperminute"],
             },
             # total of reviewed matches
             "total_": {
