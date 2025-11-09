@@ -64,3 +64,15 @@ button {
 .review:hover {
   background-color: #2563eb; /* blue-600 */
 }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  transform-origin: center;
+}

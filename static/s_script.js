@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const sname = document.getElementById("sname").value.trim();
     const tag = document.getElementById("tag").value.trim();
 
+    button.disabled = true;
+    button.innerText = "Loading...";
+    button.classList.remove("hover:bg-blue-600");
+
     try {
       // Send the fetch request to Flask server to set up user
       const response = await fetch("http://127.0.0.1:5000/api/set_user", {
@@ -41,11 +45,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (data.error) {
         status.innerText = data.error;
+        button.disabled = false;
+        button.innerText = "Search";
+        button.classList.add("hover:bg-blue-600");
       }
 
     } catch (error) {
       console.error("Error during fetch:", error);
       status.innerText = "Network error, please try again.";
+      button.disabled = false;
+      button.innerText = "Search";
+      button.classList.add("hover:bg-blue-600");
     }
   });
 
