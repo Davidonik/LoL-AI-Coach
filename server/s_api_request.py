@@ -46,7 +46,9 @@ def home():
 @app.route("/dashboard")
 def dashboard():
     matches = get_last20gamesstuff()
-    return render_template("dashboard.html", ign="hi", matches=matches)
+    if matches == None:
+        matches = {}
+    return render_template("dashboard.html", ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ", games=matches)
 
 @app.route("/leaderboard")
 def leaderboard():
@@ -344,7 +346,6 @@ def get_stats(matchdata: dict) -> dict:
     for participant in matchdata["info"]["participants"]:
         if participant["puuid"] == request.cookies.get("puuid"):
             champused = participant["championName"]
-            return champused
         
     kills, deaths, assists = participantdata["kills"], participantdata["deaths"], participantdata["assists"]
     kda = round((kills+assists) / deaths, 2)
@@ -355,11 +356,12 @@ def get_stats(matchdata: dict) -> dict:
         csAt10 = participantdata["challenges"]["laneMinionsFirst10Minutes"]
     totalcs = participantdata["totalAllyJungleMinionsKilled"] + participantdata["totalEnemyJungleMinionsKilled"] + participantdata["totalMinionsKilled"]
 
-    gameduration = (matchdata["info"]["gameDuration"]//60)
-    csPerMinute = totalcs / gameduration
+    gamedurationminutes = (matchdata["info"]["gameDuration"]//60)
+    gamedurationseconds = (matchdata["info"]["gameDuration"]%60)
+    csPerMinute = totalcs / gamedurationminutes
 
     goldperminute = participantdata["challenges"]["goldPerMinute"]
-    goldearned = participantdata["goldearned"]
+    goldearned = participantdata["goldEarned"]
     winloss = participantdata["win"]
 
     return {
@@ -368,10 +370,11 @@ def get_stats(matchdata: dict) -> dict:
         "assists": assists,
         "deaths": deaths,
         "csAt10": csAt10,
-        "csPerMinute": csPerMinute ,
+        "csPerMinute": round(csPerMinute, 1),
         "goldperminute": goldperminute,
         "goldearned": goldearned,
-        "gameduration": gameduration,
+        "gamedurationminutes": gamedurationminutes,
+        "gamedurationseconds": gamedurationseconds,
         "winloss": winloss,
         "champused": champused
     }
