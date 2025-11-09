@@ -465,7 +465,7 @@ def playerstatsAt10(matchid: str, puuid: str) -> dict:
     resp = requests.get(api_url_timeline)
     matchdatatimeline = resp.json()
 
-    participantid = get_participant_index(get_matchdata(matchid), puuid)
+    participantid = get_participant_index(get_matchdata(matchid), puuid) + 1
 
     targettime = 600000  # 10 min in ms
     frames = matchdatatimeline["info"]["frames"]
