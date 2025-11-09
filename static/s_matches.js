@@ -1,4 +1,4 @@
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
   const matchList = document.getElementById("matchList");
   const loading = document.getElementById("loading");
 
@@ -23,4 +23,4 @@ window.onload = () => {
       window.location.href = "http://127.0.0.1:5000/leaderboard";
     });
   }
-};
+});
