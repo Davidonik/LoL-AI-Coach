@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+window.onload = () => {
  const home = document.getElementById('home');
  const leaderboard = document.getElementById('leaderboard');
 
@@ -12,4 +12,4 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = "http://127.0.0.1:5000/leaderboard";
     });
   }
-})
+};

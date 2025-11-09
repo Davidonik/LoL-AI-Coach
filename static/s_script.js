@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+window.onload = () => {
   const button = document.getElementById("setUserBtn");
   const status = document.getElementById("status");
 
@@ -58,4 +58,4 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("hover:bg-blue-600");
     }
   });
-});
+};

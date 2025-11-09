@@ -1,11 +1,8 @@
-
-document.addEventListener("DOMContentLoaded", async () => {
-const home = document.getElementById('home');
-
-
-if (home){
+window.onload = () => {
+  const home = document.getElementById('home');
+  if (home){
     home.addEventListener("click", () => {
-    window.location.href = 'static/s_matches.js/index.html';
+      window.location.href = "http://127.0.0.1:5000/home";
     });
   }
-})
+};
