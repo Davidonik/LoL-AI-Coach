@@ -97,7 +97,7 @@ def get_player_stats():
 @app.route("/aws/ai_traits", methods=["POST"])
 def ai_traits():
     # Get stats for player
-    playerData = get_playerStats(request.cookies.get("puuid", None))
+    playerData = get_playerData(request.cookies.get("puuid", None))
     traits = playerData["traits_"].keys()
     del playerData["traits_"]
     
@@ -465,7 +465,7 @@ def playerstatsAt10(matchid: str, puuid: str) -> dict:
     resp = requests.get(api_url_timeline)
     matchdatatimeline = resp.json()
 
-    participantid = get_participant_index(get_matchdata(matchid), puuid)
+    participantid = get_participant_index(get_matchdata(matchid), puuid) + 1
 
     targettime = 600000  # 10 min in ms
     frames = matchdatatimeline["info"]["frames"]
