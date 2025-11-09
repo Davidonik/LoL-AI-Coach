@@ -85,6 +85,13 @@ def set_user():
     response.set_cookie("puuid", puuid, max_age=60*60*24)
     return response
 
+@app.route("/api/player/stats", methods=["POST"])
+def get_player_stats():
+    playerData = get_playerData(request.cookies.get("puuid", None))
+    if None == playerData:
+        return make_response(jsonify({"error": f"No player was defined"}))
+    return make_response(jsonify(playerData))
+
 @app.route("/aws/ai_traits", methods=["POST"])
 def ai_traits():
     # Get stats for player
@@ -400,7 +407,7 @@ def get_last20gamesstuff() -> list:
         list: returns list of stats for 20 games
     """
     last20matchstats = []
-    for matchid in (lolapi_matches(request.cookies.get("puuid"))):  
+    for matchid in (lolapi_matches(request.cookies.get("puuid", None))):  
         last20matchstats.append(get_stats(get_matchdata(matchid)))
 
     return last20matchstats

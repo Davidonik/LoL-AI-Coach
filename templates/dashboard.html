@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="{{ url_for('static', filename='s_requests.js') }}"></script>
   <script src="{{ url_for('static', filename='s_matches.js') }}"></script>
+  <script src="{{ url_for('static', filename='s_playerstats.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
@@ -23,8 +24,7 @@
       <text class="text-xl mb-2 block font-medium text-gray-300">{{ ign | default('Guest', true) }}</text>
       <h2 class="font-mono text-4xl font-bold mb-4 border-b border-gray-700 pb-2">Recent Match History</h2> 
 
-      <div>
-        
+      <div id="stats" class="card p-6 sm:p-8">
       </div>
 
       <div class="match-list grid gap-4"> 
