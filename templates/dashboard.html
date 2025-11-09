@@ -49,7 +49,7 @@
           <div class="text-left sm:text-right w-full sm:w-1/4 pt-3 sm:pt-0 flex-shrink-0">
             <p class="text-xs text-gray-400">Duration:</p>
             <p class="font-bold text-lg font-mono-stats">{{ "%d:%02d" | format(match.gamedurationminutes, match.gamedurationseconds) }}</p>
-            <button class="review">Review</button>
+            <button class="review" data-matchid="{{match.matchid}}">Review</button>
           </div>
           
         {% endfor %}
