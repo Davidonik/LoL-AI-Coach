@@ -50,4 +50,16 @@ button {
   color: #ef4444;
   font-weight: bold;
 }
+.review {
+  background-color: #3b82f6; /* blue-500 */
+  padding: 0.5rem 1rem; /* same as px-4 py-2 */
+  border-radius: 0.5rem; /* same as rounded-lg */
+  font-weight: 600; /* same as font-semibold */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.review:hover {
+  background-color: #2563eb; /* blue-600 */
+}
