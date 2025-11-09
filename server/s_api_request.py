@@ -499,10 +499,6 @@ def playerstatsAt10(matchid: str, puuid: str):
         "kda_by10": round(kda, 2),
     }
 
-player_stats_10 = get_ten_minute_stats(MATCH_ID, PUUID)
-print(player_stats_10)
-
-
 def get_playerData(puuid: str) -> dict:
     """_summary_
 
