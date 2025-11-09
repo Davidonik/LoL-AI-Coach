@@ -342,6 +342,8 @@ def get_stats(matchdata: dict) -> dict:
     Returns:
         dict: returns the stats of the player
     """
+    matchid = matchdata["metadata"]["matchId"]
+
     participantindex = get_participant_index(matchdata, request.cookies.get("puuid"))
     participantdata = matchdata["info"]["participants"][participantindex]
     for participant in matchdata["info"]["participants"]:
@@ -366,6 +368,7 @@ def get_stats(matchdata: dict) -> dict:
     winloss = participantdata["win"]
 
     return {
+        "matchid": matchid,
         "kda": kda,
         "kills": kills,
         "assists": assists,
