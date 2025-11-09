@@ -2,11 +2,11 @@ import json
 import boto3
 import requests
 import os
-from flask import Flask, request, jsonify, make_response, redirect, url_for, render_template
+from flask import Flask, request, jsonify, make_response, redirect, url_for, render_template, session
 from flask_cors import CORS
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-2b6282c3-6b36-4869-b7b9-6e26fa4413f4"
+APIKEY_LOL = ""
 
 # Bedrock Model Configs
 BEDROCK = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
@@ -45,10 +45,10 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
-    matches = get_last20gamesstuff()
-    if matches == None:
-        matches = {}
-    return render_template("dashboard.html", ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ", games=matches)
+    games = get_last20gamesstuff()
+    if games == None:
+        games = []
+    return render_template("dashboard.html", ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ", games=games)
 
 @app.route("/leaderboard")
 def leaderboard():
@@ -56,7 +56,8 @@ def leaderboard():
 
 @app.route("/review")
 def review():
-    return render_template("review.html")
+    coach_response = session.pop("coach_response", None)
+    return render_template("review.html", coach_response=coach_response)
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
@@ -174,16 +175,11 @@ def ai_coach():
 
     # The response body comes as a byte stream, so decode it:
     aws_response_body = json.loads(aws_response["body"].read())
+    ai_response = aws_response_body["content"][0]["text"]
 
-    # Create response object
-    # print("\n Model output:")
-    # print(aws_response_body["content"][0]["text"])
-    response = make_response(jsonify({
-        "message": True,
-        "ai_response": aws_response_body["content"][0]["text"]
-    }))
-    
-    return response
+    session["coach_response"] = ai_response
+
+    return redirect(url_for("reveiw"))
 
 @app.route("/api/get_matches", methods=["POST"])
 def getLast20Matches():
