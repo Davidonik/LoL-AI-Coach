@@ -142,8 +142,8 @@ def ai_coach():
     match_data = get_matchdata(matchid)
     opponent_puuid = parse_player_opponent(match_data, request.cookies.get("puuid"))["opponentpuuid"]
 
-    player_stats = playerstatsAt10(matchid, request.cookies.get("puuid"))
-    opponent_stats = playerstatsAt10(matchid, opponent_puuid)
+    player_stats = get_playerstatsAt10(matchid, request.cookies.get("puuid"))
+    opponent_stats = get_playerstatsAt10(matchid, opponent_puuid)
     champion_data = get_champdata(matchid)
 
     # AI Prompt Creation
@@ -451,7 +451,7 @@ def get_avg20(matchid: str) -> dict:
         "last20goldperminute": goldperminute/20
     }
 
-def playerstatsAt10(matchid: str, puuid: str) -> dict:
+def get_playerstatsAt10(matchid: str, puuid: str) -> dict:
     """_summary_
 
     Args:
