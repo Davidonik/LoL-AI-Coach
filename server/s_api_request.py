@@ -350,6 +350,7 @@ def get_stats(matchdata: dict) -> dict:
         720: "Aram Clash", 
         0: "Customs"
     }
+    
     matchid = matchdata["metadata"]["matchId"]
     queuetype = queuetypebyid[matchdata["info"]["queueId"]]
 
@@ -378,7 +379,6 @@ def get_stats(matchdata: dict) -> dict:
 
     return {
         "matchid": matchid,
-        "queuetype": queuetype,
         "kda": kda,
         "kills": kills,
         "assists": assists,
