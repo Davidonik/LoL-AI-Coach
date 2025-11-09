@@ -1,8 +1,8 @@
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
   const home = document.getElementById('home');
   if (home){
     home.addEventListener("click", () => {
-      window.location.href = "http://127.0.0.1:5000/home";
+      window.location.href = "http://127.0.0.1:5000/";
     });
   }
-};
+});

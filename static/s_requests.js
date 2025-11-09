@@ -1,4 +1,4 @@
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
   const review_btn = document.getElementsByClassName("review");
   for(const btn of review_btn) {
     btn.addEventListener("click", async () => {
@@ -61,4 +61,4 @@ window.onload = () => {
       console.error("Error during fetch:", error);
     }
   });
-};
+});

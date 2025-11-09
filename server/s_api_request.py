@@ -351,7 +351,7 @@ def get_stats(matchdata: dict) -> dict:
         0: "Customs"
     }
     matchid = matchdata["metadata"]["matchId"]
-    queuetype = queuetypebyid[matchdata["info"]["participants"]["queueId"]]
+    queuetype = queuetypebyid[matchdata["info"]["queueId"]]
 
     participantindex = get_participant_index(matchdata, request.cookies.get("puuid"))
     participantdata = matchdata["info"]["participants"][participantindex]
