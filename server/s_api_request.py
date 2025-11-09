@@ -58,10 +58,9 @@ def leaderboard():
 
 @app.route("/review")
 def review():
-    # coach_response = request.args.get("coach_response")
-    # html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
     coach_response = session.get("coach_response", None)
-    return render_template("review.html", coach_response=coach_response)
+    html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
+    return render_template("review.html", coach_response=html_response)
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
