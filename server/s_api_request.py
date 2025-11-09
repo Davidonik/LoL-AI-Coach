@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, make_response, redirect, url_for, ren
 from flask_cors import CORS
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-2b6282c3-6b36-4869-b7b9-6e26fa4413f4"
+APIKEY_LOL = "RGAPI-494a4976-77e7-4866-b34b-1886b60ab245"
 
 # Bedrock Model Configs
 BEDROCK = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
