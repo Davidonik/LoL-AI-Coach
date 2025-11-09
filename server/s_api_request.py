@@ -126,7 +126,7 @@ def ai_traits():
 def ai_coach():
     data = request.get_json()
     matchid = data.get("matchid")
-    
+
     player_info = get_playerData(request.cookies.get("puuid"))
     champion_data = get_champdata()
     game_data = get_matchdata(matchid) #TODO fetch the matchid after button is made for it
@@ -192,7 +192,6 @@ def getLast20Matches():
         return make_response(jsonify({"error": f"summoner not found"}))
     return lolapi_matches(puuid)
 
-
 ##############################################################
 ###################### LoL API REQUESTS ######################
 ##############################################################
@@ -215,7 +214,6 @@ def lolapi_puuid(sname: str, tag: str) -> str:
         return None
     
     return resp.json()["puuid"]
-
 
 def lolapi_matches(puuid: str) -> dict:
     """_summary_
@@ -334,7 +332,6 @@ def get_participant_index(matchdata: dict, puuid: str) -> int | None:
         if p["puuid"] == puuid:
             return i
     return None
-
 
 def get_stats(matchdata: dict) -> dict:
     """_summary_
