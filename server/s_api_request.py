@@ -124,21 +124,25 @@ def ai_traits():
 
 @app.route("/aws/ai_coach", methods=["POST"])
 def ai_coach():
+    data = request.get_json()
+    matchid = data.get("matchid")
+    
     player_info = get_playerData(request.cookies.get("puuid"))
     champion_data = get_champdata()
-    game_data = get_matchdata() #TODO fetch the matchid after button is made for it
+    game_data = get_matchdata(matchid) #TODO fetch the matchid after button is made for it
+    player_opponent_info = parse_player_opponent(matchid, request.cookies.get("puuid"))
 
     # AI Prompt Creation
     context = (
         f"""You are reviewing a player's recent ranked game. The following data is provided:\n
-        # {player_info}
-        # {champion_data}
-        # {game_data}
-        # The player is playing Miss Fortune against Xayah in the ADC Role. 
-        # At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold.
-        # Miss Fortune has 75 cs and Xayah has 57 cs. "
-        # Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA.
-        "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
+        {player_info}
+        {champion_data}
+        {game_data}
+        The information about the player and their counterpart {player_opponent_info}. 
+        At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold.
+        Miss Fortune has 75 cs and Xayah has 57 cs. "
+        Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA.
+        Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
         """
     )
 
