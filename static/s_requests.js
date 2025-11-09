@@ -4,7 +4,7 @@ window.onload = () => {
     btn.addEventListener("click", async () => {
       try {
         // Send the fetch request to Flask server to let ai coach review
-        console.log(btn.dataset.info)
+        console.log(btn.dataset.matchid)
 
         const response = await fetch("http://127.0.0.1:5000/aws/ai_coach", {
           method: "POST",
@@ -13,7 +13,7 @@ window.onload = () => {
           },
           credentials: "include",
           body: JSON.stringify({
-            "matchid": btn.dataset.info,
+            "matchid": btn.dataset.matchid,
           })
         });
 
