@@ -58,7 +58,7 @@ def leaderboard():
 
 @app.route("/review")
 def review():
-    stats = session.get("matchstats", None)
+    stats = session.get("player_stats", None)
     coach_response = session.get("coach_response", None)
     html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
     
@@ -89,7 +89,7 @@ def set_user():
 
 @app.route("/api/player/stats", methods=["POST"])
 def get_player_stats():
-    playerData = get_playerStats(request.cookies.get("puuid", None))
+    playerData = get_playerData(request.cookies.get("puuid", None))
     if None == playerData:
         return make_response(jsonify({"error": f"No player was defined"}))
     return make_response(jsonify(playerData))
@@ -139,25 +139,24 @@ def ai_traits():
 def ai_coach():
     data = request.get_json()
     matchid = data.get("matchid")
-
-    player_stats = get_playerStats(request.cookies.get("puuid"))
-    champion_data = get_champdata(matchid)
-    match_data = get_matchdata(matchid) #TODO fetch the matchid after button is made for it
+    match_data = get_matchdata(matchid)
     opponent_puuid = parse_player_opponent(match_data, request.cookies.get("puuid"))["opponentpuuid"]
+
+    player_stats = playerstatsAt10(matchid, request.cookies.get("puuid"))
+    opponent_stats = playerstatsAt10(matchid, opponent_puuid)
+    champion_data = get_champdata(matchid)
 
     # AI Prompt Creation
     context = (
-        f"""You are reviewing a player's recent ranked game. The following data is provided:\n
-        {player_stats}
-        {champion_data}
-        {match_data}
-        The information about the player {}. 
-        The information about the player's lane opponent {}. 
-        At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold.
-        Miss Fortune has 75 cs and Xayah has 57 cs. "
-        Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA.
-        Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
-        """
+        f"You are reviewing a player's recent ranked game. The following data is provided:\n"
+        # {champion_data}
+        # {match_data}
+        f"The information about the player you are coaching {player_stats}. "
+        f"The information about the player's lane opponent {opponent_stats}. "
+        "At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. "
+        "Miss Fortune has 75 cs and Xayah has 57 cs. "
+        "Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. "
+        "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n"
     )
 
     task = (
@@ -190,7 +189,7 @@ def ai_coach():
     coach_response = aws_response_body["content"][0]["text"]
     
     session["coach_response"] = coach_response
-    session["matchstats"] = playerstatsAt10(matchid)
+    session["player_stats"] = player_stats
     
     return redirect(url_for("review"))
 
@@ -247,17 +246,6 @@ def lolapi_matches(puuid: str) -> list:
 ###################### PARSER FUNCTIONS ######################
 ##############################################################
 
-def parse_player_to_info(player: dict) -> dict:
-    """_summary_
-
-    Args:
-        player (dict): player object (unparsed)
-
-    Returns:
-        dict: cleans input to provide filtered information
-    """
-    return {}
-
 def parse_traits(playerData: dict) -> list:
     """_summary_
 
@@ -284,13 +272,16 @@ def parse_player_opponent(matchdata: dict, puuid: str):
         return None
 
     playerindex = matchdata["metadata"]["participants"].index(puuid)
+    opponentindex = (playerindex + 5) % 2
+    opponentpuuid = matchdata["metadata"]["participants"][opponentindex]
 
     player = matchdata["info"]["participants"][playerindex]
-    opponent = matchdata["info"]["participants"][(playerindex + 5) % 2]
+    opponent = matchdata["info"]["participants"][opponentindex]
     
     return {
         "player": player,
         "opponent": opponent,
+        "opponentpuuid": opponentpuuid
     }
 
 #############################################################
@@ -460,7 +451,68 @@ def get_avg20(matchid: str) -> dict:
         "last20goldperminute": goldperminute/20
     }
 
-def get_playerStats(puuid: str) -> dict:
+def playerstatsAt10(matchid: str, puuid: str) -> dict:
+    """_summary_
+
+    Args:
+        matchid (str): id for the match you want stats from
+        puuid (str): id of player that you want stats of
+
+    Returns:
+        dict: stats in dict format
+    """
+    api_url_timeline = f"https://americas.api.riotgames.com/lol/match/v5/matches/{matchid}/timeline?api_key={APIKEY_LOL}"
+    resp = requests.get(api_url_timeline)
+    matchdatatimeline = resp.json()
+
+    participantid = get_participant_index(get_matchdata(matchid), puuid)
+
+    targettime = 600000  # 10 min in ms
+    frames = matchdatatimeline["info"]["frames"]
+    frameAt10 = min(frames, key=lambda f: abs(f["timestamp"] - targettime))
+
+    pf = frameAt10["participantFrames"][str(participantid)]
+    cs = pf.get("minionsKilled", 0) + pf.get("jungleMinionsKilled", 0)
+
+    # 4) Events up to 10:00 for K/D/A
+    kills = deaths = assists = 0
+    for f in frames:
+        if f["timestamp"] > targettime:
+            break
+        for e in f.get("events", []):
+            if e.get("type") != "CHAMPION_KILL":
+                continue
+            if e["timestamp"] > targettime:
+                continue
+
+            # killer
+            if e.get("killerId") == participantid:
+                kills += 1
+
+            # victim
+            if e.get("victimId") == participantid:
+                deaths += 1
+
+            # assists
+            for aid in e.get("assistingParticipantIds", []) or []:
+                if aid == participantid:
+                    assists += 1
+                    break
+
+    kda = (kills + assists) / max(1, deaths)
+
+    return {
+        "gold": pf.get("totalGold"),
+        "xp": pf.get("xp"),
+        "cs": cs,
+        "level": pf.get("level"),
+        "kills_by10": kills,
+        "deaths_by10": deaths,
+        "assists_by10": assists,
+        "kda_by10": round(kda, 2),
+    }
+
+def get_playerData(puuid: str) -> dict:
     """_summary_
 
     Args:
