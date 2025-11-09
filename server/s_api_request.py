@@ -395,8 +395,11 @@ def get_last20gamesstuff() -> list:
 
     return last20matchstats
 
-def get_avg20() -> dict:
+def get_avg20(matchid: str) -> dict:
     """_summary_
+
+    Args:
+        matchid (str): string of match id corresponding to the match
 
     Returns:
         dict: returns the stats of the player
@@ -435,7 +438,6 @@ def get_playerData(puuid: str) -> dict:
     # json load (placeholder fo AWS DynamoDB API requests)
     with open("./playerData/playerData.json", "r") as file:
         playerData = json.load(file)
-        avg20 = get_avg20()
         # player data already exists in sheet
         if puuid in playerData:
             return playerData[puuid]
@@ -443,31 +445,31 @@ def get_playerData(puuid: str) -> dict:
         # player data needs to be initialized in sheet
         return {
             "KDA_": {
-                "total_kda_reviewed": None,
-                "last20": avg20["last20kda"]
+                "total_kda_reviewed": 0,
+                "last20": 0.0
             },
             # last 20 matches
             "avg_": {
-                "kills": avg20["last20kills"],
-                "assists": avg20["last20assists"],
-                "deaths": avg20["last20deaths"],
-                "cs@10": avg20["last20csAt10"],
-                "cs_per_min": avg20["last20csPerMinute"],
-                "gold_per_min": avg20["last20goldperminute"],
+                "kills": 0.0,
+                "assists": 0.0,
+                "deaths": 0.0,
+                "cs@10": 0.0,
+                "cs_per_min": 0.0,
+                "gold_per_min": 0.0,
             },
             # total of reviewed matches
             "total_": {
-                "dmg_done": None,
-                "towers_taken": None,
-                "gold": None,
-                "objectives": None,
-                "objective_steals": None,
-                "first_bloods": None,
-                "feats": None,
+                "dmg_done": 0,
+                "towers_taken": 0,
+                "gold": 0,
+                "objectives": 0,
+                "objective_steals": 0,
+                "first_bloods": 0,
+                "feats": 0,
             },
             "traits_": {
-                "aggression": None,
-                "weakness": None,
-                "strength": None,
+                "aggression": "",
+                "weakness": "",
+                "strength": "",
             }
         }
