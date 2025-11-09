@@ -12,4 +12,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = "http://127.0.0.1:5000/leaderboard";
     });
   }
+  const responseContainer = document.getElementById('coachResponse');
+  const responseText = `{{ coach_response | escapejs }}`; // escapejs handles quotes/newlines
+  if (!responseText) return;
+
+  const words = responseText.split(' ');
+  let i = 0;
+
+  function showNextWord() {
+    if (i < words.length) {
+      responseContainer.innerHTML += words[i] + ' ';
+      i++;
+      setTimeout(showNextWord, 300); // speed in ms, adjust as needed
+    }
+  }
+
+  showNextWord();
 })

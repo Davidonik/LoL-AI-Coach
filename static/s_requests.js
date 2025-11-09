@@ -36,6 +36,7 @@ window.onload = () => {
           b.innerText = "Review";
           b.classList.add("hover:bg-blue-600");
         }
+        console.error("Error during fetch:", error);
       }
     });
   }
