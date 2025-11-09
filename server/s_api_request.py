@@ -391,9 +391,8 @@ def get_last20gamesstuff() -> list:
         list: returns list of stats for 20 games
     """
     last20matchstats = []
-    for matchid in (lolapi_matches(request.cookies.get("puuid"))):
-        hold = get_matchdata(matchid)
-        last20matchstats.append(get_stats(hold))
+    for matchid in (lolapi_matches(request.cookies.get("puuid"))):  
+        last20matchstats.append(get_stats(get_matchdata(matchid)))
 
     return last20matchstats
 
