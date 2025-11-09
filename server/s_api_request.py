@@ -340,7 +340,19 @@ def get_stats(matchdata: dict) -> dict:
     Returns:
         dict: returns the stats of the player
     """
+    queuetypebyid = {
+        420: "Ranked", 
+        440: "Ranked Flex", 
+        450: "Aram", 
+        400: "Normals", 
+        490: "swiftplay", 
+        700: "Clash",
+        720: "Aram Clash", 
+        0: "Customs"
+    }
+    
     matchid = matchdata["metadata"]["matchId"]
+    queuetype = queuetypebyid[matchdata["info"]["queueId"]]
 
     participantindex = get_participant_index(matchdata, request.cookies.get("puuid"))
     participantdata = matchdata["info"]["participants"][participantindex]
