@@ -39,6 +39,12 @@
 
       <p class="text-xl mb-2 font-medium text-gray-300">{{ ign | default('Guest', true) }}</p>
 
+      {% if coach_response %}
+      <div class="mb-6 p-4 bg-gray-800 rounded-lg">
+          {{ coach_response | safe }}
+      </div>
+      {% endif %}
+      
       <!-- Match List -->
       <div id="match-stats-display" class="match-list grid gap-4" data-matchid="{{matchid}}">
       </div>
