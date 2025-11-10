@@ -498,7 +498,8 @@ def get_stats(matchdata: dict) -> dict:
         490: "swiftplay", 
         700: "Clash",
         720: "Aram Clash", 
-        0: "Customs"
+        0: "Customs",
+        3130: "Tournament"
     }
     
     matchid = matchdata["metadata"]["matchId"]
