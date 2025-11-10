@@ -259,6 +259,7 @@ button {
   font: 600 .9rem/1 system-ui;
   color: #e5e7eb;
   font-variant-numeric: tabular-nums; 
+  margin-left: 0.5em;
 }
 
 /* Responsiveness */
