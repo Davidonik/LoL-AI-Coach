@@ -15,7 +15,7 @@
       const stats_display = document.getElementById("match-stats-display");
 
         try {
-          const response = await fetch("http://127.0.0.1:5000/api/matchdata", {
+          const response = await fetch("/api/matchdata", {
               method: "POST",
               headers: {
                   "Content-Type": "application/json"
