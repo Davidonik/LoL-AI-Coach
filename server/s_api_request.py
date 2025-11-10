@@ -50,6 +50,7 @@ def home():
 def dashboard():
     games = get_last20gamesstuff()
     if games == None:
+        print("no games passed")
         games = []
     return render_template("dashboard.html", ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ", games=games)
 
@@ -59,11 +60,11 @@ def leaderboard():
 
 @app.route("/review")
 def review():
-    stats = session.get("match_data", [])
     coach_response = session.get("coach_response", None)
+    matchid = session.get("match_id", None)
     html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
     
-    return render_template("review.html", coach_response=(html_response), stats=stats, ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ")
+    return render_template("review.html", coach_response=(html_response), matchid=matchid, ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ")
 
 @app.route("/api/leaderboard", methods=["GET"])
 def load_leaderboard():
@@ -159,7 +160,6 @@ def ai_coach():
     context = (
         f"""
         You are reviewing a player's recent ranked game. The following data is provided:\n
-        {match_data}\n
         {champion_data}\n
         The information about the player you are coaching {player_stats}.\n
         The information about the player's lane opponent {opponent_stats}.\n
@@ -217,7 +217,8 @@ def ai_coach():
     aws_response_body = json.loads(aws_response["body"].read())
     coach_response = aws_response_body["content"][0]["text"]
     
-    session["coach_response"] = coach_response
+    session["coach_response"] = coach_response 
+    session["match_id"] = matchid
     
     return redirect(url_for("review"))
 
@@ -272,6 +273,14 @@ def update_stats():
     
     return make_response(jsonify({"message": "update complete"}))
     
+@app.route("/api/matchdata", methods=["POST"])
+def get_match_stats():
+    data = request.get_json()
+    matchid = data.get("matchid", None)
+    matchdata = get_matchdata(matchid)
+    if None == matchdata:
+        return make_response(jsonify({"error": "matchdata failed to load anything"}))
+    return make_response(jsonify(matchdata))
 
 ##############################################################
 ###################### LoL API REQUESTS ######################
