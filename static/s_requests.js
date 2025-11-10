@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.innerText = "Loading...";
         btn.classList.remove("hover:bg-blue-600");
 
-        fetch("http://127.0.0.1:5500/api/player/update_stats", {
+        fetch("/api/player/update_stats", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).catch(err => console.warn("Stats update failed:", err));
 
         // Send the fetch request to Flask server to let ai coach review
-        const response = await fetch("http://127.0.0.1:5500/aws/ai_coach", {
+        const response = await fetch("/aws/ai_coach", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

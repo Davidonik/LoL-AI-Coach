@@ -5,17 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (home){
     home.addEventListener("click", () => {
-      window.location.href = "http://127.0.0.1:5500/";
+      window.location.href = "/";
     });
   }
   if (leaderboard){
     leaderboard.addEventListener("click", () => {
-      window.location.href = "http://127.0.0.1:5500/leaderboard";
+      window.location.href = "/leaderboard";
     });
   }
   if (dashboard){
     dashboard.addEventListener("click", () => {
-      window.location.href = "http://127.0.0.1:5500/dashboard";
+      window.location.href = "/dashboard";
     });
   }
 })

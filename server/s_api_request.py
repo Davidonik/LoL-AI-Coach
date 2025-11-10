@@ -34,12 +34,14 @@ BASE = (
 ###################### FLASH APP ######################
 #######################################################
 
+base_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask(
     __name__,
-    template_folder="../templates",
-    static_folder="../static"
+    template_folder=os.path.join(base_dir, "../templates"),
+    static_folder=os.path.join(base_dir, "../static")
 )
 app.secret_key = "some_secret_key"
+app.debug = False
 
 CORS(app, supports_credentials=True, origins=[
     "http://127.0.0.1:5500",

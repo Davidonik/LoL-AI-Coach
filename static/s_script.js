@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // Send the fetch request to Flask server to set up user
-      const response = await fetch("http://127.0.0.1:5500/api/set_user", {
+      const response = await fetch("/api/set_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -5,19 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (review){
     home.addEventListener("click", () => {
-      window.location.href = "http://127.0.0.1:5500/review";
+      window.location.href = "/review";
     });
   }
 
   if (home){
     home.addEventListener("click", () => {
-      window.location.href = "http://127.0.0.1:5500/";
+      window.location.href = "/";
     });
   }
 
   if (leaderboard){
     leaderboard.addEventListener("click", () => {
-      window.location.href = "http://127.0.0.1:5500/leaderboard";
+      window.location.href = "/leaderboard";
     });
   }
 });
