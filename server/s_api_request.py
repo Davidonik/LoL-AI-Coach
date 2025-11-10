@@ -43,11 +43,7 @@ app = Flask(
 app.secret_key = "some_secret_key"
 app.debug = False
 
-CORS(app, supports_credentials=True, origins=[
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
-    "https://lol-ai-coach.onrender.com"
-])
+CORS(app, supports_credentials=True, origins="*")
 
 @app.template_filter('split_champname')
 def split_champname(champname: str) -> str:
