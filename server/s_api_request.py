@@ -632,8 +632,8 @@ def get_stats_to_save(matchid: int, puuid: str) -> dict:
     Returns:
         dict: stats that need to be saved to player sheet
     """
-    match_data = get_matchdata(puuid)
-    participantindex = get_participant_index(match_data, request.cookies.get("puuid"))
+    match_data = get_matchdata(matchid)
+    participantindex = get_participant_index(match_data, puuid)
     participantdata = match_data["info"]["participants"][participantindex]
     return {
         "KDA_": {
