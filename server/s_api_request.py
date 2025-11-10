@@ -229,6 +229,7 @@ def ai_coach():
         prompt = f"{BASE} {context} {task}"
         temp = 0.4
 
+    print(prompt)
     # AWS Request Structure
     body = {
         "max_tokens": 1000,
@@ -392,7 +393,7 @@ def parse_player_opponent(matchdata: dict, puuid: str):
         return None
 
     playerindex = matchdata["metadata"]["participants"].index(puuid)
-    opponentindex = (playerindex + 5) % 2
+    opponentindex = (playerindex + 5) % 10
     opponentpuuid = matchdata["metadata"]["participants"][opponentindex]
 
     player = matchdata["info"]["participants"][playerindex]
@@ -505,7 +506,7 @@ def get_stats(matchdata: dict) -> dict:
             champused = participant["championName"]
         
     kills, deaths, assists = participantdata["kills"], participantdata["deaths"], participantdata["assists"]
-    kda = round((kills+assists) / deaths, 2)
+    kda = round((kills+assists) / max(1, deaths), 2)
 
     if participantdata["teamPosition"] == "JUNGLE":
         csAt10 = participantdata["challenges"]["jungleCsBefore10Minutes"]
@@ -602,7 +603,7 @@ def get_playerstatsAt10(matchid: str, puuid: str) -> dict:
     frames = matchdatatimeline["info"]["frames"]
     frameAt10 = min(frames, key=lambda f: abs(f["timestamp"] - targettime))
 
-    pf = frameAt10["participantFrames"][str(participantid + 1)]
+    pf = frameAt10["participantFrames"][str(participantid)]
     cs = pf.get("minionsKilled", 0) + pf.get("jungleMinionsKilled", 0)
 
     # 4) Events up to 10:00 for K/D/A
