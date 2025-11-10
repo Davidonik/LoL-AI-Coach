@@ -11,8 +11,8 @@
             "goldEarned": 58467,
             "objectivesStolen": 0
         },
-        "firstBloodKill": 0,
-        "objectives": 0,
+        "firstBloodKill": 3,
+        "objectives": 22,
         "traits_": {
             "aggression": "",
             "weakness": "",
@@ -26,18 +26,18 @@
     },
     "cVuOn0b1PoS4fADkhCZvsK7IzSoCQhTj2OCYTIMVQ1wZCEh5zq3fEXSMMp0FV_yXzUL4lA5NwBezOg": {
         "KDA_": {
-            "kills": 0,
-            "assists": 0,
-            "deaths": 0
+            "kills": 30,
+            "assists": 59,
+            "deaths": 34
         },
         "total_": {
-            "totalDamageDealtToChampions": 12267,
-            "turretKills": 0,
-            "goldEarned": 0,
-            "objectivesStolen": 0
+            "totalDamageDealtToChampions": 10263,
+            "turretKills": 12,
+            "goldEarned": 50263,
+            "objectivesStolen": 1
         },
-        "firstBloodKill": 0,
-        "objectives": 0,
+        "firstBloodKill": 2,
+        "objectives": 10,
         "traits_": {
             "aggression": "",
             "weakness": "",
@@ -51,18 +51,18 @@
     },
     "AlnH_XJvQ-zq3VEFymhVvt_njZQjGan_G9OjaoGnzMWbx0MfTRvv_mTXZ_zVNYaRcePMUIpRIBTVFw": {
         "KDA_": {
-            "kills": 0,
-            "assists": 0,
-            "deaths": 0
+            "kills": 93498,
+            "assists": 245378,
+            "deaths": 38569
         },
         "total_": {
-            "totalDamageDealtToChampions": 12267,
-            "turretKills": 0,
-            "goldEarned": 0,
-            "objectivesStolen": 0
+            "totalDamageDealtToChampions": 52340983,
+            "turretKills": 437,
+            "goldEarned": 24387956,
+            "objectivesStolen": 1
         },
-        "firstBloodKill": 0,
-        "objectives": 0,
+        "firstBloodKill": 123,
+        "objectives": 543,
         "traits_": {
             "aggression": "",
             "weakness": "",
@@ -76,18 +76,18 @@
     },
     "xa7lx_eJqrihEE3TYFrtai8Jr-n9ghKHzMComw2A7q2gqhqyhMO4Yl0K82SQm80HfCJAacE8nr-VQA": {
         "KDA_": {
-            "kills": 0,
-            "assists": 0,
-            "deaths": 0
+            "kills": 3476,
+            "assists": 5432,
+            "deaths": 2587
         },
         "total_": {
-            "totalDamageDealtToChampions": 12267,
-            "turretKills": 0,
-            "goldEarned": 0,
-            "objectivesStolen": 0
+            "totalDamageDealtToChampions": 678543,
+            "turretKills": 259,
+            "goldEarned": 896742,
+            "objectivesStolen": 45
         },
-        "firstBloodKill": 0,
-        "objectives": 0,
+        "firstBloodKill": 45,
+        "objectives": 248,
         "traits_": {
             "aggression": "",
             "weakness": "",
