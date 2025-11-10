@@ -96,7 +96,7 @@ def review():
 
 @app.route("/api/leaderboard", methods=["GET"])
 def load_leaderboard():
-    leaderboardRankings = get_leaderboard("kda", False)
+    leaderboardRankings = get_leaderboard("KDA_kills", False)
     if None == leaderboardRankings:
         return make_response(jsonify({"error": f"No player was defined"}))
     return make_response(jsonify(leaderboardRankings))
@@ -294,6 +294,9 @@ def update_stats():
     current_stats["objectives"] += total_obj_killed
     
     last20matchids = lolapi_matches(request.cookies.get("puuid", None))
+    
+    current_stats["ign_"]["gameName"] = request.cookies.get("sname", "")
+    current_stats["ign_"]["tagLine"] = request.cookies.get("tag", "")
 
     # Keep only reviewed matches that are still in the last 20
     current_stats["reviewed_matchids"] = [
@@ -650,15 +653,24 @@ def get_leaderboard(sortKey: str, reverse: bool) -> list:
     Returns:
         list: list of dictionaries containing player data
     """
+    # sortKey parse
+    key1, key2 = None, None
+    if "_" in sortKey:
+        key1 = sortKey[:sortKey.index("_") + 1]
+        key2 = sortKey[sortKey.index("_") + 1:]
+    else:
+        key1 = sortKey
+        
+    print([key1, key2])
+    
     sortedPlayers = []
     with open("./playerData/playerData.json", "r") as file:
         playerData = json.load(file)
-        sortedPlayers = [{
-            
-        } for puuid in playerData]
-        sortedPlayers = sorted(playerData, key=lambda p: p.get(sortKey, "kda"), reverse=reverse)
+        sortedPlayers = [(playerData[puuid][key1] if None == key2 else playerData[puuid][key1][key2], playerData[puuid]) for puuid in playerData.keys()]
+        sortedPlayers = sorted(sortedPlayers, key=lambda e: e[0],reverse=reverse)
 
-    return sortedPlayers
+    print([player[1] for player in sortedPlayers])
+    return [player[1] for player in sortedPlayers]
 
 def get_playerData(puuid: str) -> dict:
     """_summary_
@@ -695,6 +707,10 @@ def get_playerData(puuid: str) -> dict:
                 "aggression": "",
                 "weakness": "",
                 "strength": "",
+            },
+            "ign_": {
+                "gameName": "",
+                "tagLine": ""
             },
             "reviewed_matchids": []
         }
