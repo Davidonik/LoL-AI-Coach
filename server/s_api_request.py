@@ -3,7 +3,6 @@ import json
 import boto3
 import requests
 import markdown
-import threading
 from pathlib import Path
 from flask_cors import CORS
 from markupsafe import Markup
@@ -56,7 +55,10 @@ def dashboard():
 
 @app.route("/leaderboard")
 def leaderboard():
-    return render_template("leaderboard.html")
+    leaderboardRankings = get_leaderboard() #TODO still need sort key and order of sort asc(true) or desc(false)
+    if leaderboardRankings == None:
+        leaderboardRankings = []
+    return render_template("leaderboard.html", leaderboardRankings=leaderboardRankings)
 
 @app.route("/review")
 def review():
@@ -514,6 +516,23 @@ def get_playerstatsAt10(matchid: str, puuid: str) -> dict:
         "kda_by10": round(kda, 2),
     }
 
+def get_leaderboard(sortKey: str, reverse: bool ) -> list:
+    """_summary_
+
+    Args:
+        sortKey (str): Key to sort the players (e.g. kda)
+        reverse (bool): order of sorting
+
+    Returns:
+        list: list of dictionaries containing player data
+    """
+    with open("./playerData/playerData.json", "r") as file:
+        playerData = json.load(file)
+    
+    sortedPlayers = sorted(playerData, key=lambda p: p.get(sortKey, "kda"), reverse=reverse)
+
+    return sortedPlayers
+
 def get_playerData(puuid: str) -> dict:
     """_summary_
 
@@ -561,52 +580,3 @@ def get_playerData(puuid: str) -> dict:
                 "strength": "",
             }
         }
-    
-#############################################################
-##################### HELPER FUNCTIONS ######################
-#############################################################
-
-
-def load_json_once(path="playerInLeaderboard.json") -> list:
-    """_summary_
-
-    Args:
-        path (str, optional): Defaults to "playerInLeaderboard.json".
-
-    Returns:
-        list: list of dictionaries and each dictionary have player stats
-    """
-    _json_cache_lock = threading.Lock()
-    _players_cache = {"data": None, "mtime": 0}
-    p = Path(path)
-    mtime = p.stat().st_mtime if p.exists() else 0
-    with _json_cache_lock:
-        if _players_cache["data"] is None or _players_cache["mtime"] != mtime:
-            _players_cache["data"] = json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
-            _players_cache["mtime"] = mtime
-        # return a shallow copy so callers don’t mutate the cache
-        return list(_players_cache["data"])
-
-
-def bisect_desc(a, v, key):
-    lo, hi = 0, len(a)
-    while lo < hi:
-        mid = (lo + hi) // 2
-        if key(a[mid]) > v: lo = mid + 1
-        else: hi = mid
-    return lo
-
-def update_player(id, new_stats):
-    sort_key = 'kda'
-    players = load_json_once()
-    players_sorted = sorted(players, key=lambda p: p.get(sort_key, 0), reverse=True)
-    index = {p['id']: i for i, p in enumerate(players_sorted)}
-    i = index[id]
-    p = players_sorted.pop(i)
-    p.update(new_stats)
-    j = bisect_desc(players_sorted, p.get(sort_key, 0), lambda x: x.get(sort_key, 0))
-    players_sorted.insert(j, p)
-    # refresh index only for affected window
-    lo, hi = sorted((i, j))
-    for k in range(lo, hi + 1):
-        index[players_sorted[k]['id']] = k
