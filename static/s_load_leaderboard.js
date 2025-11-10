@@ -14,7 +14,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await response.json();
 
         if (data) {
-            leaderboard_display.innerHTML = await data;
+            for (let i = 0; i < Math.min(10, data.board.length); i++) {
+                leaderboard_display.innerHTML += `
+                    <code for each row of stats>
+                `;
+            }
         } else {
             stats_div.innerText = "Leaderboard was unable to load";
         }

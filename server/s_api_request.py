@@ -99,7 +99,7 @@ def load_leaderboard():
     leaderboardRankings = get_leaderboard("KDA_kills", False)
     if None == leaderboardRankings:
         return make_response(jsonify({"error": f"No player was defined"}))
-    return make_response(jsonify(leaderboardRankings))
+    return make_response(jsonify("board": leaderboardRankings))
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
