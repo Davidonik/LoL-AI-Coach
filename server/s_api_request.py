@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import boto3
 import requests
@@ -17,13 +18,16 @@ MODEL_ID = "arn:aws:bedrock:us-east-1:085366697379:inference-profile/us.anthropi
 
 # AI Prompt Bases
 BASE = (
-    "You are a Challenger-ranked League of Legends coach with over 10 years of competitive and analytical experience. " 
-    "Your tone is confident, encouraging, and professional — like a high-ELO coach reviewing a player's match history. " 
-    "You focus on actionable, measurable advice with in-game reasoning (timing, wave control, map awareness, etc.). " 
-    "Use game-specific vocabulary correctly (e.g., roam timings, CS@10, lane priority, objective control, tempo, macro). " 
-    "Avoid fluff or generic comments. Always explain why each issue matters in terms of win conditions and map state." 
-    "When data is unclear, infer gently — never guess random numbers. " 
-    "Keep answers concise and structured. "
+    """ 
+    You are a Challenger-ranked League of Legends coach with over 10 years of competitive and analytical experience. 
+    Your tone is confident, encouraging, and professional — like a high-ELO coach reviewing a player's match history. 
+    You focus on actionable, measurable advice with in-game reasoning (timing, wave control, map awareness, etc.). 
+    Use game-specific vocabulary correctly (e.g., roam timings, CS@10, lane priority, objective control, tempo, macro). 
+    Avoid fluff or generic comments. Always explain why each issue matters in terms of win conditions and map state. 
+    When data is unclear, infer gently — never guess random numbers. 
+    Keep answers concise and structured.
+    Currently league of legends patch is 25.22
+    """
 )
 
 #######################################################
@@ -41,6 +45,30 @@ CORS(app, supports_credentials=True, origins=[
     "http://127.0.0.1:5500",
     "http://localhost:5500"
 ])
+
+@app.template_filter('split_champname')
+def split_champname(champname: str) -> str:
+    """_summary_
+
+    Args:
+        champname (str): champion name in camel case
+
+    Returns:
+        str: correctly formatted champion name
+    """
+    champwithApostrophe = {
+    "KhaZix": "Kha’Zix",
+    "VelKoz": "Vel’Koz",
+    "KogMaw": "Kog’Maw",
+    "BelVeth": "Bel’Veth",
+    "RekSai": "Rek’Sai",
+    "KaiSa": "Kai’Sa",
+    "ChoGath": "Cho'Gath",
+    }
+    if champname in champwithApostrophe:
+        return champwithApostrophe[champname]
+    else:
+        return re.sub(r'(?<!^)(?=[A-Z])', ' ', champname)
 
 @app.route("/")
 def home():
@@ -68,7 +96,7 @@ def review():
 
 @app.route("/api/leaderboard", methods=["GET"])
 def load_leaderboard():
-    leaderboardRankings = get_leaderboard("kda", False) # still need sort key and order of sort asc(true) or desc(false)
+    leaderboardRankings = get_leaderboard("kda", False)
     if None == leaderboardRankings:
         return make_response(jsonify({"error": f"No player was defined"}))
     return make_response(jsonify(leaderboardRankings))
@@ -120,11 +148,12 @@ def ai_traits():
     
     # AWS Request Structure
     body = {
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 1000,
+        "temperature": 0.4,
         "messages": [
             {"role": "user", "content": prompt}
         ],
-        "max_tokens": 1000,
-        "anthropic_version": "bedrock-2023-05-31",
     }
 
     # Send the request to AWS Bedrock
@@ -149,23 +178,26 @@ def ai_coach():
     data = request.get_json()
     matchid = data.get("matchid")
     roasting = data.get("roast")
+    
     match_data = get_matchdata(matchid)
     opponent_puuid = parse_player_opponent(match_data, request.cookies.get("puuid"))["opponentpuuid"]
-
-    player_stats = get_playerstatsAt10(matchid, request.cookies.get("puuid"))
-    opponent_stats = get_playerstatsAt10(matchid, opponent_puuid)
+    player_opponent_role = get_stats(match_data)["role"]
+    player_stats_at_10 = get_playerstatsAt10(matchid, request.cookies.get("puuid"))
+    opponent_stats_at_10 = get_playerstatsAt10(matchid, opponent_puuid)
     champion_data = get_champdata(matchid)
-
+    playerindex = get_participant_index(match_data, request.cookies.get("puuid"))
+    champion_data[playerindex]["champname"] = "(your player's champion) " + champion_data[playerindex]["champname"]
+    champion_data[(playerindex + 5) % 10]["champname"] = "(your player's opponent's champion)" + champion_data[(playerindex + 5) % 10]["champname"]
+                                        
     # AI Prompt Creation
     context = (
         f"""
         You are reviewing a player's recent ranked game. The following data is provided:\n
-        {champion_data}\n
-        The information about the player you are coaching {player_stats}.\n
-        The information about the player's lane opponent {opponent_stats}.\n
-        At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. 
-        Miss Fortune has 75 cs and Xayah has 57 cs. 
-        Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. 
+        The player you are coaching and their opponent played the {player_opponent_role} role.\n
+        The information about the player you are coaching {player_stats_at_10}.\n
+        The information about the player's lane opponent {opponent_stats_at_10}.\n 
+        The information about the full match {match_data}\n
+        The information about the champions in the match {champion_data}\n
         Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
         """
     )
@@ -184,7 +216,7 @@ def ai_coach():
         The roast should be 2 to 3 sentence flame session describing how bad or surprisingly decent the player was.\n
         Tone:\n
         Ruthlessly honest, witty, and slightly toxic—but never truly mean or insulting.\n
-        Think of a Challenger coach who’s tired of Bronze mistakes but still wants you to climb.\n
+        Think of a Challenger coach who's tired of Bronze mistakes but still wants you to climb.\n
         Use short, punchy sentences. Drop a joke or two if it fits.\n
         Always balance the roast with an actual coaching point (e.g., “You died level 3 to a jungle gank—maybe try warding before inting next time.")\n
         """
@@ -192,17 +224,19 @@ def ai_coach():
 
     if roasting == True:
         prompt = f"{BASE} {context} {task} {roast}"
+        temp = 0.7
     else:
         prompt = f"{BASE} {context} {task}"
-
+        temp = 0.4
 
     # AWS Request Structure
     body = {
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
         "max_tokens": 1000,
         "anthropic_version": "bedrock-2023-05-31",
+        "temperature": temp,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
     }
 
     # Send the request to AWS Bedrock
@@ -385,7 +419,7 @@ def get_matchdata(matchid: str) -> dict:
 
     return matchdata
 
-def get_champdata(matchid: str ,folderpath="champions") -> dict:
+def get_champdata(matchid: str ,folderpath="champions") -> list:
     """_summary_
 
     Args:
@@ -393,9 +427,10 @@ def get_champdata(matchid: str ,folderpath="champions") -> dict:
         folderpath (str, optional): path to champion data dir. Defaults to "champions".
 
     Returns:
-        dict: data on champions
+        list: data on champions
     """
-    championdata = {}
+    cleanedchampiondata = []
+    championdata = []
     matchdata = get_matchdata(matchid)
 
     # Champions for the specific match
@@ -406,11 +441,20 @@ def get_champdata(matchid: str ,folderpath="champions") -> dict:
 
         try:
             with open(filepath, "r", encoding="utf-8") as champdata:
-                championdata[championname] = json.load(champdata)
+                championdata.append(json.load(champdata))
         except FileNotFoundError:
-            championdata[championname] = {"error": f"{championname}.json not found"}
+            championdata.append({"error": f"{championname}.json not found"})
 
-    return championdata
+        # Cleaning champion data for response
+        cleanedchampiondata.append({
+            "champname": championname,
+            "stats": championdata[-1]["stats"],
+            "spells": championdata[-1]["spells"],
+            "allytips": championdata[-1]["allytips"],
+            "enemytips": championdata[-1]["enemytips"]
+        })
+
+    return cleanedchampiondata
 
 def get_participant_index(matchdata: dict, puuid: str) -> int | None:
     """_summary_
@@ -487,7 +531,8 @@ def get_stats(matchdata: dict) -> dict:
         "gamedurationminutes": gamedurationminutes,
         "gamedurationseconds": gamedurationseconds,
         "winloss": winloss,
-        "champused": champused
+        "champused": champused,
+        "role": participantdata["teamPosition"]
     }
 
 def get_last20gamesstuff() -> list:

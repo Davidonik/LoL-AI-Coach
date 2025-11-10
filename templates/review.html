@@ -3,31 +3,41 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>League AI Coach</title>
+    <title>Oracle Lens</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ url_for('static', filename='s_review.js') }}"></script>
+    <script src="{{ url_for('static', filename='s_animlogic.js') }}"></script>
     <script src="{{ url_for('static', filename='s_load_stats.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/OracleLens.png') }}">
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
+  <!-- Background -->
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-[url('{{ url_for('static', filename='media/bg.png') }}')] bg-cover bg-center"></div>
+    <div class="absolute inset-0 bg-black/60"></div>
+  </div>
 
-<div class="fixed top-0 left-0 p-4 z-10 flex space-x-2">
-    <button id="home" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Home</button>
-    <button id="leaderboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Leaderboard</button>
-    <button id="dashboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Dashboard</button>
+  <!-- Nav Bar -->
+  <div id="navbar" class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
+    <div class="flex items-center space-x-3">
+      <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
+        <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="Oracle Lens Logo" class="h-12 w-12 shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-pink-300/30">
+        <h2 class="text-4xl sm:text-2xl font-extrabold text-spirit tracking-widee">Oracle Lens</h2>
+      </a>
+    </div>
+    <button id="dashboard" class="px-4 py-2 rounded-lg font-semibold text-white 
+                                    bg-white/10 hover:bg-white/20 border border-white/20 
+                                    backdrop-blur-sm transition">Dashboard</button>
+    <button id="leaderboard" class="px-4 py-2 rounded-lg font-semibold text-white 
+                                    bg-white/10 hover:bg-white/20 border border-white/20 
+                                    backdrop-blur-sm transition">Leaderboards</button>
   </div>
 
   <div class="flex justify-center mt-8 w-full max-w-4xl">
     <div class="card p-6 sm:p-8 bg-gray-900 rounded-xl shadow-lg w-full">
 
       <p class="text-xl mb-2 font-medium text-gray-300">{{ ign | default('Guest', true) }}</p>
-
-      <!-- Coach Response -->
-      {% if coach_response %}
-      <div class="mb-6 p-4 bg-gray-800 rounded-lg">
-          {{ coach_response | safe }}
-      </div>
-      {% endif %}
 
       <!-- Match List -->
       <div id="match-stats-display" class="match-list grid gap-4" data-matchid="{{matchid}}">
@@ -36,5 +46,4 @@
     </div>
   </div>
 </body>
-</html>
 </html>

@@ -3,118 +3,151 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recent Matches</title>
+  <title>Oracle Lens</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="{{ url_for('static', filename='s_requests.js') }}"></script>
   <script src="{{ url_for('static', filename='s_matches.js') }}"></script>
   <script src="{{ url_for('static', filename='s_playerstats.js') }}"></script>
+  <script src="{{ url_for('static', filename='s_animlogic.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/OracleLens.png') }}">
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
+  <!-- Background -->
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-[url('{{ url_for('static', filename='media/bg.png') }}')] bg-cover bg-center"></div>
+    <div class="absolute inset-0 bg-black/60"></div>
+  </div>
 
-  <div class="fixed top-0 left-0 p-4 z-10 flex space-x-2">
-    <button id="home" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Home</button>
-    <button id="leaderboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Leaderboard</button>
+  <!-- Nav Bar -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
+    <div class="flex items-center space-x-3">
+      <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
+        <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="Oracle Lens Logo" class="h-12 w-12 shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-pink-300/30">
+        <h2 class="text-4xl sm:text-2xl font-extrabold text-spirit tracking-wide">Oracle Lens</h2>
+      </a>
+    </div>
+    
+    <button id="leaderboard" class="px-4 py-2 rounded-lg font-semibold text-white 
+                                    bg-white/10 hover:bg-white/20 border border-white/20 
+                                    backdrop-blur-sm transition">Leaderboards</button>
     <button id="test" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Test</button>
     <button id="test2" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Test2</button>
-  </div>
 
-    <label class="switch">
-    <input type="checkbox" id="mySwitch">
-    <span class="slider"></span>
-    </label>
-
-    <text id="status" class="fixed top-10 right-0 p-4 z-10 flex font-semibold">Roast Switch is OFF</text>
-
-
-  <div class="container w-full max-w-4xl mt-16">
-    <div class="card p-6 sm:p-8">
-      <text class="text-xl mb-2 block font-medium text-gray-300">{{ ign | default('Guest', true) }}</text>
-      <h2 class="font-mono text-4xl font-bold mb-4 border-b border-gray-700 pb-2">Recent Match History</h2> 
-
-      <div id="stats" class="card p-6 sm:p-8">
+  </nav>
+  
+  <!-- Roast Switch -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <div class="fixed bottom-6 right-6 z-50 flex items-end gap-5">
+      <!-- Speech bubble -->
+      <div id="speech"
+         class="bubble bubble-off relative -translate-y-1.5 mr-1"
+         role="status" aria-live="polite">Roasting mode is OFF
       </div>
-        
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
 
-    <!-- KDA Section -->
-    <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="kda-section">
-      <h2 class="text-lg font-bold text-blue-400 mb-2">Games</h2>
-      <p class="text-xl text-gray-400" id="total-kda-reviewed">Loading...</p>
+      <!-- Switch button -->
+      <label class="switch">
+        <input id="mySwitch" type="checkbox">
+        <!-- Circular button -->
+        <span class="switch-btn"></span>
+      </label>
     </div>
-
-    <!-- Average Stats Section -->
-    <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="avg-section">
-      <h2 class="text-lg font-bold text-blue-400 mb-2">Average Per Game</h2>
-      <ul class="text-sm text-gray-300 space-y-1" id="avg-stats">
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-      </ul>
-    </div>
-
-    <!-- Total Stats Section -->
-    <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="total-section">
-      <h2 class="text-lg font-bold text-blue-400 mb-2">Totals</h2>
-      <ul class="text-sm text-gray-300 space-y-1" id="total-stats">
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-        <li>Loading...</li>
-      </ul>
-    </div>
-
   </div>
-
-
-
-      <div class="match-list grid gap-4"> 
-        {% for match in games %}
-  <div class="match-card flex flex-col sm:flex-row justify-between items-center bg-gray-800 rounded-xl p-4 shadow-md">
-    
-    <!-- Left side: Win/Loss + Champion -->
-    <div class="flex flex-col space-y-0 w-full sm:w-1/4 mb-2 sm:mb-0 flex-shrink-0">
-      <span class="text-s font-medium text-gray-400">{{ match.queuetype }}</span>
-      <span class="text-xl font-black tracking-widest">
-        {% if match.winloss %}
-          <span class="win">Victory</span>
-        {% else %}
-          <span class="loss">Defeat</span>
-        {% endif %}
-      </span>
-      <span class="text-lg font-semibold flex items-center">{{ match.champused }}</span>
-    </div>
-
-          <!-- Center: KDA -->
-          <div class="text-center w-full sm:w-1/3 py-3 sm:py-0 sm:px-4 border-y border-white/20 sm:border-y-0 sm:border-x sm:border-white/20">
-            <p class="text-2xl font-mono-stats">
-              <span class="text-white font-extrabold">{{ match.kills }}</span> / 
-              <span class="text-yellow-400 font-extrabold">{{ match.deaths }}</span> / 
-              <span class="text-blue-400 font-extrabold">{{ match.assists }}</span>
-            </p>
-            <p class="text-sm font-semibold text-gray-300 mt-1">
-              KDA: <span class="text-lg font-bold">{{ match.kda }}</span>
-            </p>
+  
+  <!-- Main Content -->
+  <div class="mt-28 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="p-[1px] rounded-2xl bg-grey-700/60 shadow-[0_0_25px_rgba(59,130,246,0.25)] hover:shadow-[0_0_40px_rgba(147,0,0,0.35)] transition-all duration-500">
+      <div class="bg-gray-800/60 backdrop-blur rounded-2xl border border-white/10 shadow-xl p-8 sm:p-10 text-center">
+        <div class="container w-full max-w-4xl mt-16">
+          <div class="card p-6 sm:p-8">
+            <p class="text-xl mb-2 block font-medium text-gray-300">{{ ign | default('Guest', true) }}</p>
+            <h2 class="font-mono text-4xl font-bold mb-4 border-b border-gray-700 pb-2">Recent Match History</h2> 
+            <div id="stats" class="card p-6 sm:p-8">
+            </div>
+              
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
+      
+          <!-- KDA Section -->
+            <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="kda-section">
+              <h2 class="text-lg font-bold text-blue-400 mb-2">Games</h2>
+              <p class="text-xl text-gray-400" id="total-kda-reviewed">Loading...</p>
+            </div>
+            <!-- Average Stats Section -->
+            <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="avg-section">
+              <h2 class="text-lg font-bold text-blue-400 mb-2">Average Per Game</h2>
+              <ul class="text-sm text-gray-300 space-y-1" id="avg-stats">
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+              </ul>
+            </div>
+      
+          <!-- Total Stats Section -->
+            <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="total-section">
+              <h2 class="text-lg font-bold text-blue-400 mb-2">Totals</h2>
+              <ul class="text-sm text-gray-300 space-y-1" id="total-stats">
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+                <li>Loading...</li>
+              </ul>
+            </div>
           </div>
-
-          <!-- Right side: Duration + Review button -->
-          <div class="text-left sm:text-right w-full sm:w-1/4 pt-3 sm:pt-0 flex flex-col items-end flex-shrink-0">
-            <p class="text-xs text-gray-400">Duration:</p>
-            <p class="font-bold text-lg font-mono-stats">
-              {{ "%d:%02d" | format(match.gamedurationminutes, match.gamedurationseconds) }}
-            </p>
-            <button class="review" data-matchid="{{match.matchid}}">Review</button>
+      
+            <div class="match-list grid grid-cols-1 gap-4 w-full max-w-6xl mx-auto"> 
+              {% for match in games %}
+              <div class="match-card flex flex-col sm:flex-row justify-between items-center bg-gray-800 rounded-xl p-4 shadow-md">
+                <!-- Left side: Win/Loss + Champion -->
+                <div class="flex flex-col space-y-0 w-full sm:w-1/4 mb-2 sm:mb-0 flex-shrink-0">
+                  <div class="flex items-center gap-2 mt-1">
+                    <img src="{{ url_for('static', filename='media/championIcons/' + match.champused + '_0.jpg') }}"
+                    alt="{{ match.champused }}"
+                    class="h-14 w-14 rounded-md shadow-md border border-white/10">
+                    <span class="text-2xl font-semibold ">{{ match.champused | split_champname }}</span>
+                  </div>
+                  <span class="text-s font-medium text-gray-400">{{ match.queuetype }}</span>
+                  <span class="text-xl font-black tracking-widest">
+                  {% if match.winloss %}
+                    <span class="win">Victory</span>
+                  {% else %}
+                    <span class="loss">Defeat</span>
+                  {% endif %}
+                  </span>
+                </div>
+      
+                <!-- Center: KDA -->
+                <div class="text-center w-full sm:w-1/3 py-3 sm:py-0 sm:px-4 border-y border-white/20 sm:border-y-0 sm:border-x sm:border-white/20">
+                  <p class="text-4xl font-mono-stats">
+                    <span class="text-blue-400 font-extrabold">{{ match.kills }}</span> / 
+                    <span class="text-red-400 font-extrabold">{{ match.deaths }}</span> / 
+                    <span class="text-yellow-400 font-extrabold">{{ match.assists }}</span>
+                  </p>
+                  <p class="text-base font-semibold text-gray-300 mt-1">
+                    KDA: <span class="text-base font-bold">{{ match.kda }}</span>
+                  </p>
+                </div>
+      
+                <!-- Right side: Duration + Review button -->
+                <div class="text-left sm:text-right w-full sm:w-1/4 pt-3 sm:pt-0 flex flex-col items-end flex-shrink-0">
+                  <p class="text-sm text-gray-400">Duration:</p>
+                  <p class="font-bold text-lg font-mono-stats">
+                    {{ "%d:%02d" | format(match.gamedurationminutes, match.gamedurationseconds) }}
+                  </p>
+                  <button class="review px-4 py-2 rounded-lg font-semibold text-white 
+                                    bg-white/10 hover:bg-white/20 border border-white/20 
+                                    backdrop-blur-sm transition" data-matchid="{{match.matchid}}">Review</button>
+                </div>
+              </div>
+            {% endfor %}
+            </div>
           </div>
-
         </div>
-      {% endfor %}
-
       </div>
     </div>
   </div>
