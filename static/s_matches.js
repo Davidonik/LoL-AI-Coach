@@ -23,4 +23,17 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "http://127.0.0.1:5000/leaderboard";
     });
   }
+
+  const mySwitch = document.getElementById("mySwitch");
+  const status = document.getElementById("status");
+
+  mySwitch.addEventListener("change", () => {
+    if (mySwitch.checked) {
+      status.innerText = "Switch is ON";
+      console.log("Switched ON");
+    } else {
+      status.innerText = "Switch is OFF";
+      console.log("Switched OFF");
+    }
+    });
 });
