@@ -18,6 +18,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (data) {
             // If data is an object, convert to string for display
+            document.getElementById("total-kda-reviewed").innerText = `Total KDA Reviewed: ${data.KDA_.total_kda_reviewed}`;
+            document.getElementById("last20-kda").innerText = `Last 20 Avg KDA: ${data.KDA_.last20}`;
+
+            // Average Stats
+            document.getElementById("avg-stats").innerHTML = `
+              <li>Kills: ${data.avg_.kills}</li>
+              <li>Assists: ${data.avg_.assists}</li>
+              <li>Deaths: ${data.avg_.deaths}</li>
+              <li>CS@10: ${data.avg_["cs@10"]}</li>
+              <li>CS/Min: ${data.avg_.cs_per_min}</li>
+              <li>Gold/Min: ${data.avg_.gold_per_min}</li>
+            `;
+
+            // Total Stats
+            document.getElementById("total-stats").innerHTML = `
+              <li>Damage Done: ${data.total_.dmg_done}</li>
+              <li>Towers Taken: ${data.total_.towers_taken}</li>
+              <li>Gold: ${data.total_.gold}</li>
+              <li>Objectives: ${data.total_.objectives}</li>
+              <li>Objective Steals: ${data.total_.objective_steals}</li>
+              <li>First Bloods: ${data.total_.first_bloods}</li>
+              <li>Feats: ${data.total_.feats}</li>
+            `;
             stats_div.innerText = typeof data === "object" ? JSON.stringify(data, null, 2) : data;
         } else {
             stats_div.innerText = "No stats available";

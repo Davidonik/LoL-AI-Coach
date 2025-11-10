@@ -18,7 +18,7 @@
     <button id="test" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Test</button>
     <button id="test2" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Test2</button>
   </div>
-  
+
   <div class="container w-full max-w-4xl mt-16">
     <div class="card p-6 sm:p-8">
       <text class="text-xl mb-2 block font-medium text-gray-300">{{ ign | default('Guest', true) }}</text>
@@ -26,6 +26,46 @@
 
       <div id="stats" class="card p-6 sm:p-8">
       </div>
+        
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
+
+    <!-- KDA Section -->
+    <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="kda-section">
+      <h2 class="text-lg font-bold text-blue-400 mb-2">Games</h2>
+      <p class="text-sm text-gray-400" id="total-kda-reviewed">Loading...</p>
+      <p class="text-sm text-gray-400" id="last20-kda">Loading...</p>
+    </div>
+
+    <!-- Average Stats Section -->
+    <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="avg-section">
+      <h2 class="text-lg font-bold text-blue-400 mb-2">Average Per Game</h2>
+      <ul class="text-sm text-gray-300 space-y-1" id="avg-stats">
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+      </ul>
+    </div>
+
+    <!-- Total Stats Section -->
+    <div class="bg-gray-800 rounded-xl p-4 shadow-md text-center" id="total-section">
+      <h2 class="text-lg font-bold text-blue-400 mb-2">Totals</h2>
+      <ul class="text-sm text-gray-300 space-y-1" id="total-stats">
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+        <li>Loading...</li>
+      </ul>
+    </div>
+
+  </div>
+
+
 
       <div class="match-list grid gap-4"> 
         {% for match in games %}
