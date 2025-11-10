@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   function updateBubble(){
     const on = sw.checked;
-    bubble.textContent = on ? "🔥 Roast is ON" : "Roast is OFF";
+    bubble.textContent = on ? "🔥 Roasting mode is ON" : "Roast mode is OFF";
     bubble.classList.toggle('bubble-on', on);
     bubble.classList.toggle('bubble-off', !on);
   }
