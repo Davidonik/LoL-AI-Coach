@@ -192,9 +192,12 @@ def ai_coach():
 
     if roasting == True:
         prompt = f"{BASE} {context} {task} {roast}"
+        temp = 0.7
+        topP = 0.95
     else:
         prompt = f"{BASE} {context} {task}"
-
+        temp = 0.4
+        topP = 0.7
 
     # AWS Request Structure
     body = {
@@ -203,6 +206,8 @@ def ai_coach():
         ],
         "max_tokens": 1000,
         "anthropic_version": "bedrock-2023-05-31",
+        "temperature": temp,
+        "topP": topP
     }
 
     # Send the request to AWS Bedrock
