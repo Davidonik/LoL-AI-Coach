@@ -6,6 +6,7 @@
     <title>Oracle Lens</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ url_for('static', filename='s_review.js') }}"></script>
+    <script src="{{ url_for('static', filename='s_animlogic.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/OracleLens.png') }}">
 </head>
@@ -16,11 +17,12 @@
     <div class="absolute inset-0 bg-black/60"></div>
   </div>
 
-  <div class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
+  <!-- Nav Bar -->
+  <div id="navbar" class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
     <div class="flex items-center space-x-3">
       <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
         <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="Oracle Lens Logo" class="h-12 w-12 shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-pink-300/30">
-        <h2 class="text-5xl sm:text-6xl font-extrabold text-spirit tracking-wide">Oracle Lens</h2>
+        <h2 class="text-4xl sm:text-2xl font-extrabold text-spirit tracking-widee">Oracle Lens</h2>
       </a>
     </div>
     <button id="leaderboard" class="px-4 py-2 rounded-lg font-semibold text-white 

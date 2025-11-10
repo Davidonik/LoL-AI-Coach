@@ -8,6 +8,7 @@
   <script src="{{ url_for('static', filename='s_requests.js') }}"></script>
   <script src="{{ url_for('static', filename='s_matches.js') }}"></script>
   <script src="{{ url_for('static', filename='s_playerstats.js') }}"></script>
+  <script src="{{ url_for('static', filename='s_animlogic.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/OracleLens.png') }}">
 </head>
@@ -19,11 +20,11 @@
   </div>
 
   <!-- Nav Bar -->
-  <div class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
+  <nav id="navbar" class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
     <div class="flex items-center space-x-3">
       <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
         <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="Oracle Lens Logo" class="h-12 w-12 shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-pink-300/30">
-        <h2 class="text-5xl sm:text-6xl font-extrabold text-spirit tracking-wide">Oracle Lens</h2>
+        <h2 class="text-4xl sm:text-2xl font-extrabold text-spirit tracking-wide">Oracle Lens</h2>
       </a>
     </div>
     
@@ -32,14 +33,26 @@
                                     backdrop-blur-sm transition">Leaderboards</button>
     <button id="test" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Test</button>
     <button id="test2" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Test2</button>
-  </div>
 
+  </nav>
+  
   <!-- Roast Switch -->
-  <label class="switch fixed top-20 right-40 z-10">
-    <input type="checkbox" id="mySwitch">
-    <span class="slider"></span>
-  </label>
-  <p id="status" class="fixed top-20 right-0 p-4 z-10 flex font-semibold">Roast Switch is OFF</p>
+  <div class="fixed bottom-6 right-6 z-50">
+    <div class="fixed bottom-6 right-6 z-50 flex items-end gap-5">
+      <!-- Speech bubble -->
+      <div id="speech"
+         class="bubble bubble-off relative -translate-y-1.5 mr-1"
+         role="status" aria-live="polite">Roast is OFF
+      </div>
+
+      <!-- Switch button -->
+      <label class="switch">
+        <input id="mySwitch" type="checkbox">
+        <!-- Circular button -->
+        <span class="switch-btn"></span>
+      </label>
+    </div>
+  </div>
   
   <!-- Main Content -->
   <div class="mt-28 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -95,7 +95,7 @@ def review():
 
 @app.route("/api/leaderboard", methods=["GET"])
 def load_leaderboard():
-    leaderboardRankings = get_leaderboard("kda", False) # still need sort key and order of sort asc(true) or desc(false)
+    leaderboardRankings = get_leaderboard("kda", False)
     if None == leaderboardRankings:
         return make_response(jsonify({"error": f"No player was defined"}))
     return make_response(jsonify(leaderboardRankings))
@@ -184,16 +184,19 @@ def ai_coach():
     player_stats_at_10 = get_playerstatsAt10(matchid, request.cookies.get("puuid"))
     opponent_stats_at_10 = get_playerstatsAt10(matchid, opponent_puuid)
     champion_data = get_champdata(matchid)
-
+    playerindex = get_participant_index(match_data, request.cookies.get("puuid"))
+    champion_data[playerindex]["champname"] = "(your player's champion) " + champion_data[playerindex]["champname"]
+    champion_data[(playerindex + 5) % 10]["champname"] = "(your player's opponent's champion)" + champion_data[(playerindex + 5) % 10]["champname"]
+                                        
     # AI Prompt Creation
     context = (
         f"""
         You are reviewing a player's recent ranked game. The following data is provided:\n
-        The information about the full match {match_data}\n
-        The information about the champions in the match {champion_data}\n
+        The player you are coaching and their opponent played the {player_opponent_role} role.\n
         The information about the player you are coaching {player_stats_at_10}.\n
         The information about the player's lane opponent {opponent_stats_at_10}.\n 
-        The player you are coaching and their opponent played the {player_opponent_role} role.\n
+        The information about the full match {match_data}\n
+        The information about the champions in the match {champion_data}\n
         Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
         """
     )
@@ -407,7 +410,7 @@ def get_matchdata(matchid: str) -> dict:
 
     return matchdata
 
-def get_champdata(matchid: str ,folderpath="champions") -> dict:
+def get_champdata(matchid: str ,folderpath="champions") -> list:
     """_summary_
 
     Args:
@@ -415,10 +418,10 @@ def get_champdata(matchid: str ,folderpath="champions") -> dict:
         folderpath (str, optional): path to champion data dir. Defaults to "champions".
 
     Returns:
-        dict: data on champions
+        list: data on champions
     """
-    cleanedchampiondata = {}
-    championdata = {}
+    cleanedchampiondata = []
+    championdata = []
     matchdata = get_matchdata(matchid)
 
     # Champions for the specific match
@@ -429,17 +432,18 @@ def get_champdata(matchid: str ,folderpath="champions") -> dict:
 
         try:
             with open(filepath, "r", encoding="utf-8") as champdata:
-                championdata[championname] = json.load(champdata)
+                championdata.append(json.load(champdata))
         except FileNotFoundError:
-            championdata[championname] = {"error": f"{championname}.json not found"}
+            championdata.append({"error": f"{championname}.json not found"})
 
         # Cleaning champion data for response
-        cleanedchampiondata[championname] = {
-            "stats": championdata[championname].get("stats", {}),
-            "spells": championdata[championname].get("spells", {}),
-            "allytips": championdata[championname].get("allytips", []),
-            "enemytips": championdata[championname].get("enemytips", [])
-        }    
+        cleanedchampiondata.append({
+            "champname": championname,
+            "stats": championdata["stats"],
+            "spells": championdata["spells"],
+            "allytips": championdata["allytips"],
+            "enemytips": championdata["enemytips"]
+        })
 
     return cleanedchampiondata
 
