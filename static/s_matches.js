@@ -5,19 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (review){
     home.addEventListener("click", () => {
-      window.location.href = "https://lol-ai-coach.onrender.com/review";
+      window.location.href = "http://127.0.0.1:5500/review";
     });
   }
 
   if (home){
     home.addEventListener("click", () => {
-      window.location.href = "https://lol-ai-coach.onrender.com/";
+      window.location.href = "http://127.0.0.1:5500/";
     });
   }
 
   if (leaderboard){
     leaderboard.addEventListener("click", () => {
-      window.location.href = "https://lol-ai-coach.onrender.com/leaderboard";
+      window.location.href = "http://127.0.0.1:5500/leaderboard";
     });
   }
 });

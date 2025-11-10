@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (leaderboard){
     leaderboard.addEventListener("click", () => {
-    window.location.href = 'https://lol-ai-coach.onrender.com/leaderboard';
+    window.location.href = 'http://127.0.0.1:5500/leaderboard';
     });
   }
 
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // Send the fetch request to Flask server to set up user
-      const response = await fetch("https://lol-ai-coach.onrender.com/api/set_user", {
+      const response = await fetch("http://127.0.0.1:5500/api/set_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

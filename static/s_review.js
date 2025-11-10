@@ -5,17 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (home){
     home.addEventListener("click", () => {
-      window.location.href = "https://lol-ai-coach.onrender.com/";
+      window.location.href = "http://127.0.0.1:5500/";
     });
   }
   if (leaderboard){
     leaderboard.addEventListener("click", () => {
-      window.location.href = "https://lol-ai-coach.onrender.com/leaderboard";
+      window.location.href = "http://127.0.0.1:5500/leaderboard";
     });
   }
   if (dashboard){
     dashboard.addEventListener("click", () => {
-      window.location.href = "https://lol-ai-coach.onrender.com/dashboard";
+      window.location.href = "http://127.0.0.1:5500/dashboard";
     });
   }
 })
