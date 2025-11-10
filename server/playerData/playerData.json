@@ -1,13 +1,13 @@
 {
     "KDA_": {
-        "kills": 9,
-        "assists": 6,
-        "deaths": 5
+        "kills": 6,
+        "assists": 1,
+        "deaths": 3
     },
     "total_": {
-        "totalDamageDealtToChampions": 12267,
-        "turretKills": 1,
-        "goldEarned": 10767,
+        "totalDamageDealtToChampions": 7758,
+        "turretKills": 0,
+        "goldEarned": 9213,
         "objectivesStolen": 0
     },
     "firstBloodKill": 0,
@@ -18,6 +18,6 @@
         "strength": ""
     },
     "reviewed_matchids": [
-        "NA1_5410407602"
+        "NA1_5410333288"
     ]
 }
