@@ -1,4 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const mySwitch = document.getElementById("mySwitch");
+  const status = document.getElementById("status");
+
+  mySwitch.addEventListener("change", () => {
+    if (mySwitch.checked) {
+      status.innerText = "Roast Switch is ON";
+    } else {
+      status.innerText = "Roast Switch is OFF";
+    }
+  });
+
   const review_btn = document.getElementsByClassName("review");
   for(const btn of review_btn) {
     btn.addEventListener("click", async () => {
@@ -27,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
           credentials: "include",
           body: JSON.stringify({
             "matchid": btn.dataset.matchid,
+            "roast": mySwitch.checked,
           })
         });
 
