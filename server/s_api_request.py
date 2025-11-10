@@ -46,6 +46,8 @@ app.secret_key = "some_secret_key"
 
 CORS(app, supports_credentials=True, origins="*")
 
+player_data_path = os.path.join(BASE_DIR, "playerData", "playerData.json")
+
 @app.template_filter('split_champname')
 def split_champname(champname: str) -> str:
     """_summary_
@@ -270,7 +272,7 @@ def update_stats():
 
     current_stats["reviewed_matchids"].append(matchid)
 
-    with open("./playerData/playerData.json", "w") as file:
+    with open(player_data_path, "w") as file:
         json.dump({request.cookies.get("puuid", None): current_stats}, file, indent=4)
     
     return make_response(jsonify({"message": "update complete"}))
@@ -665,7 +667,7 @@ def get_leaderboard(sortKey: str, reverse: bool) -> list:
         key1 = sortKey
     
     sortedPlayers = []
-    with open("./playerData/playerData.json", "r") as file:
+    with open(player_data_path, "r") as file:
         playerData = json.load(file)
         sortedPlayers = [(playerData[puuid][key1] if None == key2 else playerData[puuid][key1][key2], playerData[puuid]) for puuid in playerData.keys()]
         sortedPlayers = sorted(sortedPlayers, key=lambda e: e[0],reverse=reverse)
@@ -684,7 +686,7 @@ def get_playerData(puuid: str) -> dict:
         dict: contains stats about player
     """
     # json load (placeholder fo AWS DynamoDB API requests)
-    with open("./playerData/playerData.json", "r") as file:
+    with open(player_data_path, "r") as file:
         playerData = json.load(file)
         # player data already exists in sheet
         if puuid in playerData:
