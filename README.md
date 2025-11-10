@@ -1,5 +1,5 @@
 # **LoL-AI-Coach**
-A League of Legends AI Coach is like a personal digital trainer that watches how you play and gives you feedback — just like a real coach would.
+A League of Legends AI Coach is like a personal digital trainer that review the first **10 minutes** of your specific match and gives you feedback — just like a real coach would.
 
 It uses game data from your matches (like what champion you played, how many times you died, etc.) and compares it to what skilled players usually do.
 
@@ -34,10 +34,13 @@ Instead of vague tips, it might say things like:
 
 **OR**
 
-“You built too many damage items as Leona — next time, prioritize armor and magic resistance to stay alive longer.”  #change this line
+“Use Xin Zhao's early dueling power to contest scuttle crabs. At 3:30, after your initial clear, ward river bushes and challenge Dr. Mundo for scuttle. His early game is weaker than yours - this is your window to establish jungle priority.”
 
-### 5.Tracks your improvement over time
+### 5. Tracks your improvement over time
 The AI can also store your match history and highlight progress — like “You’ve improved your farming speed by 15% in the last 10 games.”
+
+### 6. Built in ROAST-MODE
+By enabling ROAST-MODE in the bottom left (at the list of all matches), AI coach will be a little bit salty (maybe toxic) but still give constructive feedback.
 
 ## Setup
 1. Download [Python 3.13.7 64-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7-amd64.exe) or [Python 3.13.7 32-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7.exe)
