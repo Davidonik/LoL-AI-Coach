@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await response.json();
 
         if (data) {
+          console.log(data);
             for (let i = 0; i < Math.min(10, data.board.length); i++) {
                 leaderboard_display.innerHTML += `
                     <div class="llb-row">
