@@ -668,5 +668,5 @@ def get_stats_to_save(matchid: int, puuid: str) -> dict:
             "objectivesStolen": participantdata["objectivesStolen"],
         },
         "firstBloodKill": participantdata["firstBloodKill"],
-        "objectives": participantdata["objectives"],
+        "objectives": match_data["info"]["teams"][1 if participantindex > 4 else 0]["objectives"],
     }
