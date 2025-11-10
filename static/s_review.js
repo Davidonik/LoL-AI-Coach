@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   if (dashboard){
-    leaderboard.addEventListener("click", () => {
+    dashboard.addEventListener("click", () => {
       window.location.href = "http://127.0.0.1:5000/dashboard";
     });
   }
