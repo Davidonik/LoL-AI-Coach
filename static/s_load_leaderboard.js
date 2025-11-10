@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const leaderboard_display = document.getElementById("leaderboard-display");
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/api/leaderboard", {
+        const response = await fetch("https://lol-ai-coach.onrender.com/api/leaderboard", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
