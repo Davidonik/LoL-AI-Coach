@@ -589,12 +589,12 @@ def load_json_once(path="playerInLeaderboard.json") -> list:
 
 
 def bisect_desc(a, v, key):
-  lo, hi = 0, len(a)
-  while lo < hi:
-    mid = (lo + hi) // 2
-    if key(a[mid]) > v: lo = mid + 1
-    else: hi = mid
-  return lo
+    lo, hi = 0, len(a)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if key(a[mid]) > v: lo = mid + 1
+        else: hi = mid
+    return lo
 
 def update_player(id, new_stats):
     sort_key = 'kda'
