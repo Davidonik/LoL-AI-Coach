@@ -223,7 +223,6 @@ def ai_coach():
     coach_response = aws_response_body["content"][0]["text"]
     
     session["coach_response"] = coach_response
-    session["match_data"] = match_data
     
     return redirect(url_for("review"))
 
