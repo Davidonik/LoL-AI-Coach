@@ -95,7 +95,7 @@ def review():
 
 @app.route("/api/leaderboard", methods=["GET"])
 def load_leaderboard():
-    leaderboardRankings = get_leaderboard("KDA_kills", False)
+    leaderboardRankings = get_leaderboard("KDA_kills", True)
     if None == leaderboardRankings:
         return make_response(jsonify({"error": f"No player was defined"}))
     return make_response(jsonify({"board": leaderboardRankings}))
@@ -668,6 +668,8 @@ def get_leaderboard(sortKey: str, reverse: bool) -> list:
         playerData = json.load(file)
         sortedPlayers = [(playerData[puuid][key1] if None == key2 else playerData[puuid][key1][key2], playerData[puuid]) for puuid in playerData.keys()]
         sortedPlayers = sorted(sortedPlayers, key=lambda e: e[0],reverse=reverse)
+        
+    print(sortedPlayers)
         
     return [player[1] for player in sortedPlayers]
 
