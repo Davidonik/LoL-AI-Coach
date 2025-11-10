@@ -10,26 +10,28 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/OracleLens.png') }}">
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
+  <!-- Background -->
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-[url('{{ url_for('static', filename='media/bg.png') }}')] bg-cover bg-center"></div>
+    <div class="absolute inset-0 bg-black/60"></div>
+  </div>
 
-  <div class="fixed top-0 left-0 w-full bg-gray-800 shadow-md p-4 z-10 flex items-center justify-start space-x-4 border-b border-gray-700">
+  <div class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
     <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
-    <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="RiftIQ Logo" class="h-10 w-10 rounded-lg">
+    <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="OracleLens Logo" class="h-10 w-10 rounded-lg">
     </a>
-    <button id="leaderboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Leaderboard</button>
-    <button id="dashboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Dashboard</button>
+    <button id="leaderboard" class="px-4 py-2 rounded-lg font-semibold text-white 
+                                    bg-white/10 hover:bg-white/20 border border-white/20 
+                                    backdrop-blur-sm transition">Leaderboards</button>
+    <button id="dashboard" class="px-4 py-2 rounded-lg font-semibold text-white 
+                                    bg-white/10 hover:bg-white/20 border border-white/20 
+                                    backdrop-blur-sm transition">Dashboard</button>
   </div>
 
   <div class="flex justify-center mt-8 w-full max-w-4xl">
     <div class="card p-6 sm:p-8 bg-gray-900 rounded-xl shadow-lg w-full">
 
       <p class="text-xl mb-2 font-medium text-gray-300">{{ ign | default('Guest', true) }}</p>
-
-      <!-- Coach Response -->
-      {% if coach_response %}
-      <div class="mb-6 p-4 bg-gray-800 rounded-lg">
-          {{ coach_response | safe }}
-      </div>
-      {% endif %}
 
       <!-- Match List -->
       <div class="match-list grid gap-4">
@@ -45,7 +47,7 @@
                 <span class="loss text-red-400">Defeat</span>
               {% endif %}
             </span>
-            <span class="text-lg font-semibold flex items-center">{{ match.champused }}</span>
+            <span class="text-lg font-semibold flex items-center">{{ match.champused | split_champname }}</span>
           </div>
 
           <!-- KDA -->
@@ -73,6 +75,14 @@
         <p class="text-gray-400">No matches to display.</p>
         {% endfor %}
       </div>
+
+      <!-- Coach Response -->
+      {% if coach_response %}
+      <div class="mb-6 p-4 bg-gray-800 rounded-lg">
+          {{ coach_response | safe }}
+      </div>
+      {% endif %}
+
 
     </div>
   </div>

@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import boto3
 import requests
@@ -44,6 +45,30 @@ CORS(app, supports_credentials=True, origins=[
     "http://localhost:5500"
 ])
 
+@app.template_filter('split_champname')
+def split_champname(champname: str) -> str:
+    """_summary_
+
+    Args:
+        champname (str): champion name in camel case
+
+    Returns:
+        str: correctly formatted champion name
+    """
+    champwithApostrophe = {
+    "KhaZix": "Kha’Zix",
+    "VelKoz": "Vel’Koz",
+    "KogMaw": "Kog’Maw",
+    "BelVeth": "Bel’Veth",
+    "RekSai": "Rek’Sai",
+    "KaiSa": "Kai’Sa",
+    "ChoGath": "Cho'Gath",
+    }
+    if champname in champwithApostrophe:
+        return champwithApostrophe[champname]
+    else:
+        return re.sub(r'(?<!^)(?=[A-Z])', ' ', champname)
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -63,7 +88,7 @@ def leaderboard():
 def review():
     stats = session.get("match_data", [])
     coach_response = session.get("coach_response", None)
-    html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
+    html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"], stats=stats)
     
     return render_template("review.html", coach_response=(html_response), stats=stats, ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ")
 

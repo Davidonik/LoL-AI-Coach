@@ -11,12 +11,17 @@
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/OracleLens.png') }}">
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
+  <!-- Background -->
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-[url('{{ url_for('static', filename='media/bg.png') }}')] bg-cover bg-center"></div>
+    <div class="absolute inset-0 bg-black/60"></div>
+  </div>
 
-  <div class="fixed top-0 left-0 w-full bg-gray-800 shadow-md p-4 z-10 flex items-center justify-start space-x-4 border-b border-gray-700">
+  <div class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
     <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
-    <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="RiftIQ Logo" class="h-10 w-10 rounded-lg">
+    <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="OracleLens Logo" class="h-10 w-10 rounded-lg">
     </a>
-    <button id="leaderboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Leaderboard</button>
+    <button id="leaderboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Leaderboards</button>
   </div>
 
   <div id="leaderboard-display">
