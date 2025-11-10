@@ -62,11 +62,11 @@ def leaderboard():
 
 @app.route("/review")
 def review():
-    match = session.get("match_data", None)
+    stats = session.get("match_data", [])
     coach_response = session.get("coach_response", None)
     html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
     
-    return render_template("review.html", coach_response=(html_response), match=match)
+    return render_template("review.html", coach_response=(html_response), stats=stats, ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ")
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
