@@ -241,7 +241,7 @@ button {
 .llb-tag{ color:#94a3b8; font:600 .8rem/1; margin-left:.35rem; }
 
 /* K/D/A cell */
-.llb-kda-wrap{ display:flex; flex-direction:column; gap:2px; margin-left: 12em;}
+.llb-kda-wrap{ display:flex; flex-direction:column; gap:2px; margin-left: 10em;}
 .llb-kda-line{ font:700 .95rem/1 system-ui; }
 .llb-k{ color:#93c5fd; } .llb-d{ color:#fca5a5; } .llb-a{ color:#fde68a; }
 .llb-kda{ font:800 .9rem/1 system-ui; color:#e5e7eb; opacity:.9; }
@@ -259,6 +259,7 @@ button {
   font: 600 .9rem/1 system-ui;
   color: #e5e7eb;
   font-variant-numeric: tabular-nums; 
+  margin-left: 0.5em;
 }
 
 /* Responsiveness */

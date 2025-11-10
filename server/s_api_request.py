@@ -58,12 +58,12 @@ def split_champname(champname: str) -> str:
         str: correctly formatted champion name
     """
     champwithApostrophe = {
-    "KhaZix": "Kha’Zix",
-    "VelKoz": "Vel’Koz",
-    "KogMaw": "Kog’Maw",
-    "BelVeth": "Bel’Veth",
-    "RekSai": "Rek’Sai",
-    "KaiSa": "Kai’Sa",
+    "KhaZix": "Kha'Zix",
+    "VelKoz": "Vel'Koz",
+    "KogMaw": "Kog'Maw",
+    "BelVeth": "Bel'Veth",
+    "RekSai": "Rek'Sai",
+    "KaiSa": "Kai'Sa",
     "ChoGath": "Cho'Gath",
     }
     if champname in champwithApostrophe:
