@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const home = document.getElementById('home');
   const leaderboard = document.getElementById('leaderboard');
   const review = document.getElementById('review');
+  const roast = false
 
   if (review){
     home.addEventListener("click", () => {
@@ -30,8 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
   mySwitch.addEventListener("change", () => {
     if (mySwitch.checked) {
       status.innerText = "Roast Switch is ON";
+      roast = true
     } else {
       status.innerText = "Roast Switch is OFF";
+      roast = false
     }
     });
 });
