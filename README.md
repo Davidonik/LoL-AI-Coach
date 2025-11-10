@@ -40,7 +40,7 @@ Instead of vague tips, it might say things like:
 The AI can also store your match history and highlight progress — like “You’ve improved your farming speed by 15% in the last 10 games.”
 
 ### 6. Built in ROAST-MODE
-By enabling ROAST-MODE in the bottom left, AI coach will be a little bit salty (maybe toxic) but constructive critism.
+By enabling ROAST-MODE in the bottom left, AI coach will be a little bit salty (maybe toxic) but still give constructive feedback.
 
 ## Setup
 1. Download [Python 3.13.7 64-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7-amd64.exe) or [Python 3.13.7 32-bit](https://www.python.org/ftp/python/3.13.7/python-3.13.7.exe)
