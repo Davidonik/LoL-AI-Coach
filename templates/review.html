@@ -52,13 +52,14 @@
                   </p>
 
                   <p class="text-base font-semibold text-gray-300 mt-1">
-                    KDA: <span class="text-base font-bold">${(data.kills + data.assists) / data.assists}</span>
+                    KDA: <span class="text-base font-bold">${(data.kills + data.assists) / data.deaths}</span>
                   </p>
                 </div>
+              </div>
             ` + stats_display.innerHTML;
 
           } else {
-            stats_display.innerText = "Leaderboard was unable to load";
+            stats_display.innerText = "Review was unable to load";
           }
         } catch (error) {
             console.error("Error during fetch:", error);
