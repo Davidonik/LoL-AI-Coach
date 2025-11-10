@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const review_btn = document.getElementsByClassName("review");
   for(const btn of review_btn) {
-    console.log(btn.dataset.matchid)
     btn.addEventListener("click", async () => {
       try {
         for (const b of review_btn) {

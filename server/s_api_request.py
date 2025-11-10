@@ -78,7 +78,6 @@ def home():
 def dashboard():
     games = get_last20gamesstuff()
     if games == None:
-        print("no games passed")
         games = []
     return render_template("dashboard.html", ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ", games=games)
 
@@ -131,47 +130,7 @@ def get_player_stats():
         return make_response(jsonify({"error": f"No player was defined"}))
     return make_response(jsonify(playerData))
 
-@app.route("/aws/ai_traits", methods=["POST"])
-def ai_traits():
-    # Get stats for player
-    playerData = get_playerData(request.cookies.get("puuid", None))
-    traits = playerData["traits_"].keys()
-    del playerData["traits_"]
-    
-    # AI Prompt Creation
-    prompt = (
-        f"{BASE} The following is your student's statistics from past reviews in json format:\n"
-        f"{str(playerData)}\n"
-        "Summarize the player into traits by making in a json object using the follow keys, keep the values to be one word:\n"
-        f"{str(traits)}"
-    )
-    
-    # AWS Request Structure
-    body = {
-        "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 1000,
-        "temperature": 0.4,
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
-    }
 
-    # Send the request to AWS Bedrock
-    aws_response = BEDROCK.invoke_model(
-        modelId=MODEL_ID,
-        body=json.dumps(body),
-        contentType="application/json",
-        accept="application/json"
-    )
-
-    aws_response_body = json.loads(aws_response["body"].read())
-    
-    response = make_response(jsonify({
-        "message": True,
-        "ai_response": aws_response_body["content"][0]["text"]
-    }))
-    
-    return response
 
 @app.route("/aws/ai_coach", methods=["POST"])
 def ai_coach():
@@ -229,7 +188,6 @@ def ai_coach():
         prompt = f"{BASE} {context} {task}"
         temp = 0.4
 
-    print(prompt)
     # AWS Request Structure
     body = {
         "max_tokens": 1000,
@@ -266,10 +224,11 @@ def getLast20Matches():
 
 @app.route("/api/player/update_stats", methods=["POST"])
 def update_stats():
+    puuid = request.cookies.get("puuid", None)
     data = request.get_json()
     matchid = data.get("matchid", None)
-    current_stats = get_playerData(request.cookies.get("puuid", None))
-    new_stats = get_stats_to_save(matchid, request.cookies.get("puuid", None))
+    current_stats = get_playerData(puuid)
+    new_stats = get_stats_to_save(matchid, puuid)
     
     if matchid in current_stats["reviewed_matchids"]:
         return make_response(jsonify({"message": "already reviewed this game"}))
@@ -294,10 +253,14 @@ def update_stats():
         total_obj_killed += (new_stats["objectives"][obj]["kills"] if obj != "champion" and obj != "tower" and obj != "inhibitor" else 0)
     current_stats["objectives"] += total_obj_killed
     
-    last20matchids = lolapi_matches(request.cookies.get("puuid", None))
+    last20matchids = lolapi_matches(puuid)
     
     current_stats["ign_"]["gameName"] = request.cookies.get("sname", "")
     current_stats["ign_"]["tagLine"] = request.cookies.get("tag", "")
+    
+    traits = ai_traits(puuid)
+    for trait in current_stats["traits_"].keys():
+        current_stats["traits_"][trait] = traits[trait]
 
     # Keep only reviewed matches that are still in the last 20
     current_stats["reviewed_matchids"] = [
@@ -408,6 +371,44 @@ def parse_player_opponent(matchdata: dict, puuid: str):
 #############################################################
 ####################### GET FUNCTIONS #######################
 #############################################################
+
+def ai_traits(puuid: str) -> dict:
+    # Get stats for player
+    playerData = get_playerData(puuid)
+    traits = playerData["traits_"].keys()
+    del playerData["traits_"]
+    
+    # AI Prompt Creation
+    prompt = (
+        f"{BASE} The following is your student's statistics from past reviews in json format:\n"
+        f"{str(playerData)}\n"
+        f"Summarize the player's playstyle into these {len(traits)} traits (use only one word for each trait):\n"
+        f"{str(traits)}"
+        "Reply only in a comma seperated list (in order) in the same line and nothing else."
+    )
+    
+    # AWS Request Structure
+    body = {
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 1000,
+        "temperature": 0.4,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+    }
+
+    # Send the request to AWS Bedrock
+    aws_response = BEDROCK.invoke_model(
+        modelId=MODEL_ID,
+        body=json.dumps(body),
+        contentType="application/json",
+        accept="application/json"
+    )
+
+    aws_response_body = json.loads(aws_response["body"].read())
+    list_traits = aws_response_body["content"][0]["text"]
+    return dict(zip(traits, list_traits.split(",")))
+
 
 def get_matchdata(matchid: str) -> dict:
     """_summary_
@@ -661,16 +662,13 @@ def get_leaderboard(sortKey: str, reverse: bool) -> list:
         key2 = sortKey[sortKey.index("_") + 1:]
     else:
         key1 = sortKey
-        
-    print([key1, key2])
     
     sortedPlayers = []
     with open("./playerData/playerData.json", "r") as file:
         playerData = json.load(file)
         sortedPlayers = [(playerData[puuid][key1] if None == key2 else playerData[puuid][key1][key2], playerData[puuid]) for puuid in playerData.keys()]
         sortedPlayers = sorted(sortedPlayers, key=lambda e: e[0],reverse=reverse)
-
-    print([player[1] for player in sortedPlayers])
+        
     return [player[1] for player in sortedPlayers]
 
 def get_playerData(puuid: str) -> dict:

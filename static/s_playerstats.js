@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const stats_div = document.getElementById("stats");
+    const traits_section = document.getElementById("traits-section");
 
     // Show loading text immediately
     stats_div.innerText = "Loading stats...";
@@ -16,7 +17,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await response.json();
 
         if (data) {
-            console.log(data)
             // If data is an object, convert to string for display
             stats_div.innerText = ""
             kda_ = (data.KDA_.kills + data.KDA_.assists)/data.KDA_.deaths;
@@ -40,6 +40,15 @@ document.addEventListener("DOMContentLoaded", async () => {
               <li>Objective Steals: ${data.total_.objectivesStolen}</li>
               <li>First Bloods: ${data.firstBloodKill}</li>
             `;
+
+            for (const [key, value] of Object.entries(data.traits_)) {
+                traits_section.innerHTML += `
+                    <div class="flex justify-between w-full">
+                        <span class="font-semibold text-gray-300 text-right w-1/2 pr-2 capitalize">${key}:</span>
+                        <span class="text-gray-200 text-left w-1/2 pl-2 capitalize">${value}</span>
+                    </div>
+                `;
+            }
         } else {
             stats_div.innerText = "No stats available";
         }
