@@ -62,11 +62,11 @@ def leaderboard():
 
 @app.route("/review")
 def review():
-    stats = session.get("player_stats", None)
+    match = session.get("match_data", None)
     coach_response = session.get("coach_response", None)
     html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
     
-    return render_template("review.html", coach_response=html_response, stats=stats)
+    return render_template("review.html", coach_response=(html_response), match=match)
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
@@ -193,7 +193,7 @@ def ai_coach():
     coach_response = aws_response_body["content"][0]["text"]
     
     session["coach_response"] = coach_response
-    session["player_stats"] = player_stats
+    session["match_data"] = match_data
     
     return redirect(url_for("review"))
 
