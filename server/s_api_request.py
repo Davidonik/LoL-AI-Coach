@@ -621,26 +621,26 @@ def get_playerData(puuid: str) -> dict:
         
         # player data needs to be initialized in sheet
         return {
-        "KDA_": {
-            "kills": 0,
-            "assists": 0,
-            "deaths": 0,
-        },
-        "total_": {
-            "totalDamageDealtToChampions": 0,
-            "turretKills": 0,
-            "goldEarned": 0,
-            "objectivesStolen": 0,
-        },
-        "firstBloodKill": 0,
-        "objectives": 0,
-        "traits_": {
-            "aggression": "",
-            "weakness": "",
-            "strength": "",
-        },
-        "reviewed_matchids": []
-    }
+            "KDA_": {
+                "kills": 0,
+                "assists": 0,
+                "deaths": 0,
+            },
+            "total_": {
+                "totalDamageDealtToChampions": 0,
+                "turretKills": 0,
+                "goldEarned": 0,
+                "objectivesStolen": 0,
+            },
+            "firstBloodKill": 0,
+            "objectives": 0,
+            "traits_": {
+                "aggression": "",
+                "weakness": "",
+                "strength": "",
+            },
+            "reviewed_matchids": []
+        }
 
 def get_stats_to_save(matchid: int, puuid: str) -> dict:
     """_summary_
