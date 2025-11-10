@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>League AI Coach</title>
+    <title>Oracle Lens</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ url_for('static', filename='s_review.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='media/OracleLens.png') }}">
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-6">
 
-<div class="fixed top-0 left-0 p-4 z-10 flex space-x-2">
-    <button id="home" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Home</button>
+  <div class="fixed top-0 left-0 w-full bg-gray-800 shadow-md p-4 z-10 flex items-center justify-start space-x-4 border-b border-gray-700">
+    <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
+    <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="RiftIQ Logo" class="h-10 w-10 rounded-lg">
+    </a>
     <button id="leaderboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Leaderboard</button>
     <button id="dashboard" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Dashboard</button>
   </div>
