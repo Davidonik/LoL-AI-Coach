@@ -206,8 +206,53 @@ def ai_coach():
 def getLast20Matches():
     puuid = request.cookies.get("puuid", None)
     if None == puuid:
-        return make_response(jsonify({"error": f"summoner not found"}))
+        return make_response(jsonify({"error": "summoner not found"}))
     return lolapi_matches(puuid)
+
+@app.route("/api/player/update_stats", methods=["POST"])
+def update_stats():
+    data = request.get_json()
+    matchid = data.get("matchid", None)
+    current_stats = get_playerData(request.cookies.get("puuid", None))
+    new_stats = get_stats_to_save(matchid, request.cookies.get("puuid", None))
+    
+    if matchid in current_stats["reviewed_matchids"]:
+        return make_response(jsonify({"message": "already reviewed this game"}))
+    
+    # Update stats then write to file
+    KDA_ = current_stats["KDA_"]
+    new_KDA_ = new_stats["KDA_"]
+    total_ = current_stats["total_"]
+    new_total_ = new_stats["total_"]
+    
+    for key in KDA_.keys():
+        KDA_[key] += new_KDA_[key]
+        
+    for key in total_.keys():
+        total_[key] += new_total_[key]
+        
+    if new_stats["firstBloodKill"]:
+        current_stats["firstBloodKill"] += 1
+    
+    total_obj_killed = 0
+    for obj in new_stats["objectives"].keys():
+        total_obj_killed += (new_stats["objectives"][obj]["kills"] if obj != "champion" and obj != "tower" and obj != "inhibitor" else 0)
+    current_stats["objectives"] += total_obj_killed
+    
+    last20matchids = lolapi_matches(request.cookies.get("puuid", None))
+
+    # Keep only reviewed matches that are still in the last 20
+    current_stats["reviewed_matchids"] = [
+        mid for mid in current_stats["reviewed_matchids"] if mid in last20matchids
+    ]
+
+    current_stats["reviewed_matchids"].append(matchid)
+
+    with open("./playerData/playerData.json", "w") as file:
+        json.dump(current_stats, file, indent=4)
+    
+    return make_response(jsonify({"message": "update complete"}))
+    
 
 ##############################################################
 ###################### LoL API REQUESTS ######################
@@ -347,7 +392,7 @@ def get_participant_index(matchdata: dict, puuid: str) -> int | None:
         puuid (str): player's id for query
 
     Returns:
-        dict: Returns the participant index (0 to 9) for a given player's PUUID.
+        int: Returns the participant index (0 to 9) for a given player's PUUID.
     """
     for i, p in enumerate(matchdata["info"]["participants"]):
         if p["puuid"] == puuid:
@@ -556,32 +601,52 @@ def get_playerData(puuid: str) -> dict:
         
         # player data needs to be initialized in sheet
         return {
-            "KDA_": {
-                "total_kda_reviewed": 0,
-                "last20": 0.0
-            },
-            # last 20 matches
-            "avg_": {
-                "kills": 0.0,
-                "assists": 0.0,
-                "deaths": 0.0,
-                "cs@10": 0.0,
-                "cs_per_min": 0.0,
-                "gold_per_min": 0.0,
-            },
-            # total of reviewed matches
-            "total_": {
-                "dmg_done": 0,
-                "towers_taken": 0,
-                "gold": 0,
-                "objectives": 0,
-                "objective_steals": 0,
-                "first_bloods": 0,
-                "feats": 0,
-            },
-            "traits_": {
-                "aggression": "",
-                "weakness": "",
-                "strength": "",
-            }
-        }
+        "KDA_": {
+            "kills": 0,
+            "assists": 0,
+            "deaths": 0,
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 0,
+            "turretKills": 0,
+            "goldEarned": 0,
+            "objectivesStolen": 0,
+        },
+        "firstBloodKill": 0,
+        "objectives": 0,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": "",
+        },
+        "reviewed_matchids": []
+    }
+
+def get_stats_to_save(matchid: int, puuid: str) -> dict:
+    """_summary_
+
+    Args:
+        matchid (int): match id of corresponding game
+        puuid (str): id of the player you wants stats of
+
+    Returns:
+        dict: stats that need to be saved to player sheet
+    """
+    match_data = get_matchdata(puuid)
+    participantindex = get_participant_index(match_data, request.cookies.get("puuid"))
+    participantdata = match_data["info"]["participants"][participantindex]
+    return {
+        "KDA_": {
+            "kills": participantdata["kills"],
+            "assists": participantdata["assists"],
+            "deaths": participantdata["deaths"],
+        },
+        "total_": {
+            "totalDamageDealtToChampions": participantdata["totalDamageDealtToChampions"],
+            "turretKills": participantdata["turretKills"],
+            "goldEarned": participantdata["goldEarned"],
+            "objectivesStolen": participantdata["objectivesStolen"],
+        },
+        "firstBloodKill": participantdata["firstBloodKill"],
+        "objectives": participantdata["objectives"],
+    }
