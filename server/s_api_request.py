@@ -25,7 +25,8 @@ BASE = (
     Use game-specific vocabulary correctly (e.g., roam timings, CS@10, lane priority, objective control, tempo, macro). 
     Avoid fluff or generic comments. Always explain why each issue matters in terms of win conditions and map state. 
     When data is unclear, infer gently — never guess random numbers. 
-    Keep answers concise and structured. 
+    Keep answers concise and structured.
+    Currently league of legends patch is 25.22
     """
 )
 
@@ -246,6 +247,7 @@ def ai_coach():
     aws_response_body = json.loads(aws_response["body"].read())
     coach_response = aws_response_body["content"][0]["text"]
     
+    session["match_data"] = get_stats(match_data)
     session["coach_response"] = coach_response
     
     return redirect(url_for("review"))

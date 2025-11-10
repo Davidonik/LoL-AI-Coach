@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Oracle Lens</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ url_for('static', filename='s_script.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
@@ -18,9 +19,14 @@
 
   <!-- Nav Bar -->
   <div class="fixed top-0 left-0 w-full bg-gray-800/60 backdrop-blur shadow-lg p-4 z-20 flex items-center justify-start space-x-4 border-b border-white/10">
-    <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
-      <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="OracleLens Logo" class="h-10 w-10 rounded-lg">
-    </a>
+    
+    <div class="flex items-center space-x-3">
+      <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
+        <img src="{{ url_for('static', filename='media/OracleLens.png') }}" alt="Oracle Lens Logo" class="h-12 w-12 shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-pink-300/30">
+        <h2 class="font-mono text-4xl sm:text-2xl font-bold mb-4 tracking-tight">Oracle Lens</h2>
+      </a>
+    </div>
+
     <button id="leaderboard" class="px-4 py-2 rounded-lg font-semibold text-white 
                                     bg-white/10 hover:bg-white/20 border border-white/20 
                                     backdrop-blur-sm transition">Leaderboards</button>
@@ -30,21 +36,21 @@
     <div class="mt-28 w-full max-w-3xl">
       <div class="p-[1px] rounded-2xl bg-grey-700/60 shadow-[0_0_25px_rgba(59,130,246,0.25)] hover:shadow-[0_0_40px_rgba(147,0,0,0.35)] transition-all duration-500">
         <div class="bg-gray-800/60 backdrop-blur rounded-2xl border border-white/10 shadow-xl p-8 sm:p-10 text-center">
-          <h1 class="font-mono text-5xl sm:text-6xl font-bold mb-4 tracking-tight">Oracle Lens</h1>
+          <h1 class="text-5xl sm:text-6xl font-extrabold text-spirit tracking-wide">Oracle Lens</h1>
           <h2 class="font-mono text-lg sm:text-xl text-gray-300 mb-6">League of Legends AI Coach</h2>
     
           <div class="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
     
-          <p class="font-mono text-sm sm:text-base text-gray-300">
-            Enter your Summoner name
-          </p>
+          <p class="font-mono text-sm sm:text-base text-gray-300">Enter your Summoner name</p>
     
           <div class="input-container">
             <input type="text" id="sname" class="px-4 py-2 rounded-lg text-black" placeholder="Game Name">
             <input type="text" id="tag" class="px-4 py-2 rounded-lg text-black" placeholder="Tag (e.g. NA1)">
             <button id="setUserBtn" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold inline-block">Search</button>
           </div>
-    
+          
+          <div id="status"></div>
+          
         </div>
       </div>
     </div>
@@ -52,11 +58,45 @@
   <section class="mt-20 mb-10 text-center px-4">
     <h2 class="text-3xl font-bold mb-6">About us</h2>
     <p class="text-gray-100 leading-relaxed max-w-3xl mx-auto mb-6">
-        <strong>Oracle Lens</strong> was created by members of the Illinois Institute of Technology’s
+        <strong>Oracle Lens</strong> was created by 3 members of the Illinois Institute of Technology’s
         varsity League of Legends team. As competitive players, we know how valuable real coaching is
-        and how few players have access to it.
+        and how few players have access to it. So our goal is to make professional-style coaching accessible to everyone who loves League.
       </p>
   </section>
-  <div id="status"></div>
+  <section id="contact" class="w-full mt-24 py-16 bg-gradient-to-b from-white/10 via-white/5 to-transparent backdrop-blur-lg">
+  <h2 class="text-4xl font-extrabold text-center text-spirit mb-12" style="font-family: 'Cinzel Decorative', serif;">Contact Us</h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
+    <!-- Person 1 -->
+    <div class="bg-gray-800/60 rounded-2xl p-6 text-center shadow-[0_0_25px_rgba(147,197,253,0.2)] border border-pink-200/20 hover:shadow-[0_0_40px_rgba(236,72,153,0.4)] transition-all duration-500">
+      <h3 class="text-2xl font-semibold text-white">Figo Fontana</h3>
+      <div class="text-gray-300 space-y-1">
+        <p>Email: <a href="mailto:figo72f@gmail.com" class="text-blue-400 hover:underline">figo72f@gmail.com</a></p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/figo-fontana" target="_blank" class="text-blue-400 hover:underline">Figo Fontana</a></p>
+        <p>Discord: .xinru.</p>
+      </div>
+    </div>
+
+    <!-- Person 2 -->
+    <div class="bg-gray-800/60 rounded-2xl p-6 text-center shadow-[0_0_25px_rgba(147,197,253,0.2)] border border-pink-200/20 hover:shadow-[0_0_40px_rgba(236,72,153,0.4)] transition-all duration-500">
+      <h3 class="text-2xl font-semibold text-white">Sovannratana Khek</h3>
+      <div class="text-gray-300 space-y-1">
+        <p>Email: <a href="mailto:@gmail.com" class="text-blue-400 hover:underline">@gmail.com</a></p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/skhek" target="_blank" class="text-blue-400 hover:underline">Sovannratana Khek</a></p>
+        <p>Discord: </p>
+      </div>
+    </div>
+
+    <!-- Person 3 -->
+    <div class="bg-gray-800/60 rounded-2xl p-6 text-center shadow-[0_0_25px_rgba(147,197,253,0.2)] border border-pink-200/20 hover:shadow-[0_0_40px_rgba(236,72,153,0.4)] transition-all duration-500">
+      <h3 class="text-2xl font-semibold text-white">Long Pham</h3>
+      <div class="text-gray-300 space-y-1">
+        <p>Email: <a href="mailto:@gmail.com" class="text-blue-400 hover:underline">@gmail.com</a></p>
+        <p>LinkedIn: <a href="" target="_blank" class="text-blue-400 hover:underline">Long Pham</a></p>
+        <p>Discord: </p>
+      </div>
+    </div>
+  </div>
+</section>
 </body>
 </html>

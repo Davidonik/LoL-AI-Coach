@@ -120,3 +120,28 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(26px);
 }
+
+@keyframes spiritPulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(236,72,153,0.5)); }
+  50%      { filter: drop-shadow(0 0 16px rgba(147,197,253,0.7)); }
+}
+
+.text-spirit {
+  background: linear-gradient(90deg,
+    #a78bfa,  /* soft lavender */
+    #f9a8d4,  /* blossom pink */
+    #93c5fd,  /* spirit blue */
+    #a78bfa   /* lavender again for looping */
+  );
+  background-size: 200% 200%;
+  animation: spiritGradient 8s ease infinite, spiritPulse 4s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: 'Cinzel Decorative', serif; /* graceful fantasy font */
+}
+
+@keyframes spiritGradient {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
