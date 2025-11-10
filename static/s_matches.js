@@ -29,11 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   mySwitch.addEventListener("change", () => {
     if (mySwitch.checked) {
-      status.innerText = "Switch is ON";
-      console.log("Switched ON");
+      status.innerText = "Roast Switch is ON";
     } else {
-      status.innerText = "Switch is OFF";
-      console.log("Switched OFF");
+      status.innerText = "Roast Switch is OFF";
     }
     });
 });
