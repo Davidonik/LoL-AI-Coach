@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (data) {
             // If data is an object, convert to string for display
             stats_div.innerText = ""
-            kda_ = (data.KDA_.kills + data.KDA_.assists)/data.KDA_.deaths;
+            kda_ = ((data.KDA_.kills + data.KDA_.assists)/Math.max(data.KDA_.deaths, 1)).toFixed(2);
             if (!kda_) {
                 kda_ = 0.0;
             }
