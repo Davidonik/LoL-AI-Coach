@@ -190,7 +190,7 @@ def ai_coach():
         temp = 0.7
     else:
         prompt = f"{BASE} {context} {task}"
-        temp = 0.4
+        temp = 0.5
 
     # AWS Request Structure
     body = {
