@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="{{ url_for('static', filename='s_requests.js') }}"></script>
   <script src="{{ url_for('static', filename='s_matches.js') }}"></script>
+  <script src="{{ url_for('static', filename='s_script.js') }}"></script>
   <script src="{{ url_for('static', filename='s_playerstats.js') }}"></script>
   <script src="{{ url_for('static', filename='s_animlogic.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
@@ -34,6 +35,32 @@
 
   </nav>
   
+  <!-- Center box -->
+  <section class="mt-20 mb-20">
+    <!-- Center box -->
+    <div class="mt-28 w-full max-w-3xl">
+      <div class="p-[1px] rounded-2xl bg-grey-700/60 shadow-[0_0_25px_rgba(59,130,246,0.25)] hover:shadow-[0_0_40px_rgba(147,0,0,0.35)] transition-all duration-500">
+        <div class="bg-gray-800/60 backdrop-blur rounded-2xl border border-white/10 shadow-xl p-8 sm:p-10 text-center">
+          <h1 class="text-5xl sm:text-6xl font-extrabold text-spirit tracking-wide">Oracle Lens</h1>
+          <h2 class="font-mono text-lg sm:text-xl text-gray-300 mb-6">League of Legends AI Coach</h2>
+    
+          <div class="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+    
+          <p class="font-mono text-sm sm:text-base text-gray-300">Enter your Summoner name</p>
+    
+          <div class="input-container">
+            <input type="text" id="sname" class="px-4 py-2 rounded-lg text-black" placeholder="Game Name">
+            <input type="text" id="tag" class="px-4 py-2 rounded-lg text-black" placeholder="Tag (e.g. NA1)">
+            <button id="setUserBtn" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold inline-block">Search</button>
+          </div>
+          
+          <div id="status"></div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Roast Switch -->
   <div class="fixed bottom-6 right-6 z-50">
     <div class="fixed bottom-6 right-6 z-50 flex items-end gap-5">
