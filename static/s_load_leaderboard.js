@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const response = await fetch("/leaderboard", {
+        const response = await fetch("/api/leaderboard", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
