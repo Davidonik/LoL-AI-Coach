@@ -1,33 +1,227 @@
 {
-    "58RyCNnVEoGy_lH7W9V_9fDJTdn93HoETNdzBCDfvVC204pwgjagNR9oVq1L-p08rYnhjNs5ldWDbQ": {
+    "wWWbdjrc3B8ld5OhA8TAf-rdHnPC4ZUPrNlRQXHt5qvRq50tns8GQLuv1MExOmYMeslA1SaJmrU-jA": {
         "KDA_": {
-            "kills": 40,
-            "assists": 56,
-            "deaths": 36
+            "kills": 62,
+            "assists": 12,
+            "deaths": 54
         },
         "total_": {
-            "totalDamageDealtToChampions": 64320,
-            "turretKills": 8,
-            "goldEarned": 76370,
+            "totalDamageDealtToChampions": 52267,
+            "turretKills": 30,
+            "goldEarned": 58467,
+            "objectivesStolen": 0
+        },
+        "firstBloodKill": 3,
+        "objectives": 22,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
+        },
+        "ign_": {
+            "gameName": "Pating",
+            "tagLine": "mochi"
+        },
+        "reviewed_matchids": []
+    },
+    "cVuOn0b1PoS4fADkhCZvsK7IzSoCQhTj2OCYTIMVQ1wZCEh5zq3fEXSMMp0FV_yXzUL4lA5NwBezOg": {
+        "KDA_": {
+            "kills": 30,
+            "assists": 59,
+            "deaths": 34
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 10263,
+            "turretKills": 12,
+            "goldEarned": 50263,
+            "objectivesStolen": 1
+        },
+        "firstBloodKill": 2,
+        "objectives": 10,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
+        },
+        "ign_": {
+            "gameName": "kiwi",
+            "tagLine": "020"
+        },
+        "reviewed_matchids": []
+    },
+    "AlnH_XJvQ-zq3VEFymhVvt_njZQjGan_G9OjaoGnzMWbx0MfTRvv_mTXZ_zVNYaRcePMUIpRIBTVFw": {
+        "KDA_": {
+            "kills": 93498,
+            "assists": 245378,
+            "deaths": 38569
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 52340983,
+            "turretKills": 437,
+            "goldEarned": 24387956,
+            "objectivesStolen": 1
+        },
+        "firstBloodKill": 123,
+        "objectives": 543,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
+        },
+        "ign_": {
+            "gameName": "Aspect Arkeantus",
+            "tagLine": "Ark"
+        },
+        "reviewed_matchids": []
+    },
+    "xa7lx_eJqrihEE3TYFrtai8Jr-n9ghKHzMComw2A7q2gqhqyhMO4Yl0K82SQm80HfCJAacE8nr-VQA": {
+        "KDA_": {
+            "kills": 3476,
+            "assists": 5432,
+            "deaths": 2587
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 678543,
+            "turretKills": 259,
+            "goldEarned": 896742,
+            "objectivesStolen": 45
+        },
+        "firstBloodKill": 45,
+        "objectives": 248,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
+        },
+        "ign_": {
+            "gameName": "Komorebi",
+            "tagLine": "Aki"
+        },
+        "reviewed_matchids": []
+    },
+    "58RyCNnVEoGy_lH7W9V_9fDJTdn93HoETNdzBCDfvVC204pwgjagNR9oVq1L-p08rYnhjNs5ldWDbQ": {
+        "KDA_": {
+            "kills": 32,
+            "assists": 54,
+            "deaths": 34
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 54321,
+            "turretKills": 7,
+            "goldEarned": 65489,
             "objectivesStolen": 1
         },
         "firstBloodKill": 3,
-        "objectives": 7,
+        "objectives": 2,
         "traits_": {
-            "aggression": "Aggressive",
-            "weakness": " Positioning",
-            "strength": " Teamfighting"
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
         },
         "ign_": {
             "gameName": "KiraKuin",
             "tagLine": "Lover"
         },
-        "reviewed_matchids": [
-            "NA1_5410391849"
-        ]
+        "reviewed_matchids": []
+    },
+    "n_i_V3cFGTqklFmnUfbzQjdeOVjHcPhu9rj0SkNiGqrWnj8zkO3xyjrT58Qbg6MbEtPgUcx2-2CQuA": {
+        "KDA_": {
+            "kills": 53,
+            "assists": 96,
+            "deaths": 43
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 54322,
+            "turretKills": 6,
+            "goldEarned": 43216,
+            "objectivesStolen": 1
+        },
+        "firstBloodKill": 2,
+        "objectives": 5,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
+        },
+        "ign_": {
+            "gameName": "Swizzy22",
+            "tagLine": "4459"
+        },
+        "reviewed_matchids": []
+    },
+    "21mkXioisW2V_wiWKDCiSRY0qIDOnH_MCS0ujY5n9HV9Bn1IkfM7TtnnZTG7T-O2QCPBxGDMHGFk6g": {
+        "KDA_": {
+            "kills": 34,
+            "assists": 43,
+            "deaths": 14
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 31246,
+            "turretKills": 2,
+            "goldEarned": 23156,
+            "objectivesStolen": 1
+        },
+        "firstBloodKill": 1,
+        "objectives": 10,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
+        },
+        "ign_": {
+            "gameName": "David",
+            "tagLine": "JERRY"
+        },
+        "reviewed_matchids": []
+    },
+    "_f60-Zue4AFSIs-LhwwfmseozpkSScXvQ5ufnrO4Cxag0uggNTfPyvOiQ_eyDEqLKA7Jyu4zXYDjvw": {
+        "KDA_": {
+            "kills": 43,
+            "assists": 54,
+            "deaths": 67
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 76534,
+            "turretKills": 4,
+            "goldEarned": 54323,
+            "objectivesStolen": 0
+        },
+        "firstBloodKill": 4,
+        "objectives": 6,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
+        },
+        "ign_": {
+            "gameName": "LF Kuudere GF",
+            "tagLine": "Ryuzu"
+        },
+        "reviewed_matchids": []
+    },
+    "RdDjWsxp0mJfHCtxQwkBLI0lVD2zofeWQUsh2PETisZjrP7fdUwkox6zaopfRz4jeF-1950BlQXUEw": {
+        "KDA_": {
+            "kills": 54,
+            "assists": 13,
+            "deaths": 40
+        },
+        "total_": {
+            "totalDamageDealtToChampions": 94354,
+            "turretKills": 5,
+            "goldEarned": 30543,
+            "objectivesStolen": 0
+        },
+        "firstBloodKill": 3,
+        "objectives": 5,
+        "traits_": {
+            "aggression": "",
+            "weakness": "",
+            "strength": ""
+        },
+        "ign_": {
+            "gameName": "asleep",
+            "tagLine": "NA2"
+        },
+        "reviewed_matchids": []
     }
 }
-
-
-
-
