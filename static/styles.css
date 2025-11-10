@@ -176,3 +176,79 @@ button {
 #navbar {
   transition: transform 0.3s ease-in-out;
 }
+
+/* leaderboard */
+
+.llb-scope{
+  --llb-surface:#0f172a;
+  --llb-surface-2:#0c1424;
+  --llb-row:#111a30;
+  --llb-ring:#2a364a;
+  --llb-text:#e6eaf2;
+  --llb-muted:#9aa3b2;
+  --llb-radius:14px;
+  --llb-shadow:0 10px 40px rgba(0,0,0,.35);
+  color:var(--llb-text);
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+.llb-wrap{max-width:1100px;margin:28px auto;padding:0 16px}
+.llb-title{font-weight:800;font-size:clamp(22px,3.4vw,36px);margin-bottom:6px}
+.llb-sub{color:var(--llb-muted);margin-bottom:12px}
+.llb-panel{
+  background:linear-gradient(180deg,var(--llb-surface),var(--llb-surface-2));
+  border:1px solid var(--llb-ring); border-radius:18px; box-shadow:var(--llb-shadow); overflow:hidden;
+}
+
+/* Table grid: keep columns consistent across head & rows */
+.llb-grid{
+  display:grid;
+  grid-template-columns: 1.6fr .75fr .8fr .8fr .7fr .9fr .8fr .95fr; /* Summoner, KDA, Dmg, Gold, Turrets, Objectives, 1st, Stolen */
+  column-gap: 8px;
+}
+.llb-head{
+  composes: llb-grid;
+  display:grid;
+  padding:12px 14px;
+  text-transform:uppercase; letter-spacing:.6px; font-size:12px; color:var(--llb-muted);
+  background:rgba(255,255,255,.03); border-top:1px solid rgba(255,255,255,.06);
+}
+.llb-row{
+  composes: llb-grid;
+  display:grid;
+  margin:8px 10px; padding:12px 12px;
+  background:var(--llb-row);
+  border:1px solid var(--llb-ring);
+  border-radius:var(--llb-radius);
+  align-items:center;
+}
+.llb-row:hover{ background-color:#13203a; }
+
+/* Cells */
+.llb-cell{display:flex; align-items:center; gap:10px; min-width:0 }
+.llb-right{justify-content:flex-end}
+.llb-stat{font-weight:700}
+.llb-muted{color:var(--llb-muted);font-weight:700;font-size:12px}
+
+/* Summoner column */
+.llb-sum{display:flex;align-items:center;gap:12px;min-width:0}
+.llb-icon{width:34px;height:34px;border-radius:10px;border:1px solid var(--llb-ring);
+  background:#0b1220;display:grid;place-items:center;font-weight:800;flex:0 0 34px}
+.llb-name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.llb-tag{color:var(--llb-muted);font-weight:700;margin-left:6px}
+
+/* KDA */
+.llb-kda{font-weight:800}
+.llb-kda-detail{color:var(--llb-muted);font-weight:700;font-size:12px;margin-left:8px;white-space:nowrap}
+
+/* Small “chip” look for numbers (optional) */
+.llb-chip{
+  padding:6px 10px; border-radius:10px; background:#0f192d; border:1px solid var(--llb-ring);
+  font-weight:700; white-space:nowrap;
+}
+
+/* Responsive stack */
+@media (max-width: 900px){
+  .llb-head{display:none}
+  .llb-row{grid-template-columns:1fr; row-gap:10px}
+  .llb-right{justify-content:flex-start}
+}
