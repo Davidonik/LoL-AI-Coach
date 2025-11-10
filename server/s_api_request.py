@@ -303,7 +303,7 @@ def update_stats():
     current_stats["reviewed_matchids"].append(matchid)
 
     with open("./playerData/playerData.json", "w") as file:
-        json.dump(current_stats, file, indent=4)
+        json.dump({request.cookies.get("puuid", None): current_stats}, file, indent=4)
     
     return make_response(jsonify({"message": "update complete"}))
     
@@ -650,10 +650,13 @@ def get_leaderboard(sortKey: str, reverse: bool) -> list:
     Returns:
         list: list of dictionaries containing player data
     """
+    sortedPlayers = []
     with open("./playerData/playerData.json", "r") as file:
         playerData = json.load(file)
-    
-    sortedPlayers = sorted(playerData, key=lambda p: p.get(sortKey, "kda"), reverse=reverse)
+        sortedPlayers = [{
+            
+        } for puuid in playerData]
+        sortedPlayers = sorted(playerData, key=lambda p: p.get(sortKey, "kda"), reverse=reverse)
 
     return sortedPlayers
 
