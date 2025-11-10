@@ -52,17 +52,17 @@ button {
 }
 
 .review {
-  background-color: #3b82f6; /* blue-500 */
-  padding: 0.5rem 1rem; /* same as px-4 py-2 */
-  border-radius: 0.5rem; /* same as rounded-lg */
-  font-weight: 600; /* same as font-semibold */
+  background-color: #3b82f6; 
+  padding: 0.5rem 1rem; 
+  border-radius: 0.5rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .review:hover {
-  background-color: #2563eb; /* blue-600 */
+  background-color: #2563eb; 
 }
 
 #ai-response {
@@ -74,7 +74,7 @@ button {
 
 .switch {
   position: relative;
-  bottom: 20px;       /* anchored to bottom-right */
+  bottom: 20px;      
   right: 20px;
   display: inline-block;
   width: 64px;
@@ -237,7 +237,7 @@ button {
 /* Summoner cell */
 .llb-sum{ display:flex; align-items:center; gap:10px; min-width:0; }
 .llb-ava{ width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,.15); }
-.llb-name{ font:700 1rem/1.2 system-ui; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.llb-name{ font:700 1rem/1.2 system-ui; white-space:normal; overflow:visible; text-overflow:unset; }
 .llb-tag{ color:#94a3b8; font:600 .8rem/1; margin-left:.35rem; }
 
 /* K/D/A cell */
@@ -246,11 +246,19 @@ button {
 .llb-k{ color:#93c5fd; } .llb-d{ color:#fca5a5; } .llb-a{ color:#fde68a; }
 .llb-kda{ font:800 .9rem/1 system-ui; color:#e5e7eb; opacity:.9; }
 
-/* Numeric chips */
 .llb-chip{
-  display:inline-flex; justify-content:flex-end; width:100%;
-  padding:.35rem .5rem; border-radius:10px; background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1); font:700 .9rem/1 system-ui; color:#e5e7eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 80px;           
+  height: 32px;
+  text-align: center;
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  font: 600 .9rem/1 system-ui;
+  color: #e5e7eb;
+  font-variant-numeric: tabular-nums; 
 }
 
 /* Responsiveness */

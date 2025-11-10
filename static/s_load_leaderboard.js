@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                       <!-- K/D/A + KDA -->
                       <div class="llb-kda-wrap">
                         <div class="llb-kda-line"><span class="llb-k">${data.board[i].KDA_.kills}</span>/<span class="llb-d">${data.board[i].KDA_.deaths}</span>/<span class="llb-a">${data.board[i].KDA_.assists}</span></div>
-                        <div class="llb-kda">KDA ${((data.board[i].KDA_.kills + data.board[i].KDA_.assists)/Math.max(data.board[i].KDA_.deaths, 1).toFixed(2))}</div>
+                        <div class="llb-kda">${((data.board[i].KDA_.kills + data.board[i].KDA_.assists) / Math.max(data.board[i].KDA_.deaths, 1)).toFixed(2)}</div>
                       </div>
 
                       <!-- Damage -->
