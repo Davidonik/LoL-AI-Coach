@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("hi");
     const stats_div = document.getElementById("stats");
 
     // Show loading text immediately
@@ -7,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const response = await fetch("http://127.0.0.1:5000/api/player/stats", {
-            method: "POST",
+            method: "GET",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -18,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (data) {
             // If data is an object, convert to string for display
+            stats_div.innerText = ""
             document.getElementById("total-kda-reviewed").innerText = `Total KDA Reviewed: ${data.KDA_.total_kda_reviewed}`;
             document.getElementById("last20-kda").innerText = `Last 20 Avg KDA: ${data.KDA_.last20}`;
 
@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               <li>First Bloods: ${data.total_.first_bloods}</li>
               <li>Feats: ${data.total_.feats}</li>
             `;
-            stats_div.innerText = typeof data === "object" ? JSON.stringify(data, null, 2) : data;
         } else {
             stats_div.innerText = "No stats available";
         }

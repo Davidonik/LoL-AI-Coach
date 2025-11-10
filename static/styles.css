@@ -69,3 +69,54 @@ button {
   margin-left: 15%;
   margin-right: 15%;
 }
+
+/* Switch container aligned to right */
+.switch {
+  position: fixed; /* fixed to stay on screen */
+  top: 20px;       /* distance from top */
+  right: 20px;     /* distance from right side */
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  z-index: 1000;   /* make sure it's above other content */
+}
+
+/* Hide default checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+/* Circle inside slider */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+/* When checked */
+input:checked + .slider {
+  background-color: #4ade80; /* green */
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
