@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (data) {
             // If data is an object, convert to string for display
+            stats_div.innerText = ""
             document.getElementById("total-kda-reviewed").innerText = `Total KDA Reviewed: ${data.KDA_.total_kda_reviewed}`;
             document.getElementById("last20-kda").innerText = `Last 20 Avg KDA: ${data.KDA_.last20}`;
 
