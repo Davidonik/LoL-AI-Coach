@@ -1,18 +1,18 @@
 {
     "58RyCNnVEoGy_lH7W9V_9fDJTdn93HoETNdzBCDfvVC204pwgjagNR9oVq1L-p08rYnhjNs5ldWDbQ": {
         "KDA_": {
-            "kills": 9,
-            "assists": 6,
-            "deaths": 5
+            "kills": 12,
+            "assists": 11,
+            "deaths": 20
         },
         "total_": {
-            "totalDamageDealtToChampions": 12267,
+            "totalDamageDealtToChampions": 36035,
             "turretKills": 1,
-            "goldEarned": 10767,
+            "goldEarned": 23782,
             "objectivesStolen": 0
         },
         "firstBloodKill": 0,
-        "objectives": 5,
+        "objectives": 8,
         "traits_": {
             "aggression": "",
             "weakness": "",
@@ -23,7 +23,8 @@
             "tagLine": "Lover"
         },
         "reviewed_matchids": [
-            "NA1_5410407602"
+            "NA1_5410407602",
+            "NA1_5408390743"
         ]
     }
 }
