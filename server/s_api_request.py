@@ -34,14 +34,15 @@ BASE = (
 ###################### FLASH APP ######################
 #######################################################
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 app = Flask(
     __name__,
-    template_folder=os.path.join(base_dir, "../templates"),
-    static_folder=os.path.join(base_dir, "../static")
+    static_folder=os.path.join(BASE_DIR, "../static"),
+    template_folder=os.path.join(BASE_DIR, "../templates")
 )
+
 app.secret_key = "some_secret_key"
-app.debug = False
 
 CORS(app, supports_credentials=True, origins="*")
 
@@ -97,6 +98,7 @@ def load_leaderboard():
     leaderboardRankings = get_leaderboard("KDA_kills", True)
     if None == leaderboardRankings:
         return make_response(jsonify({"error": f"No player was defined"}))
+    print(leaderboardRankings)
     return make_response(jsonify({"board": leaderboardRankings}))
 
 @app.route("/api/set_user", methods=["POST"])

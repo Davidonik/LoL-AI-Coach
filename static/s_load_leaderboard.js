@@ -68,6 +68,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     } catch (error) {
         console.error("Error during fetch:", error);
-        stats_div.innerText = "Failed to load stats";
     }
 });
