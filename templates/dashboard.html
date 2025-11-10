@@ -19,6 +19,28 @@
     <button id="test2" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold">Test2</button>
   </div>
 
+    <label class="switch">
+    <input type="checkbox" id="mySwitch">
+    <span class="slider"></span>
+    </label>
+
+    <p id="status" style="margin-top: 50px;">Switch is OFF</p>
+
+    <script>
+    const mySwitch = document.getElementById("mySwitch");
+    const status = document.getElementById("status");
+
+    mySwitch.addEventListener("change", () => {
+      if (mySwitch.checked) {
+        status.innerText = "Switch is ON";
+        console.log("Switched ON");
+      } else {
+        status.innerText = "Switch is OFF";
+        console.log("Switched OFF");
+      }
+    });
+    </script>
+
   <div class="container w-full max-w-4xl mt-16">
     <div class="card p-6 sm:p-8">
       <text class="text-xl mb-2 block font-medium text-gray-300">{{ ign | default('Guest', true) }}</text>

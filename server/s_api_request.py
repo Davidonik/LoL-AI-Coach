@@ -9,7 +9,7 @@ from markupsafe import Markup
 from flask import Flask, request, jsonify, make_response, redirect, url_for, render_template, session
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-494a4976-77e7-4866-b34b-1886b60ab245"
+APIKEY_LOL = "RGAPI-d7903387-6d1e-4d07-88a1-6763cfebacee"
 
 # Bedrock Model Configs
 BEDROCK = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
@@ -566,7 +566,7 @@ def get_playerstatsAt10(matchid: str, puuid: str) -> dict:
         "kda_by10": round(kda, 2),
     }
 
-def get_leaderboard(sortKey: str, reverse: bool ) -> list:
+def get_leaderboard(sortKey: str, reverse: bool) -> list:
     """_summary_
 
     Args:
