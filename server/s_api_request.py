@@ -55,10 +55,7 @@ def dashboard():
 
 @app.route("/leaderboard")
 def leaderboard():
-    leaderboardRankings = get_leaderboard() #TODO still need sort key and order of sort asc(true) or desc(false)
-    if leaderboardRankings == None:
-        leaderboardRankings = []
-    return render_template("leaderboard.html", leaderboardRankings=leaderboardRankings)
+    return render_template("leaderboard.html")
 
 @app.route("/review")
 def review():
@@ -67,6 +64,13 @@ def review():
     html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
     
     return render_template("review.html", coach_response=(html_response), match=match)
+
+@app.route("/api/leaderboard", methods=["GET"])
+def load_leaderboard():
+    leaderboardRankings = get_leaderboard(reverse=False) # still need sort key and order of sort asc(true) or desc(false)
+    if None == leaderboardRankings:
+        return make_response(jsonify({"error": f"No player was defined"}))
+    return make_response(jsonify(leaderboardRankings))
 
 @app.route("/api/set_user", methods=["POST"])
 def set_user():
@@ -91,7 +95,7 @@ def set_user():
     response.set_cookie("puuid", puuid, max_age=60*60*24)
     return response
 
-@app.route("/api/player/stats", methods=["POST"])
+@app.route("/api/player/stats", methods=["GET"])
 def get_player_stats():
     playerData = get_playerData(request.cookies.get("puuid", None))
     if None == playerData:
@@ -170,6 +174,7 @@ def ai_coach():
     )
 
     prompt = f"{BASE} {context} {task}"
+    print(prompt)
 
     # AWS Request Structure
     body = {
