@@ -88,7 +88,7 @@ def leaderboard():
 def review():
     stats = session.get("match_data", [])
     coach_response = session.get("coach_response", None)
-    html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"], stats=stats)
+    html_response = markdown.markdown(coach_response, extensions=["fenced_code", "tables"])
     
     return render_template("review.html", coach_response=(html_response), stats=stats, ign=f"{request.cookies.get("sname")}#{request.cookies.get("tag")} ")
 
