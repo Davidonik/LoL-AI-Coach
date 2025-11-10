@@ -47,6 +47,7 @@ app.secret_key = "some_secret_key"
 CORS(app, supports_credentials=True, origins="*")
 
 player_data_path = os.path.join(BASE_DIR, "playerData", "playerData.json")
+champion_path = os.path.join(BASE_DIR, "champions")
 
 @app.template_filter('split_champname')
 def split_champname(champname: str) -> str:
@@ -428,7 +429,7 @@ def get_matchdata(matchid: str) -> dict:
 
     return matchdata
 
-def get_champdata(matchid: str ,folderpath="champions") -> list:
+def get_champdata(matchid: str ,folderpath=champion_path) -> list:
     """_summary_
 
     Args:
