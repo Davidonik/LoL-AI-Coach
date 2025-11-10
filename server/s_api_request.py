@@ -439,10 +439,10 @@ def get_champdata(matchid: str ,folderpath="champions") -> list:
         # Cleaning champion data for response
         cleanedchampiondata.append({
             "champname": championname,
-            "stats": championdata["stats"],
-            "spells": championdata["spells"],
-            "allytips": championdata["allytips"],
-            "enemytips": championdata["enemytips"]
+            "stats": championdata[-1]["stats"],
+            "spells": championdata[-1]["spells"],
+            "allytips": championdata[-1]["allytips"],
+            "enemytips": championdata[-1]["enemytips"]
         })
 
     return cleanedchampiondata
