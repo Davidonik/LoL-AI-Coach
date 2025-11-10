@@ -67,7 +67,7 @@ def review():
 
 @app.route("/api/leaderboard", methods=["GET"])
 def load_leaderboard():
-    leaderboardRankings = get_leaderboard(reverse=False) # still need sort key and order of sort asc(true) or desc(false)
+    leaderboardRankings = get_leaderboard("kda", False) # still need sort key and order of sort asc(true) or desc(false)
     if None == leaderboardRankings:
         return make_response(jsonify({"error": f"No player was defined"}))
     return make_response(jsonify(leaderboardRankings))
