@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             // If data is an object, convert to string for display
             stats_div.innerText = ""
             kda_ = (data.KDA_.kills + data.KDA_.assists)/data.KDA_.deaths;
-            if (NaN == kda_) {
+            if (!kda_) {
                 kda_ = 0.0;
             }
             document.getElementById("total-kda-reviewed").innerText = `Total KDA Reviewed: ${kda_}`;

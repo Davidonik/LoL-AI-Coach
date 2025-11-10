@@ -147,6 +147,7 @@ def ai_traits():
 def ai_coach():
     data = request.get_json()
     matchid = data.get("matchid")
+    roasting = data.get("roast")
     match_data = get_matchdata(matchid)
     opponent_puuid = parse_player_opponent(match_data, request.cookies.get("puuid"))["opponentpuuid"]
 
@@ -156,25 +157,44 @@ def ai_coach():
 
     # AI Prompt Creation
     context = (
-        f"You are reviewing a player's recent ranked game. The following data is provided:\n"
-        # {champion_data}
-        # {match_data}
-        f"The information about the player you are coaching {player_stats}. "
-        f"The information about the player's lane opponent {opponent_stats}. "
-        "At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. "
-        "Miss Fortune has 75 cs and Xayah has 57 cs. "
-        "Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. "
-        "Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n"
+        f"""
+        You are reviewing a player's recent ranked game. The following data is provided:\n
+        {match_data}\n
+        {champion_data}\n
+        The information about the player you are coaching {player_stats}.\n
+        The information about the player's lane opponent {opponent_stats}.\n
+        At 10 minutes, Miss Fortune has 4295 gold and Xayah has 3458 gold. 
+        Miss Fortune has 75 cs and Xayah has 57 cs. 
+        Miss Fortune has a 5.0 KDA and Xayah has a 0.75 KDA. 
+        Focus on laning phase performance — last-hitting, positioning, early wave control trading with opponents.\n
+        """
     )
 
     task = (
-        "Identify the lane result, whether the player ended up behind, even, or ahead of the opposing laner at the 10 minute mark based on the player's gold, level, and KDA. "
-        "Next identify the top 2-3 mistakes in the laning phase and explain how they affected the player's result at the 10 minute mark. "
-        "Then provide 2 actionable coaching tips with clear timings or cues (e.g., 'At 3:15 when wave 3 crashes…'). "
+        """
+        Identify the lane result, whether the player ended up behind, even, or ahead of the opposing laner at the 10 minute mark based on the player's gold, level, and KDA. 
+        Next identify the top 2-3 mistakes in the laning phase and explain how they affected the player's result at the 10 minute mark. 
+        Then provide 2 actionable coaching tips with clear timings or cues (e.g., 'At 3:15 when wave 3 crashes…'). \n
+        """
     )
 
-    prompt = f"{BASE} {context} {task}"
-    print(prompt)
+    roast = (
+        """
+        The roast button is on !!!, On top of the prompt above be as brutally honest as you can. Make fun of the player when you get the chance.\n
+        The roast should be 2 to 3 sentence flame session describing how bad or surprisingly decent the player was.\n
+        Tone:\n
+        Ruthlessly honest, witty, and slightly toxic—but never truly mean or insulting.\n
+        Think of a Challenger coach who’s tired of Bronze mistakes but still wants you to climb.\n
+        Use short, punchy sentences. Drop a joke or two if it fits.\n
+        Always balance the roast with an actual coaching point (e.g., “You died level 3 to a jungle gank—maybe try warding before inting next time.")\n
+        """
+    )
+
+    if roasting == True:
+        prompt = f"{BASE} {context} {task} {roast}"
+    else:
+        prompt = f"{BASE} {context} {task}"
+
 
     # AWS Request Structure
     body = {
@@ -632,8 +652,8 @@ def get_stats_to_save(matchid: int, puuid: str) -> dict:
     Returns:
         dict: stats that need to be saved to player sheet
     """
-    match_data = get_matchdata(puuid)
-    participantindex = get_participant_index(match_data, request.cookies.get("puuid"))
+    match_data = get_matchdata(matchid)
+    participantindex = get_participant_index(match_data, puuid)
     participantdata = match_data["info"]["participants"][participantindex]
     return {
         "KDA_": {
