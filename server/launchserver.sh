@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
-
-# Exit immediately if a command fails
 set -e
-
-# Change to the directory containing this script
 cd "$(dirname "$0")"
 
-# Set environment variables
 export FLASK_APP=s_api_request.py
-export FLASK_ENV=production  # Use production mode on Render
+export FLASK_ENV=production
 
-# Start the Flask server on the port Render provides
-flask run --host=0.0.0.0 --port=$PORT
+# Render uses the PORT environment variable.
+echo "Starting Flask on port ${PORT:-5000}..."
+flask run --host=0.0.0.0 --port=${PORT:-5000}
