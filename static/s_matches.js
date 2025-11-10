@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const matchList = document.getElementById("matchList");
-  const loading = document.getElementById("loading");
-
   const home = document.getElementById('home');
   const leaderboard = document.getElementById('leaderboard');
   const review = document.getElementById('review');
