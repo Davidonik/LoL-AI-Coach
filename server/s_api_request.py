@@ -312,9 +312,10 @@ def get_match_stats():
     data = request.get_json()
     matchid = data.get("matchid", None)
     matchdata = get_matchdata(matchid)
+    player_index = get_participant_index(matchdata, request.cookies.get("puuid", None))
     if None == matchdata:
         return make_response(jsonify({"error": "matchdata failed to load anything"}))
-    return make_response(jsonify(matchdata))
+    return make_response(jsonify(matchdata["info"]["participants"][player_index]))
 
 ##############################################################
 ###################### LoL API REQUESTS ######################
