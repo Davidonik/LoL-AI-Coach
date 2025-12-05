@@ -10,7 +10,7 @@ from markupsafe import Markup
 from flask import Flask, request, jsonify, make_response, redirect, url_for, render_template, session
 
 # API Key for LoL
-APIKEY_LOL = "RGAPI-d99af0cb-5937-4bce-a592-e723d846014e"
+APIKEY_LOL = "RGAPI-2f2a53c4-22bb-41eb-b78c-41a056aaa86a"
 
 # Bedrock Model Configs
 BEDROCK = boto3.client(service_name="bedrock-runtime", region_name="us-east-1")
